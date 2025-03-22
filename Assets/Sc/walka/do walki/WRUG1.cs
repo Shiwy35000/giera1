@@ -24,6 +24,8 @@ public class WRUG1 : MonoBehaviour
     [HideInInspector] public UnityEvent efektyWywo³anieOtrzyma³Cios;
     [HideInInspector] public UnityEvent efektyWywo³anieZada³Cios;
     [HideInInspector] public UnityEvent efektyWywo³anieKoniecTury;
+    [HideInInspector] public float ilee;
+    [HideInInspector] public bool nieUchronnee;
 
     private void Awake()
     {
@@ -71,18 +73,24 @@ public class WRUG1 : MonoBehaviour
 
     public void PrzyjmijDmg(float ile , bool nieUchronne)
     {
+        ilee = ile;
+        nieUchronnee = nieUchronne;
         Wywo³ajEfektyOtrzyma³Cios();
-        if (nieUchronne)
+
+        if (nieUchronnee)
         {
-            hpAktualne -= ile;
+            hpAktualne -= ilee;
         }
         else
         {
             float z;
-            aktualnyPancerz -= ile;
-            z = Mathf.Abs(aktualnyPancerz);
-            hpAktualne -= z;
-            aktualnyPancerz = 0;
+            aktualnyPancerz -= ilee;
+            if (aktualnyPancerz < 0)
+            {
+                z = Mathf.Abs(aktualnyPancerz);
+                hpAktualne -= z;
+                aktualnyPancerz = 0;
+            }
         }
     }
 

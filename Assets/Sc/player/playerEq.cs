@@ -28,6 +28,8 @@ public class playerEq : MonoBehaviour
     [HideInInspector] public UnityEvent efektyWywo³anieOtrzyma³Cios;
     [HideInInspector] public UnityEvent efektyWywo³anieZada³Cios;
     [HideInInspector] public UnityEvent efektyWywo³anieKoniecTury;
+    [HideInInspector] public float ilee;
+    [HideInInspector] public bool nieUchronnee;
 
     void Awake()
     {
@@ -72,18 +74,24 @@ public class playerEq : MonoBehaviour
 
     public void PrzyjmijDmg(float ile, bool nieUchronne)
     {
+        ilee = ile;
+        nieUchronnee = nieUchronne;
         Wywo³ajEfektyOtrzyma³Cios();
-        if (nieUchronne)
+
+        if (nieUchronnee)
         {
-            hp -= ile;
+            hp -= ilee;
         }
         else
         {
             float z;
-            aktualnyPancerz -= ile;
-            z = Mathf.Abs(aktualnyPancerz);
-            hp -= z;
-            aktualnyPancerz = 0;
+            aktualnyPancerz -= ilee;
+            if (aktualnyPancerz < 0)
+            {
+                z = Mathf.Abs(aktualnyPancerz);
+                hp -= z;
+                aktualnyPancerz = 0;
+            }
         }
     }
 

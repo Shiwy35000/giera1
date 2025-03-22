@@ -93,6 +93,11 @@ public class click : MonoBehaviour
                 {
                     MorInfo(raycastHit.transform.gameObject);
                 }
+                else if (raycastHit.transform.gameObject.tag == "moreInfo")
+                {
+                    MorInfo(cel);
+                }
+
             }
 
             if(raycastHit.transform.gameObject.name == "koniecTury" && Input.GetButtonDown("LewyMysz"))

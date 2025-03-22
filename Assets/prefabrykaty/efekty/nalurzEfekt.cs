@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //nazwy musz¹ byæ identyczne jak w BIBLIOTECE inaczej nie zadzia³a!!!
-public enum nazwaEfektu { Kruchoœæ, Podpalenie, Leczenie, RozbiciePancerza, Os³abienie}; 
+public enum nazwaEfektu { Kruchoœæ, Podpalenie, LeczenieWczasie, RozbiciePancerza, Trucizna}; 
 
 [System.Serializable]
 public class nalurzEfekt
