@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
+using TMPro;
 
 public class click : MonoBehaviour
 {
@@ -20,6 +22,8 @@ public class click : MonoBehaviour
     private GameObject graczImg, graczMorInfo;
     private walkaStart WalkaStart;
     private GameObject d³on;
+    private GameObject player;
+    private int kturyEfekt;
 
     void Awake()
     {
@@ -29,6 +33,7 @@ public class click : MonoBehaviour
         graczMorInfo.SetActive(false);
         cam = this.gameObject.transform.parent.gameObject.GetComponent<Camera>();
         d³on = GameObject.FindGameObjectWithTag("dlon").gameObject;
+        player = GameObject.FindGameObjectWithTag("Player").gameObject;
     }
 
     void Update()
@@ -88,14 +93,17 @@ public class click : MonoBehaviour
                 if (raycastHit.transform.gameObject.tag == "wrug")
                 {
                     MorInfo(raycastHit.transform.gameObject);
+                    InfoOEfekcie(raycastHit.transform.gameObject);
                 }
                 else if(raycastHit.transform.gameObject.name == "graczImg")
                 {
                     MorInfo(raycastHit.transform.gameObject);
+                    InfoOEfekcie(raycastHit.transform.gameObject);
                 }
-                else if (raycastHit.transform.gameObject.tag == "moreInfo")
+                else if (raycastHit.transform.gameObject.tag == "moreInfo" || raycastHit.transform.gameObject.tag == "efektImg")
                 {
                     MorInfo(cel);
+                    InfoOEfekcie(raycastHit.transform.gameObject);
                 }
 
             }
@@ -120,6 +128,43 @@ public class click : MonoBehaviour
         if(Input.GetButtonDown("PrawyMysz") && podniesionaKarta != null)
         {
             GrabCardOf();
+        }
+    }
+
+    void InfoOEfekcie(GameObject target)
+    {
+        if(target.tag == "efektImg")
+        {
+            GameObject targetParent = target.transform.parent.gameObject;
+            for (int x = 0; x < targetParent.transform.childCount; x++)
+            {
+                if(targetParent.transform.GetChild(x).gameObject == target)
+                {
+                    kturyEfekt = x;
+                }
+            }
+
+            if (cel.tag == "wrug")
+            {
+                string treœæ = cel.GetComponent<WRUG1>().na³orzoneEfekty[kturyEfekt].opis;
+                cel.GetComponent<WRUG1>().morInfo.transform.GetChild(1).gameObject.GetComponent<TextMeshPro>().text = treœæ;
+            }
+            else if(cel.tag == "gracz")
+            {
+                string treœæ = player.GetComponent<playerEq>().na³orzoneEfekty[kturyEfekt].opis;
+                graczMorInfo.transform.GetChild(1).gameObject.GetComponent<TextMeshPro>().text = treœæ;
+            }
+        }
+        else
+        {
+            if (cel.tag == "wrug")
+            {
+                cel.GetComponent<WRUG1>().morInfo.transform.GetChild(1).gameObject.GetComponent<TextMeshPro>().text = "";
+            }
+            else if (cel.tag == "gracz")
+            {
+                graczMorInfo.transform.GetChild(1).gameObject.GetComponent<TextMeshPro>().text = "";
+            }
         }
     }
 
@@ -264,6 +309,21 @@ public class click : MonoBehaviour
                 {
                     eq.aktualnaEnergia -= karta.Koszt;
                     ObiektyCele.AddRange(d³on.GetComponent<sortGrupZ>().kartyWD³oni);
+                    karta.akcje.Invoke(ObiektyCele);
+                }
+            }
+            else if(karta.cele == Cele.AlboWrugAlboGracz)
+            {
+                if (traf == graczImg)
+                {
+                    eq.aktualnaEnergia -= karta.Koszt;
+                    ObiektyCele.Add(WalkaStart.gracz.gameObject);
+                    karta.akcje.Invoke(ObiektyCele);
+                }
+                else if (traf.tag == "wrug")
+                {
+                    eq.aktualnaEnergia -= karta.Koszt;
+                    ObiektyCele.Add(traf);
                     karta.akcje.Invoke(ObiektyCele);
                 }
             }

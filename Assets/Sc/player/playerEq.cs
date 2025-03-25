@@ -30,6 +30,7 @@ public class playerEq : MonoBehaviour
     [HideInInspector] public UnityEvent efektyWywo³anieKoniecTury;
     [HideInInspector] public float ilee;
     [HideInInspector] public bool nieUchronnee;
+    //private GameObject graczMoreInfo, GraczZbiurEfektów;
 
     void Awake()
     {
@@ -38,6 +39,8 @@ public class playerEq : MonoBehaviour
         walkaStart.KoniecTury += Wywo³ajEfektyKoniecT;
         walkaStart.KoniecTury += PrzemijanieEfektuw;
         BazaEfektow = this.GetComponent<bazaEfektow>();
+        //graczMoreInfo = GameObject.FindGameObjectWithTag("gracz").gameObject;
+        //GraczZbiurEfektów = graczMoreInfo.transform.GetChild(0).gameObject;
     }
     private void OnDestroy()
     {

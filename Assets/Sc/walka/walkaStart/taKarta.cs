@@ -8,7 +8,7 @@ using UnityEngine.Events;
 using UnityEditor;
 using System.Linq;
 
-public enum Cele { Gracz, Wrug, Wrogowie, Karta, KartyWD³oni , All, RandomWrug, Random };
+public enum Cele { Gracz, Wrug, Wrogowie, Karta, KartyWD³oni , All, RandomWrug, Random, AlboWrugAlboGracz };
 public enum PoUrzyciu { Zniszcz, Zachowaj, wyklucz, cmentarz};
 [System.Flags]
 public enum TypObrarzen : int { brak = 0x00, nieSkalowalne = 0x01, nieUchronne = 0x02 };
@@ -157,6 +157,27 @@ public class taKarta : MonoBehaviour
         {
             if (efektyNaKarty.Count > 0)
             {
+                akcje.AddListener(Na³urzEfekty);
+            }
+        }
+        else if(cele == Cele.AlboWrugAlboGracz)
+        {
+            if (Dmg != 0 && DmgGraczowi != 0)
+            {
+                akcje.AddListener(DmgDiler);
+            }
+            else if (efektyWrug.Count > 0 && efektyGracz.Count > 0)
+            {
+                akcje.AddListener(Na³urzEfekty);
+            }
+            else if (Dmg != 0 && efektyGracz.Count > 0)
+            {
+                akcje.AddListener(DmgDiler);
+                akcje.AddListener(Na³urzEfekty);
+            }
+            else if (DmgGraczowi != 0 && efektyWrug.Count > 0)
+            {
+                akcje.AddListener(DmgDiler);
                 akcje.AddListener(Na³urzEfekty);
             }
         }
@@ -529,8 +550,19 @@ public class taKarta : MonoBehaviour
                 }
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("efektyWrug"), true);
             }
-            else if (script.cele == Cele.All)
+            else if (script.cele == Cele.All || script.cele == Cele.AlboWrugAlboGracz)
             {
+                if (script.cele == Cele.AlboWrugAlboGracz)
+                {
+                    if (script.DmgGraczowi == 0 && script.efektyGracz.Count == 0)
+                    {
+                        EditorGUILayout.LabelField("    ", "Podaj dzia³ania dla obu stron by wywo³aæ!");
+                    }
+                    else if (script.Dmg == 0 && script.efektyWrug.Count == 0)
+                    {
+                        EditorGUILayout.LabelField("    ", "Podaj dzia³ania dla obu stron by wywo³aæ!");
+                    }
+                }
                 script.DmgGraczowi = EditorGUILayout.FloatField(label: "obrarzenia gracz", script.DmgGraczowi);
                 if (script.DmgGraczowi != 0)
                 {
