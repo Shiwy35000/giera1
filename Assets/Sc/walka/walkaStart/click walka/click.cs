@@ -24,6 +24,8 @@ public class click : MonoBehaviour
     private GameObject d³on;
     private GameObject player;
     private int kturyEfekt;
+    public GameObject InfoObj;
+    public TextMeshProUGUI textMorInfo;
 
     void Awake()
     {
@@ -34,6 +36,7 @@ public class click : MonoBehaviour
         cam = this.gameObject.transform.parent.gameObject.GetComponent<Camera>();
         d³on = GameObject.FindGameObjectWithTag("dlon").gameObject;
         player = GameObject.FindGameObjectWithTag("Player").gameObject;
+        InfoObj.SetActive(false);
     }
 
     void Update()
@@ -147,23 +150,25 @@ public class click : MonoBehaviour
             if (cel.tag == "wrug")
             {
                 string treœæ = cel.GetComponent<WRUG1>().na³orzoneEfekty[kturyEfekt].opis;
-                cel.GetComponent<WRUG1>().morInfo.transform.GetChild(1).gameObject.GetComponent<TextMeshPro>().text = treœæ;
+                InfoObj.SetActive(true);
+                textMorInfo.text = treœæ;
             }
             else if(cel.tag == "gracz")
             {
                 string treœæ = player.GetComponent<playerEq>().na³orzoneEfekty[kturyEfekt].opis;
-                graczMorInfo.transform.GetChild(1).gameObject.GetComponent<TextMeshPro>().text = treœæ;
+                InfoObj.SetActive(true);
+                textMorInfo.text = treœæ;
             }
         }
         else
         {
             if (cel.tag == "wrug")
             {
-                cel.GetComponent<WRUG1>().morInfo.transform.GetChild(1).gameObject.GetComponent<TextMeshPro>().text = "";
+                InfoObj.SetActive(false);
             }
             else if (cel.tag == "gracz")
             {
-                graczMorInfo.transform.GetChild(1).gameObject.GetComponent<TextMeshPro>().text = "";
+                InfoObj.SetActive(false);
             }
         }
     }

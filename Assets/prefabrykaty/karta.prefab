@@ -892,7 +892,7 @@ MonoBehaviour:
     "tre\u015B\u0107": "obrarze\u0144"
   KartaTag: 1
   "Rzadko\u015B\u0107": 0
-  cele: 8
+  cele: 1
   poUrzyciu: 0
   naKoniecTury: 3
   akcje:
@@ -927,13 +927,17 @@ MonoBehaviour:
   DmgGraczRazy: 1
   RandomRazy: 1
   "specjalnyTypObrarze\u0144": 0
-  Dmg: 0
+  Dmg: 10
   DmgRazy: 1
   efektyGracz:
   - NazwaEfektu: 2
     ile: 1
   efektyWrug:
   - NazwaEfektu: 0
+    ile: 1
+  - NazwaEfektu: 4
+    ile: 1
+  - NazwaEfektu: 1
     ile: 1
   efektyNaKarty: []
 --- !u!65 &7301124539969855688
