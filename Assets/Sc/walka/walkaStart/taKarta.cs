@@ -5,7 +5,9 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using System.Linq;
 
 public enum Cele { Gracz, Wrug, Wrogowie, Karta, KartyWD³oni , All, RandomWrug, Random, AlboWrugAlboGracz };
@@ -487,6 +489,7 @@ public class taKarta : MonoBehaviour
     }
 
     ////////////////////////////////////!!!!!!!!!!!!!!!!!UI!!!!!!!!!!!!!!!////////////////////////////////////
+#if UNITY_EDITOR
     [CustomEditor(typeof(taKarta))]
     public class taKarta_Editor : Editor
     {
@@ -609,5 +612,6 @@ public class taKarta : MonoBehaviour
             serializedObject.ApplyModifiedProperties();
         }
     }
+#endif
 
 }

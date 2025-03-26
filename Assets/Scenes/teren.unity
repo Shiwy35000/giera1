@@ -682,6 +682,7 @@ GameObject:
   m_Component:
   - component: {fileID: 622165806}
   - component: {fileID: 622165807}
+  - component: {fileID: 622165808}
   m_Layer: 5
   m_Name: wskazanieInfoPlus
   m_TagString: Untagged
@@ -725,6 +726,27 @@ MonoBehaviour:
   rug: {fileID: 1710260533}
   rugColider: {fileID: 1348886717}
   infoWizualia: {fileID: 860335989}
+--- !u!95 &622165808
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 622165805}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 0c9a7a276374ea946857275df6171353, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &667417987
 GameObject:
   m_ObjectHideFlags: 0
@@ -2665,7 +2687,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:

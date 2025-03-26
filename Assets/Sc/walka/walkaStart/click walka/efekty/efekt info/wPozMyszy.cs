@@ -12,16 +12,22 @@ public class wPozMyszy : MonoBehaviour
 
     void LateUpdate()
     {
-        WyliczKorektePoz();
+        this.gameObject.GetComponent<RectTransform>().position = Input.mousePosition;
     }
 
-    void WyliczKorektePoz()
+    public void ResetPoz()
+    {
+        //infoWizualia.GetComponent<RectTransform>().localPosition = Vector3.zero;
+        rugColider.GetComponent<RectTransform>().position = rug.GetComponent<RectTransform>().position;
+    }
+
+    public void WyliczKorektePoz()
     {
         kolizjaR = rugColider.GetComponent<kolizja>().KolizjaR;
         kolizjaD = rugColider.GetComponent<kolizja>().KolizjaD;
         if (kolizjaR)
         {
-            nowaPozycja.x = - (rugColider.GetComponent<RectTransform>().localPosition.x / 2);
+            nowaPozycja.x = - ((rugColider.GetComponent<RectTransform>().localPosition.x / 2) + poprawkaX);
         }
         else
         {
@@ -43,9 +49,7 @@ public class wPozMyszy : MonoBehaviour
             nowaPozycja.y = 0;
         }
 
-        this.gameObject.GetComponent<RectTransform>().position = Input.mousePosition;
         infoWizualia.GetComponent<RectTransform>().localPosition = nowaPozycja;
-
     }
     
 }

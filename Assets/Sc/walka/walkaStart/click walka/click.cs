@@ -26,6 +26,8 @@ public class click : MonoBehaviour
     private int kturyEfekt;
     public GameObject InfoObj;
     public TextMeshProUGUI textMorInfo;
+    private Image InfoObjT³o;
+    private Animator infoEfektAnim;
 
     void Awake()
     {
@@ -36,10 +38,13 @@ public class click : MonoBehaviour
         cam = this.gameObject.transform.parent.gameObject.GetComponent<Camera>();
         d³on = GameObject.FindGameObjectWithTag("dlon").gameObject;
         player = GameObject.FindGameObjectWithTag("Player").gameObject;
-        InfoObj.SetActive(false);
+        InfoObjT³o = textMorInfo.gameObject.transform.parent.gameObject.GetComponent<Image>();
+        infoEfektAnim = InfoObj.GetComponent<Animator>();
+        /*textMorInfo.enabled = false;
+        InfoObjT³o.enabled = false;*/
     }
 
-    void Update()
+    void LateUpdate() //nie pewna, ale zmiana na LATE!!!
     {
         Cast();
     }
@@ -122,6 +127,12 @@ public class click : MonoBehaviour
             CzyœæCardMorInfo();
             CzyœæWskazana();
 
+            if(InfoObjT³o.enabled == true)
+            {
+                InfoObj.GetComponent<wPozMyszy>().ResetPoz();
+                infoEfektAnim.Play("nic");
+            }
+
             if (Input.GetButtonDown("LewyMysz") && podniesionaKarta != null)
             {
                 GrabCardOf();
@@ -136,12 +147,13 @@ public class click : MonoBehaviour
 
     void InfoOEfekcie(GameObject target)
     {
-        if(target.tag == "efektImg")
+        if (target.tag == "efektImg")
         {
+
             GameObject targetParent = target.transform.parent.gameObject;
             for (int x = 0; x < targetParent.transform.childCount; x++)
             {
-                if(targetParent.transform.GetChild(x).gameObject == target)
+                if (targetParent.transform.GetChild(x).gameObject == target)
                 {
                     kturyEfekt = x;
                 }
@@ -150,25 +162,24 @@ public class click : MonoBehaviour
             if (cel.tag == "wrug")
             {
                 string treœæ = cel.GetComponent<WRUG1>().na³orzoneEfekty[kturyEfekt].opis;
-                InfoObj.SetActive(true);
+                infoEfektAnim.Play("pojawia");
                 textMorInfo.text = treœæ;
-            }
-            else if(cel.tag == "gracz")
-            {
-                string treœæ = player.GetComponent<playerEq>().na³orzoneEfekty[kturyEfekt].opis;
-                InfoObj.SetActive(true);
-                textMorInfo.text = treœæ;
-            }
-        }
-        else
-        {
-            if (cel.tag == "wrug")
-            {
-                InfoObj.SetActive(false);
             }
             else if (cel.tag == "gracz")
             {
-                InfoObj.SetActive(false);
+                string treœæ = player.GetComponent<playerEq>().na³orzoneEfekty[kturyEfekt].opis;
+                infoEfektAnim.Play("pojawia");
+                textMorInfo.text = treœæ;
+            }
+
+            InfoObj.GetComponent<wPozMyszy>().WyliczKorektePoz();
+        }
+        else
+        {
+            if (InfoObjT³o.enabled == true)
+            {
+                InfoObj.GetComponent<wPozMyszy>().ResetPoz();
+                infoEfektAnim.Play("nic");
             }
         }
     }
