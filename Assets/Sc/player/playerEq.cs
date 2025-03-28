@@ -36,6 +36,7 @@ public class playerEq : MonoBehaviour
     {
         maxEnergia = 3; // narazie?
         dialog.Walka += MaxEnergiaWalka;
+        walkaStart.KoniecTury += MaxEnergiaTura;
         walkaStart.KoniecTury += Wywo³ajEfektyKoniecT;
         walkaStart.KoniecTury += PrzemijanieEfektuw;
         BazaEfektow = this.GetComponent<bazaEfektow>();
@@ -45,11 +46,17 @@ public class playerEq : MonoBehaviour
     private void OnDestroy()
     {
         dialog.Walka -= MaxEnergiaWalka;
+        walkaStart.KoniecTury -= MaxEnergiaTura;
         walkaStart.KoniecTury -= Wywo³ajEfektyKoniecT;
         walkaStart.KoniecTury -= PrzemijanieEfektuw;
     }
 
     private void MaxEnergiaWalka(bool nic)
+    {
+        aktualnaEnergia = maxEnergia;
+    }
+
+    private void MaxEnergiaTura(int nic)
     {
         aktualnaEnergia = maxEnergia;
     }

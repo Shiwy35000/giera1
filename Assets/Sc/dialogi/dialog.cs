@@ -157,6 +157,7 @@ public class dialog : MonoBehaviour
         WalkaStart.DodajKartyDoRêki(playerEQ.deck);
         gracz.GetComponent<OpcjeDialogowe>().wizualizacjaWyboru.SetActive(false);
         walkaCanvasUi.SetActive(true);
+        WalkaStart.turaGracza = true;
         Walka?.Invoke(true);
     }
 

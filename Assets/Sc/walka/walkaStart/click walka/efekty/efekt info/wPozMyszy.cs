@@ -8,7 +8,7 @@ public class wPozMyszy : MonoBehaviour
 
     public GameObject rug, rugColider, infoWizualia;
     private bool kolizjaR, kolizjaD;
-    private float poprawkaX = 30f;
+    private float poprawkaX = 40f;
 
     void LateUpdate()
     {
@@ -25,21 +25,24 @@ public class wPozMyszy : MonoBehaviour
     {
         kolizjaR = rugColider.GetComponent<kolizja>().KolizjaR;
         kolizjaD = rugColider.GetComponent<kolizja>().KolizjaD;
+        float wysokoœæ = infoWizualia.transform.GetChild(0).GetComponent<RectTransform>().rect.height;
+        float szerokoœæ = infoWizualia.transform.GetChild(0).GetComponent<RectTransform>().rect.width;
+
         if (kolizjaR)
         {
-            nowaPozycja.x = - ((rugColider.GetComponent<RectTransform>().localPosition.x / 2) + poprawkaX);
+            nowaPozycja.x = -(szerokoœæ / 2);
         }
         else
         {
             float n = rug.GetComponent<RectTransform>().position.x;
             Vector3 N = new Vector3(n, rugColider.GetComponent<RectTransform>().position.y, rugColider.GetComponent<RectTransform>().position.z);
             rugColider.GetComponent<RectTransform>().position = N;
-            nowaPozycja.x = (rugColider.GetComponent<RectTransform>().localPosition.x / 2) + poprawkaX;
+            nowaPozycja.x = (szerokoœæ / 2) + poprawkaX;
         }
 
         if(kolizjaD)
         {
-            nowaPozycja.y = -rugColider.GetComponent<RectTransform>().localPosition.y;
+            nowaPozycja.y = -wysokoœæ;
         }
         else
         {

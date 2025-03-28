@@ -96,6 +96,7 @@ GameObject:
   - component: {fileID: -8053015256464792861}
   - component: {fileID: -5741796903916476568}
   - component: {fileID: 4173820372159086459}
+  - component: {fileID: 9094893621455586145}
   m_Layer: 6
   m_Name: "pustyWr\xF3g"
   m_TagString: wrug
@@ -135,8 +136,32 @@ MonoBehaviour:
   nazwa: studnia
   WrugGragika: {fileID: 21300000, guid: 06d7b59367cc356428b9938767a84545, type: 3}
   "dzia\u0142anie":
-    m_PersistentCalls:
-      m_Calls: []
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 9094893621455586145}
+        m_TargetAssemblyTypeName: "dzia\u0142anieW1test, Assembly-CSharp"
+        m_MethodName: "Dzia\u0142anieTestowe"
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: -8053015256464792861}
+        m_TargetAssemblyTypeName: WRUG1, Assembly-CSharp
+        m_MethodName: "KolejnaAkcjaWywo\u0142aj"
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   hpAktualne: 0
   hpMax: 100
   aktualnyPancerz: 30
@@ -154,6 +179,9 @@ MonoBehaviour:
       m_Calls: []
   ilee: 0
   nieUchronnee: 0
+  obecnaAkcja:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &-5741796903916476568
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -187,6 +215,18 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 3.7138445, y: 6.409402, z: 0.5}
   m_Center: {x: -0.06613815, y: 2.9291549, z: 0}
+--- !u!114 &9094893621455586145
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 528014565647558395}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 495b489a6fc291d459efe52b0dfa7b09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4967744294862384733
 GameObject:
   m_ObjectHideFlags: 0
@@ -431,11 +471,11 @@ PrefabInstance:
       objectReference: {fileID: 528014565647558395}
     - target: {fileID: 3829562555393054972, guid: f59a37eb81964c24d8a4bb4becbbd4c2, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.5
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 3829562555393054972, guid: f59a37eb81964c24d8a4bb4becbbd4c2, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.5
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 3829562555393054972, guid: f59a37eb81964c24d8a4bb4becbbd4c2, type: 3}
       propertyPath: m_LocalPosition.x

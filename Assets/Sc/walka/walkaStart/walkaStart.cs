@@ -13,12 +13,14 @@ public class walkaStart : MonoBehaviour
 
     public static event System.Action<int> KoniecTury;
 
+    public bool turaGracza; //[HideInInspector]
+
     void Update()
     {
-        Energia();
+        EnergiaWskazinik();
     }
 
-    private void Energia()
+    private void EnergiaWskazinik()
     {
         playerEq eq = gracz.gameObject.GetComponent<playerEq>();
         wskaünikEnergi.gameObject.transform.GetChild(1).GetComponent<TextMeshPro>().text = eq.aktualnaEnergia.ToString() + "/" + eq.maxEnergia.ToString();
@@ -47,6 +49,12 @@ public class walkaStart : MonoBehaviour
     {
         obecnaTura += 1;
         KoniecTury?.Invoke(obecnaTura);
+        turaGracza = true;
+    }
 
+    public void AkcjaWroga(int numerWroga)
+    {
+        przeciwnicyWwalce[numerWroga].GetComponent<WRUG1>().obecnaAkcja = przeciwnicyWwalce[numerWroga].GetComponent<WRUG1>().dzia≥anie[0];
+        przeciwnicyWwalce[numerWroga].GetComponent<WRUG1>().dzia≥anie[0].Invoke();
     }
 }

@@ -9,8 +9,8 @@ public class WRUG1 : MonoBehaviour
     [Header("Dane Wroga")]
     public string nazwa;
     public Sprite WrugGragika;
-    [SerializeField] private UnityEvent dzia³anie;
-
+    [SerializeField] public List<UnityEvent> dzia³anie;
+   
     [Header("Dane w Walce")]
     public float hpAktualne;
     public float hpMax;
@@ -26,6 +26,7 @@ public class WRUG1 : MonoBehaviour
     [HideInInspector] public UnityEvent efektyWywo³anieKoniecTury;
     [HideInInspector] public float ilee;
     [HideInInspector] public bool nieUchronnee;
+    [HideInInspector] public UnityEvent obecnaAkcja;
 
     private void Awake()
     {
@@ -133,4 +134,49 @@ public class WRUG1 : MonoBehaviour
     }
 
 
+    ////////////////////////////////////////////|||||| FUNKCJE PODSTAWOWE DO DZIA£AÑ PRZECIWNIKA |||||||///////////////////////
+    
+    public void KolejnaAkcjaWywo³aj() //wywo³uje kolejn¹ akcjê lub jeœli jest ostatnia zakañcza akcje tego wroga;
+    {
+        for (int x = 0; x < dzia³anie.Count; x++)
+        {
+            if (obecnaAkcja == dzia³anie[x])
+            {
+                if (x < dzia³anie.Count -1)
+                {
+                    AkcjaNumerWywo³aj(x + 1);
+                }
+                else if (x == dzia³anie.Count - 1)
+                {
+                    KoniecAkcjiWroga();
+                }
+            }
+        }
+    }
+    public void AkcjaNumerWywo³aj(int numerAkcji) //wywo³uje kolejn¹ akcjê o podanym numerze;
+    {
+        obecnaAkcja = dzia³anie[numerAkcji];
+        dzia³anie[numerAkcji].Invoke();
+    }
+
+    public void KoniecAkcjiWroga() //koñczy akcje tego wroga, jeœli jest ostatni to zaczyna turê gracza;
+    {
+        GameObject walka = GameObject.FindGameObjectWithTag("nadUiWalka").transform.parent.gameObject;
+        walkaStart WalkaStart = walka.GetComponent<walkaStart>();
+
+        for (int x = 0; x < WalkaStart.przeciwnicyWwalce.Count; x++)
+        {
+            if (WalkaStart.przeciwnicyWwalce[x] == this.gameObject)
+            {
+                if (x < WalkaStart.przeciwnicyWwalce.Count - 1)
+                {
+                    WalkaStart.AkcjaWroga(x + 1);
+                }
+                else if (x == WalkaStart.przeciwnicyWwalce.Count - 1)
+                {
+                    WalkaStart.koniecTury();
+                }
+            }
+        }
+    }
 }

@@ -40,8 +40,6 @@ public class click : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player").gameObject;
         InfoObjT³o = textMorInfo.gameObject.transform.parent.gameObject.GetComponent<Image>();
         infoEfektAnim = InfoObj.GetComponent<Animator>();
-        /*textMorInfo.enabled = false;
-        InfoObjT³o.enabled = false;*/
     }
 
     void LateUpdate() //nie pewna, ale zmiana na LATE!!!
@@ -66,32 +64,38 @@ public class click : MonoBehaviour
                     MorInfo(raycastHit.transform.gameObject);
                     CardWskazana(raycastHit.transform.gameObject);
                 }
-                if (Input.GetButtonDown("LewyMysz"))
+                if (WalkaStart.turaGracza)
                 {
-                    if (podniesionaKarta == null)
+                    if (Input.GetButtonDown("LewyMysz"))
                     {
-                        GrabCard(raycastHit.transform.gameObject);
-                        CzyœæCardMorInfo();
-                    }
-                    else if(podniesionaKarta == raycastHit.transform.gameObject)
-                    {
-                        GrabCardOf();
-                    }
-                    else if(podniesionaKarta != raycastHit.transform.gameObject && podniesionaKarta != null && podniesionaKarta.GetComponent<taKarta>().cele != Cele.Karta)
-                    {
-                        GrabCardOf();
-                        GrabCard(raycastHit.transform.gameObject);
-                        CzyœæCardMorInfo();
+                        if (podniesionaKarta == null)
+                        {
+                            GrabCard(raycastHit.transform.gameObject);
+                            CzyœæCardMorInfo();
+                        }
+                        else if (podniesionaKarta == raycastHit.transform.gameObject)
+                        {
+                            GrabCardOf();
+                        }
+                        else if (podniesionaKarta != raycastHit.transform.gameObject && podniesionaKarta != null && podniesionaKarta.GetComponent<taKarta>().cele != Cele.Karta)
+                        {
+                            GrabCardOf();
+                            GrabCard(raycastHit.transform.gameObject);
+                            CzyœæCardMorInfo();
+                        }
                     }
                 }
             }
-            if (raycastHit.transform.gameObject.name == "graczImg" || raycastHit.transform.gameObject.tag == "wrug" || raycastHit.transform.gameObject.tag == "karta")
+            if (WalkaStart.turaGracza)
             {
-                if (podniesionaKarta != null && podniesionaKarta != raycastHit.transform.gameObject)
+                if (raycastHit.transform.gameObject.name == "graczImg" || raycastHit.transform.gameObject.tag == "wrug" || raycastHit.transform.gameObject.tag == "karta")
                 {
-                    if (Input.GetButtonDown("LewyMysz") || Input.GetButtonUp("LewyMysz"))
+                    if (podniesionaKarta != null && podniesionaKarta != raycastHit.transform.gameObject)
                     {
-                        CzyUrzytoKartePodniesiona(raycastHit.transform.gameObject);
+                        if (Input.GetButtonDown("LewyMysz") || Input.GetButtonUp("LewyMysz"))
+                        {
+                            CzyUrzytoKartePodniesiona(raycastHit.transform.gameObject);
+                        }
                     }
                 }
             }
@@ -115,10 +119,15 @@ public class click : MonoBehaviour
                 }
 
             }
-
-            if(raycastHit.transform.gameObject.name == "koniecTury" && Input.GetButtonDown("LewyMysz"))
+            if (WalkaStart.turaGracza)
             {
-                KonieTury();
+                if (raycastHit.transform.gameObject.name == "koniecTury" && Input.GetButtonDown("LewyMysz"))
+                {
+                    GrabCardOf();
+                    CzyœæCardMorInfo();
+                    CzyœæWskazana();
+                    KonieTury();
+                }
             }
           
         }
@@ -133,15 +142,21 @@ public class click : MonoBehaviour
                 infoEfektAnim.Play("nic");
             }
 
-            if (Input.GetButtonDown("LewyMysz") && podniesionaKarta != null)
+            if (WalkaStart.turaGracza)
             {
-                GrabCardOf();
+                if (Input.GetButtonDown("LewyMysz") && podniesionaKarta != null)
+                {
+                    GrabCardOf();
+                }
             }
         }
 
-        if(Input.GetButtonDown("PrawyMysz") && podniesionaKarta != null)
+        if (WalkaStart.turaGracza)
         {
-            GrabCardOf();
+            if (Input.GetButtonDown("PrawyMysz") && podniesionaKarta != null)
+            {
+                GrabCardOf();
+            }
         }
     }
 
@@ -261,8 +276,11 @@ public class click : MonoBehaviour
 
     void GrabCardOf()
     {
-        podniesionaKarta.GetComponent<taKarta>().PodniesionaPoz(false);
-        podniesionaKarta = null;
+        if (podniesionaKarta != null)
+        {
+            podniesionaKarta.GetComponent<taKarta>().PodniesionaPoz(false);
+            podniesionaKarta = null;
+        }
     }
 
     void CzyUrzytoKartePodniesiona(GameObject traf)
@@ -355,5 +373,7 @@ public class click : MonoBehaviour
     void KonieTury()
     {
         //Debug.Log("koniecTury!");
+        WalkaStart.turaGracza = false;
+        WalkaStart.AkcjaWroga(0);
     }
 }
