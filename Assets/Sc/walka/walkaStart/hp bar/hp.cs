@@ -31,13 +31,13 @@ public class hp : MonoBehaviour
         {
             float x = w³aœcicielZdrowia.GetComponent<playerEq>().hp / w³aœcicielZdrowia.GetComponent<playerEq>().hpMax;
             bar.transform.localScale = new Vector3(x, 1f, 1f);
-            barText.GetComponent<TextMeshPro>().text = w³aœcicielZdrowia.GetComponent<playerEq>().hp.ToString() + "/" + w³aœcicielZdrowia.GetComponent<playerEq>().hpMax.ToString();
+            barText.GetComponent<TextMeshPro>().text = Mathf.Round(w³aœcicielZdrowia.GetComponent<playerEq>().hp).ToString() + "/" + Mathf.Round(w³aœcicielZdrowia.GetComponent<playerEq>().hpMax).ToString();
         }
         else
         {
             float x = w³aœcicielZdrowia.GetComponent<WRUG1>().hpAktualne / w³aœcicielZdrowia.GetComponent<WRUG1>().hpMax;
             bar.transform.localScale = new Vector3(x, 1f, 1f);
-            barText.GetComponent<TextMeshPro>().text = w³aœcicielZdrowia.GetComponent<WRUG1>().hpAktualne.ToString() + "/" + w³aœcicielZdrowia.GetComponent<WRUG1>().hpMax.ToString();
+            barText.GetComponent<TextMeshPro>().text = Mathf.Round(w³aœcicielZdrowia.GetComponent<WRUG1>().hpAktualne).ToString() + "/" + Mathf.Round(w³aœcicielZdrowia.GetComponent<WRUG1>().hpMax).ToString();
         }
     }
 

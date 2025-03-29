@@ -80,12 +80,12 @@ public class WRUG1 : MonoBehaviour
 
         if (nieUchronnee)
         {
-            hpAktualne -= ilee;
+            hpAktualne -= Mathf.Round(ilee);
         }
         else
         {
             float z;
-            aktualnyPancerz -= ilee;
+            aktualnyPancerz -= Mathf.Round(ilee);
             if (aktualnyPancerz < 0)
             {
                 z = Mathf.Abs(aktualnyPancerz);
@@ -97,16 +97,17 @@ public class WRUG1 : MonoBehaviour
 
     public void PrzemijanieEfektuw(int numerTury)
     {
-        for (int x = 0; x < na這rzoneEfekty.Count; x++)
+        for (int x = 0; x < na這rzoneEfekty.Count;)
         {
-            if(na這rzoneEfekty[x].licznik > 0)
-            {
-                na這rzoneEfekty[x].licznik -= 1;
-            }
-            if(na這rzoneEfekty[x].licznik == 0)
+            na這rzoneEfekty[x].licznik -= 1;
+            if (na這rzoneEfekty[x].licznik <= 0)
             {
                 BazaEfektow.UsunEfekt(na這rzoneEfekty[x]);
                 na這rzoneEfekty.Remove(na這rzoneEfekty[x]);
+            }
+            else
+            {
+                x++;
             }
         }
     }

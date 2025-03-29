@@ -26,8 +26,9 @@ public class taKarta : MonoBehaviour
     private biblioteka Biblioteka;
     [HideInInspector] public GameObject podgl¹dOpis;
     [HideInInspector] public GameObject dlon;
-    private playerEq Eq;
+    [HideInInspector] public playerEq Eq;
     private efekty Efektu;
+    [HideInInspector] public GameObject prefabTejKartyWdeck; //tylko potrzebne do usuwania jednorazuwek?
 
     [Header("Dane Karty")]
     public string Nazwa;
@@ -58,12 +59,12 @@ public class taKarta : MonoBehaviour
     public List<nalurzEfekt> efektyWrug;
     public List<nalurzEfekt> efektyNaKarty;
 
-
     //pozosta³e
     private string finalnyOpis;
+    [HideInInspector] public GameObject fizycznyDeck;
 
     void Awake()
-    {
+    { 
         //WIZUALIA PRZYPISZ
         ramka = this.gameObject.transform.GetChild(0).gameObject;
         grafika = ramka.transform.GetChild(0).gameObject;
@@ -75,10 +76,12 @@ public class taKarta : MonoBehaviour
        
         Eq = GameObject.FindGameObjectWithTag("Player").GetComponent<playerEq>();
         Biblioteka = GameObject.FindGameObjectWithTag("saveGame").GetComponent<biblioteka>();
+        fizycznyDeck = GameObject.FindGameObjectWithTag("fizycznyDeck").gameObject;
+
         Uzupelnij();
         PodpinajAkcje();
     }
-
+   
     void Update()
     {
         if (transform.localPosition != pozEnd)
@@ -188,6 +191,46 @@ public class taKarta : MonoBehaviour
         {
             akcje.AddListener(UsuñTeKarte);
         }
+        else if(poUrzyciu == PoUrzyciu.Zachowaj)
+        {
+            akcje.AddListener(ZachowajTeKarte);
+        }
+        else if(poUrzyciu == PoUrzyciu.cmentarz)
+        {
+            akcje.AddListener(NaCmentarzTaKarta);
+        }
+        else if(poUrzyciu == PoUrzyciu.wyklucz)
+        {
+            akcje.AddListener(UsuñTeKarte);
+        }
+    }
+
+    private void ZachowajTeKarte(List<GameObject> nieIstotne)
+    {
+        click c  = GameObject.FindGameObjectWithTag("nadUiWalka").gameObject.GetComponent<click>();
+        c.GrabCardOf();
+        c.CzyœæCardMorInfo();
+        c.CzyœæWskazana();
+    }
+    public void UsuñTeKarte(List<GameObject> nieIstotne)
+    {
+        if (prefabTejKartyWdeck != null)
+        {
+            Eq.deckPrefab.Remove(prefabTejKartyWdeck);
+        }
+        dlon.GetComponent<sortGrupZ>().UsunKarteZdloni(this.gameObject);
+    }
+    private void NaCmentarzTaKarta(List<GameObject> nieIstotne)
+    {
+        GameObject klon = GameObject.Instantiate(this.gameObject, fizycznyDeck.transform);
+        Eq.cmentarz.Add(klon);
+        dlon.GetComponent<sortGrupZ>().UsunKarteZdloni(this.gameObject);
+    }
+    private void WykluczTeKarte(List<GameObject> nieIstotne)
+    {
+        GameObject klon = GameObject.Instantiate(this.gameObject, fizycznyDeck.transform);
+        Eq.wykluczone.Add(klon);
+        dlon.GetComponent<sortGrupZ>().UsunKarteZdloni(this.gameObject);
     }
 
     private void Uzupelnij()
@@ -388,11 +431,6 @@ public class taKarta : MonoBehaviour
                 }
             }
         }
-    }
-
-    public void UsuñTeKarte(List<GameObject> nieIstotne)
-    {
-        dlon.GetComponent<sortGrupZ>().UsunKarteZdloni(this.gameObject);
     }
 
     public void Na³urzEfekty(List<GameObject> cele)

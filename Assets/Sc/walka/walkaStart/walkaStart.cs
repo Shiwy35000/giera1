@@ -13,7 +13,46 @@ public class walkaStart : MonoBehaviour
 
     public static event System.Action<int> KoniecTury;
 
-    public bool turaGracza; //[HideInInspector]
+    [HideInInspector] public bool turaGracza;
+    private GameObject fizycznyDeck;
+
+    void Awake()
+    {
+        fizycznyDeck = GameObject.FindGameObjectWithTag("fizycznyDeck").gameObject;
+
+        dialog.Walka += DeckKolekcjaWalka;
+    }
+    private void OnDestroy()
+    {
+        dialog.Walka -= DeckKolekcjaWalka;
+    }
+
+    private void DeckKolekcjaWalka(bool walka)
+    {
+        if (walka)
+        {
+            DeckFizycznyCzyœæ();
+
+            playerEq eq = gracz.gameObject.GetComponent<playerEq>();
+            eq.deck = new List<GameObject>();
+
+            for (int x = 0; x < eq.deckPrefab.Count; x++)
+            {
+                GameObject karta = Instantiate(eq.deckPrefab[x], fizycznyDeck.transform);
+                karta.GetComponent<taKarta>().prefabTejKartyWdeck = eq.deckPrefab[x];
+                eq.deck.Add(karta);
+            }
+        }
+    }
+
+    private void DeckFizycznyCzyœæ()
+    {
+        
+        foreach (Transform child in fizycznyDeck.transform)
+        {
+            Destroy(child.gameObject);
+        }
+    }
 
     void Update()
     {
@@ -35,9 +74,25 @@ public class walkaStart : MonoBehaviour
         }
     }
 
-    public void DodajKartyDoRêki(List<GameObject> deck)
+    public void DodajKartyDoRêkiStart()
     {
-        dlon.GetComponent<sortGrupZ>().DodajKartyStart(deck);
+        playerEq eq = gracz.gameObject.GetComponent<playerEq>();
+        for (int x = 0; x < eq.ileKartDobiera; x++)
+        {
+            DobierzKarteRandom();
+        }
+    }
+
+    public void DobierzKarteRandom()
+    {
+        EwentualniePrzetasuj();
+        playerEq eq = gracz.gameObject.GetComponent<playerEq>();
+        if (eq.deck.Count > 0 && dlon.GetComponent<sortGrupZ>().sloty.Count > dlon.GetComponent<sortGrupZ>().kartyWD³oni.Count)
+        {
+            int randomInt = Random.Range(0, eq.deck.Count - 1);
+            dlon.GetComponent<sortGrupZ>().DodajKarte(eq.deck[randomInt]);
+            eq.deck.Remove(eq.deck[randomInt]);
+        }
     }
     
     public void CzyszczenieRêki()
@@ -50,6 +105,17 @@ public class walkaStart : MonoBehaviour
         obecnaTura += 1;
         KoniecTury?.Invoke(obecnaTura);
         turaGracza = true;
+        DodajKartyDoRêkiStart();
+    }
+
+    public void EwentualniePrzetasuj()
+    {
+        playerEq eq = gracz.gameObject.GetComponent<playerEq>();
+        if (eq.deck.Count == 0)
+        {
+            eq.deck.AddRange(eq.cmentarz);
+            eq.cmentarz = new List<GameObject>();
+        }
     }
 
     public void AkcjaWroga(int numerWroga)

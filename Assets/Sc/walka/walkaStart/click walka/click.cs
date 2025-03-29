@@ -199,7 +199,7 @@ public class click : MonoBehaviour
         }
     }
 
-    void CzyœæCardMorInfo()
+    public void CzyœæCardMorInfo()
     {
         if (cel != null)
         {
@@ -220,7 +220,7 @@ public class click : MonoBehaviour
             }
         }
     }
-    void CzyœæWskazana()
+    public void CzyœæWskazana()
     {
         if (wskazana != null)
         {
@@ -274,7 +274,7 @@ public class click : MonoBehaviour
         podniesionaKarta.GetComponent<taKarta>().PodniesionaPoz(true);
     }
 
-    void GrabCardOf()
+    public void GrabCardOf()
     {
         if (podniesionaKarta != null)
         {

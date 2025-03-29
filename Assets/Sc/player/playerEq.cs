@@ -12,11 +12,17 @@ public class playerEq : MonoBehaviour
     public int maxEnergia;
     public float aktualnyPancerz;
     public float bonusDoObrarzeñ;
+    public int ileKartDobiera = 5;
     public List<efekty> na³orzoneEfekty;
 
-    [Header("Ekwipunek")]
+    [Header("karty w walce")] //noramlnie bêd¹ nie widoczne
     public List<GameObject> deck;
+    public List<GameObject> cmentarz;
+    public List<GameObject> wykluczone;
+
+    [Header("Ekwipunek")]
     public List<artefakt> posiadaneArtefakty;
+    public List<GameObject> deckPrefab;
 
     [Header("Inne")]
     public int sakiewka;
@@ -25,27 +31,28 @@ public class playerEq : MonoBehaviour
 
     //przypisy
     private bazaEfektow BazaEfektow;
+    private sortGrupZ sortZ;
     [HideInInspector] public UnityEvent efektyWywo³anieOtrzyma³Cios;
     [HideInInspector] public UnityEvent efektyWywo³anieZada³Cios;
     [HideInInspector] public UnityEvent efektyWywo³anieKoniecTury;
     [HideInInspector] public float ilee;
     [HideInInspector] public bool nieUchronnee;
-    //private GameObject graczMoreInfo, GraczZbiurEfektów;
 
     void Awake()
     {
         maxEnergia = 3; // narazie?
         dialog.Walka += MaxEnergiaWalka;
+        dialog.Walka += CzyœcimyListy;
         walkaStart.KoniecTury += MaxEnergiaTura;
         walkaStart.KoniecTury += Wywo³ajEfektyKoniecT;
         walkaStart.KoniecTury += PrzemijanieEfektuw;
         BazaEfektow = this.GetComponent<bazaEfektow>();
-        //graczMoreInfo = GameObject.FindGameObjectWithTag("gracz").gameObject;
-        //GraczZbiurEfektów = graczMoreInfo.transform.GetChild(0).gameObject;
+        sortZ = GameObject.FindGameObjectWithTag("dlon").gameObject.GetComponent<sortGrupZ>();
     }
     private void OnDestroy()
     {
         dialog.Walka -= MaxEnergiaWalka;
+        dialog.Walka -= CzyœcimyListy;
         walkaStart.KoniecTury -= MaxEnergiaTura;
         walkaStart.KoniecTury -= Wywo³ajEfektyKoniecT;
         walkaStart.KoniecTury -= PrzemijanieEfektuw;
@@ -81,6 +88,16 @@ public class playerEq : MonoBehaviour
             Die();
         }
     }
+    private void CzyœcimyListy(bool walka)
+    {
+        if (walka == false)
+        {
+            cmentarz = new List<GameObject>();
+            wykluczone = new List<GameObject>();
+            deck = new List<GameObject>();
+            sortZ.kartyWD³oni = new List<GameObject>();
+        }
+    }
 
     public void PrzyjmijDmg(float ile, bool nieUchronne)
     {
@@ -90,12 +107,12 @@ public class playerEq : MonoBehaviour
 
         if (nieUchronnee)
         {
-            hp -= ilee;
+            hp -= Mathf.Round(ilee);
         }
         else
         {
             float z;
-            aktualnyPancerz -= ilee;
+            aktualnyPancerz -= Mathf.Round(ilee);
             if (aktualnyPancerz < 0)
             {
                 z = Mathf.Abs(aktualnyPancerz);
@@ -109,14 +126,15 @@ public class playerEq : MonoBehaviour
     {
         for (int x = 0; x < na³orzoneEfekty.Count; x++)
         {
-            if (na³orzoneEfekty[x].licznik > 0)
-            {
-                na³orzoneEfekty[x].licznik -= 1;
-            }
-            if (na³orzoneEfekty[x].licznik == 0)
+            na³orzoneEfekty[x].licznik -= 1;
+            if (na³orzoneEfekty[x].licznik <= 0)
             {
                 BazaEfektow.UsunEfekt(na³orzoneEfekty[x]);
                 na³orzoneEfekty.Remove(na³orzoneEfekty[x]);
+            }
+            else
+            {
+                x++;
             }
         }
     }

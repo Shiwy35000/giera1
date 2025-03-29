@@ -154,11 +154,11 @@ public class dialog : MonoBehaviour
     {
         WalkaStart.SpawnPrzeciwinicy(this.gameObject.GetComponent<zKimWalka>().przeciwnicy);
         WalkaStart.CzyszczenieRêki();
-        WalkaStart.DodajKartyDoRêki(playerEQ.deck);
         gracz.GetComponent<OpcjeDialogowe>().wizualizacjaWyboru.SetActive(false);
         walkaCanvasUi.SetActive(true);
         WalkaStart.turaGracza = true;
         Walka?.Invoke(true);
+        WalkaStart.DodajKartyDoRêkiStart();
     }
 
     public void PoWalce()

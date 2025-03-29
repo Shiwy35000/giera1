@@ -9,6 +9,50 @@ public class sortGrupZ : MonoBehaviour
 
     void Awake()
     {
+        SlotyList();
+
+        walkaStart.KoniecTury += NaKoniecTury;
+    }
+    private void OnDestroy()
+    {
+        walkaStart.KoniecTury -= NaKoniecTury;
+    }
+
+    private void NaKoniecTury(int nic)
+    {
+        for (int x = 0; x < kartyWD這ni.Count;)
+        {
+            taKarta karta = kartyWD這ni[x].GetComponent<taKarta>();
+
+            if (karta.naKoniecTury == PoUrzyciu.Zniszcz)
+            {
+                if (karta.prefabTejKartyWdeck != null)
+                {
+                    karta.Eq.deckPrefab.Remove(karta.prefabTejKartyWdeck);
+                }
+                UsunKarteZdloni(karta.gameObject);
+            }
+            else if (karta.naKoniecTury == PoUrzyciu.cmentarz)
+            {
+                GameObject klon = GameObject.Instantiate(karta.gameObject, karta.fizycznyDeck.transform);
+                karta.Eq.cmentarz.Add(klon);
+                UsunKarteZdloni(karta.gameObject);
+            }
+            else if (karta.naKoniecTury == PoUrzyciu.wyklucz)
+            {
+                GameObject klon = GameObject.Instantiate(karta.gameObject, karta.fizycznyDeck.transform);
+                karta.Eq.wykluczone.Add(klon);
+                UsunKarteZdloni(karta.gameObject);
+            }
+            else if(karta.naKoniecTury == PoUrzyciu.Zachowaj)
+            {
+                x++;
+            }
+        }
+    }
+
+    private void SlotyList()
+    {
         for (int x = 0; x < transform.childCount; x++)
         {
             if (!sloty.Contains(transform.GetChild(x).gameObject))
@@ -17,18 +61,12 @@ public class sortGrupZ : MonoBehaviour
             }
         }
     }
-
+   
     public void UsunKarteZdloni(GameObject kartaa)
     {
-        //Debug.Log(kartaa.name);
         kartyWD這ni.Remove(kartaa);
         Destroy(kartaa.gameObject);
         AktywujIPrzypiszSloty();
-    }
-
-    void Update()
-    {
-        //AktywujIPrzypiszSloty();
     }
 
     private void AktywujIPrzypiszSloty()
@@ -47,15 +85,13 @@ public class sortGrupZ : MonoBehaviour
         }
     }
 
-    public void DodajKartyStart(List<GameObject> karty)
+    public void DodajKarte(GameObject karta)
     {
-        kartyWD這ni = new List<GameObject>();
-        for (int x = 0; x < karty.Count; x++)
-        {
-            GameObject karta = Instantiate(karty[x], sloty[x].transform);
-            karta.GetComponent<taKarta>().dlon = this.gameObject;
-            kartyWD這ni.Add(karta);
-        }
+        GameObject kartaa = Instantiate(karta, sloty[0].transform);
+        Destroy(karta.gameObject);
+        kartaa.GetComponent<taKarta>().dlon = this.gameObject;
+        kartyWD這ni.Add(kartaa);
+
         AktywujIPrzypiszSloty();
     }
 
