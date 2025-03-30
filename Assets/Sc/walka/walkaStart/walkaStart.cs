@@ -39,6 +39,7 @@ public class walkaStart : MonoBehaviour
             for (int x = 0; x < eq.deckPrefab.Count; x++)
             {
                 GameObject karta = Instantiate(eq.deckPrefab[x], fizycznyDeck.transform);
+                karta.name = eq.deckPrefab[x].name;
                 karta.GetComponent<taKarta>().prefabTejKartyWdeck = eq.deckPrefab[x];
                 eq.deck.Add(karta);
             }

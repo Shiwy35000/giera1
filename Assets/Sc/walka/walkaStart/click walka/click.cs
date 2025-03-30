@@ -289,7 +289,7 @@ public class click : MonoBehaviour
         playerEq eq = WalkaStart.gracz.gameObject.GetComponent<playerEq>();
         List<GameObject> ObiektyCele = new List<GameObject>();
 
-        if (karta.Koszt <= eq.aktualnaEnergia)
+        if (karta.Koszt <= eq.aktualnaEnergia && karta.grywalnoœæ == Grywalnoœæ.Grywalna)
         {
             if(karta.cele == Cele.Gracz)
             {
@@ -343,6 +343,16 @@ public class click : MonoBehaviour
                 {
                     eq.aktualnaEnergia -= karta.Koszt;
                     ObiektyCele.AddRange(d³on.GetComponent<sortGrupZ>().kartyWD³oni);
+                    karta.akcje.Invoke(ObiektyCele);
+                }
+            }
+            else if(karta.cele == Cele.RandomKartaWD³oni)
+            {
+                if (traf.tag == "karta")
+                {
+                    eq.aktualnaEnergia -= karta.Koszt;
+                    int z = Random.Range(0, d³on.GetComponent<sortGrupZ>().kartyWD³oni.Count -1);
+                    ObiektyCele.Add(d³on.GetComponent<sortGrupZ>().kartyWD³oni[z]);
                     karta.akcje.Invoke(ObiektyCele);
                 }
             }

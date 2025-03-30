@@ -877,6 +877,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   "podgl\u0105dOpis": {fileID: 0}
   dlon: {fileID: 0}
+  Eq: {fileID: 0}
   prefabTejKartyWdeck: {fileID: 0}
   Nazwa: trawa
   Koszt: 1
@@ -893,6 +894,7 @@ MonoBehaviour:
     "tre\u015B\u0107": "obrarze\u0144"
   KartaTag: 1
   "Rzadko\u015B\u0107": 0
+  "grywalno\u015B\u0107": 0
   cele: 1
   poUrzyciu: 3
   naKoniecTury: 0
@@ -941,6 +943,22 @@ MonoBehaviour:
   - NazwaEfektu: 1
     ile: 1
   efektyNaKarty: []
+  "Dzia\u0142anieNaKoniecTury": 0
+  celeNieZagranej: 3
+  akcjeKoniecTury:
+    m_PersistentCalls:
+      m_Calls: []
+  DmgGraczowiT: 0
+  "specjalnyTypObrarze\u0144GraczT": 0
+  DmgGraczRazyT: 1
+  RandomRazyT: 1
+  "specjalnyTypObrarze\u0144T": 0
+  DmgT: 0
+  DmgRazyT: 1
+  efektyGraczT: []
+  efektyWrugT: []
+  efektyNaKartyT: []
+  fizycznyDeck: {fileID: 0}
 --- !u!65 &7301124539969855688
 BoxCollider:
   m_ObjectHideFlags: 0

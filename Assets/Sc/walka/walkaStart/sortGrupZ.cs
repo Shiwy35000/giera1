@@ -35,12 +35,14 @@ public class sortGrupZ : MonoBehaviour
             else if (karta.naKoniecTury == PoUrzyciu.cmentarz)
             {
                 GameObject klon = GameObject.Instantiate(karta.gameObject, karta.fizycznyDeck.transform);
+                klon.name = karta.name;
                 karta.Eq.cmentarz.Add(klon);
                 UsunKarteZdloni(karta.gameObject);
             }
             else if (karta.naKoniecTury == PoUrzyciu.wyklucz)
             {
                 GameObject klon = GameObject.Instantiate(karta.gameObject, karta.fizycznyDeck.transform);
+                klon.name = karta.name;
                 karta.Eq.wykluczone.Add(klon);
                 UsunKarteZdloni(karta.gameObject);
             }
@@ -88,6 +90,7 @@ public class sortGrupZ : MonoBehaviour
     public void DodajKarte(GameObject karta)
     {
         GameObject kartaa = Instantiate(karta, sloty[0].transform);
+        kartaa.name = karta.name;
         Destroy(karta.gameObject);
         kartaa.GetComponent<taKarta>().dlon = this.gameObject;
         kartyWD³oni.Add(kartaa);

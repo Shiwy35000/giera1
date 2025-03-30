@@ -10,8 +10,10 @@ using UnityEditor;
 #endif
 using System.Linq;
 
-public enum Cele { Gracz, Wrug, Wrogowie, Karta, KartyWD³oni , All, RandomWrug, Random, AlboWrugAlboGracz };
+public enum Cele { Gracz, Wrug, Wrogowie, Karta, KartyWD³oni,RandomKartaWD³oni , All, RandomWrug, Random, AlboWrugAlboGracz };
+public enum CeleNieZagranej { Gracz, Wrogowie, TaKarta, KartyWD³oni, RandomKartaWD³oni, All, RandomWrug , Random };
 public enum PoUrzyciu { Zniszcz, Zachowaj, wyklucz, cmentarz};
+public enum Grywalnoœæ { Grywalna, Zablokowana, NieGrywalna };
 [System.Flags]
 public enum TypObrarzen : int { brak = 0x00, nieSkalowalne = 0x01, nieUchronne = 0x02 };
 [System.Flags]
@@ -41,6 +43,7 @@ public class taKarta : MonoBehaviour
     public rzadkoñæ Rzadkoœæ;
 
     [Header("Dzia³anie")]
+    public Grywalnoœæ grywalnoœæ;
     public Cele cele;
     public PoUrzyciu poUrzyciu;
     public PoUrzyciu naKoniecTury;
@@ -58,6 +61,24 @@ public class taKarta : MonoBehaviour
     public List<nalurzEfekt> efektyGracz;
     public List<nalurzEfekt> efektyWrug;
     public List<nalurzEfekt> efektyNaKarty;
+
+    [Header("Dzia³ania na koniec tury")] //DOPISEK "T"
+    public bool Dzia³anieNaKoniecTury = false;
+    public CeleNieZagranej celeNieZagranej;
+    [HideInInspector] public UnityEvent<List<GameObject>> akcjeKoniecTury;
+    public float DmgGraczowiT;
+    public TypObrarzen specjalnyTypObrarzeñGraczT;
+    [Range(1, 20)]
+    public int DmgGraczRazyT = 1;
+    [Range(1, 20)]
+    public int RandomRazyT = 1;
+    public TypObrarzen specjalnyTypObrarzeñT;
+    public float DmgT;
+    [Range(1, 20)]
+    public int DmgRazyT = 1;
+    public List<nalurzEfekt> efektyGraczT;
+    public List<nalurzEfekt> efektyWrugT;
+    public List<nalurzEfekt> efektyNaKartyT;
 
     //pozosta³e
     private string finalnyOpis;
@@ -158,7 +179,7 @@ public class taKarta : MonoBehaviour
                 akcje.AddListener(Na³urzEfekty);
             }
         }
-        else if (cele == Cele.Karta)
+        else if (cele == Cele.Karta || cele == Cele.KartyWD³oni || cele == Cele.RandomKartaWD³oni)
         {
             if (efektyNaKarty.Count > 0)
             {
@@ -186,6 +207,78 @@ public class taKarta : MonoBehaviour
                 akcje.AddListener(Na³urzEfekty);
             }
         }
+
+        if (Dzia³anieNaKoniecTury == true) //NO BEDZIE TROCHÊ UZUPE£NIANIA
+        {
+            if (celeNieZagranej == CeleNieZagranej.Gracz)
+            {
+                if (DmgGraczowiT != 0)
+                {
+                    akcjeKoniecTury.AddListener(DmgDilerT);
+                }
+                if (efektyGraczT.Count > 0)
+                {
+                    akcjeKoniecTury.AddListener(Na³urzEfektyT);
+                }
+            }
+            else if (celeNieZagranej == CeleNieZagranej.Wrogowie)
+            {
+                if (DmgT != 0)
+                {
+                    akcjeKoniecTury.AddListener(DmgDilerT);
+                }
+                if (efektyWrugT.Count > 0)
+                {
+                    akcjeKoniecTury.AddListener(Na³urzEfektyT);
+                }
+            }
+            else if (celeNieZagranej == CeleNieZagranej.TaKarta || celeNieZagranej == CeleNieZagranej.KartyWD³oni || celeNieZagranej == CeleNieZagranej.RandomKartaWD³oni)
+            {
+                if (efektyNaKartyT.Count > 0)
+                {
+                   akcjeKoniecTury.AddListener(Na³urzEfektyT);
+                }
+            }
+            else if (celeNieZagranej == CeleNieZagranej.All)
+            {
+                if (DmgGraczowiT != 0 || DmgT != 0)
+                {
+                    akcjeKoniecTury.AddListener(DmgDilerT);
+                }
+                if (efektyGraczT.Count > 0 || efektyWrugT.Count > 0)
+                {
+                    akcjeKoniecTury.AddListener(Na³urzEfektyT);
+                }
+            }
+            else if (celeNieZagranej == CeleNieZagranej.RandomWrug)
+            {
+                if (DmgT != 0 || efektyWrugT.Count > 0)
+                {
+                    akcjeKoniecTury.AddListener(DmgDilerT);
+                }
+            }
+            else if (celeNieZagranej == CeleNieZagranej.Random)
+            {
+                if (DmgT != 0 && DmgGraczowiT != 0)
+                {
+                    akcjeKoniecTury.AddListener(DmgDilerT);
+                }
+                else if (efektyWrugT.Count > 0 && efektyGraczT.Count > 0)
+                {
+                    akcjeKoniecTury.AddListener(DmgDilerT);
+                }
+                else if (DmgT != 0 && efektyGraczT.Count > 0)
+                {
+                    akcjeKoniecTury.AddListener(DmgDilerT);
+                }
+                else if (DmgGraczowiT != 0 && efektyWrugT.Count > 0)
+                {
+                    akcjeKoniecTury.AddListener(DmgDilerT);
+                }
+            }
+        }
+
+
 
         if (poUrzyciu == PoUrzyciu.Zniszcz)
         {
@@ -223,12 +316,14 @@ public class taKarta : MonoBehaviour
     private void NaCmentarzTaKarta(List<GameObject> nieIstotne)
     {
         GameObject klon = GameObject.Instantiate(this.gameObject, fizycznyDeck.transform);
+        klon.name = this.gameObject.name;
         Eq.cmentarz.Add(klon);
         dlon.GetComponent<sortGrupZ>().UsunKarteZdloni(this.gameObject);
     }
     private void WykluczTeKarte(List<GameObject> nieIstotne)
     {
         GameObject klon = GameObject.Instantiate(this.gameObject, fizycznyDeck.transform);
+        klon.name = this.gameObject.name;
         Eq.wykluczone.Add(klon);
         dlon.GetComponent<sortGrupZ>().UsunKarteZdloni(this.gameObject);
     }
@@ -379,55 +474,54 @@ public class taKarta : MonoBehaviour
         }
     }
 
-    private void PodajObrarzenia(GameObject trafiony)
+    public void DmgDilerT(List<GameObject> celee)
     {
-        if(trafiony.tag == "Player")
+        if (celeNieZagranej == CeleNieZagranej.Random || celeNieZagranej == CeleNieZagranej.RandomWrug)
         {
-            if (specjalnyTypObrarzeñ.HasFlag(TypObrarzen.nieSkalowalne))
+            for (int y = 0; y < RandomRazyT; y++)
             {
-                if (specjalnyTypObrarzeñ.HasFlag(TypObrarzen.nieUchronne))
+                int z = Random.Range(0, celee.Count);
+                if (celee[z].tag == "Player")
                 {
-                    Eq.PrzyjmijDmg(DmgGraczowi, true);
+                    PodajObrarzeniaT(celee[z]);
+                    if (efektyGraczT.Count > 0)
+                    {
+                        for (int c = 0; c < efektyGraczT.Count; c++)
+                        {
+                            Na³urzEfekt(Eq.gameObject, efektyGraczT[c]);
+                        }
+                    }
                 }
-                else
+                else if (celee[z].tag == "wrug")
                 {
-                    Eq.PrzyjmijDmg(DmgGraczowi, false);
-                }
-            }
-            else
-            {
-                if (specjalnyTypObrarzeñ.HasFlag(TypObrarzen.nieUchronne))
-                {
-                    Eq.PrzyjmijDmg((DmgGraczowi + Eq.bonusDoObrarzeñ), true);
-                }
-                else
-                {
-                    Eq.PrzyjmijDmg((DmgGraczowi + Eq.bonusDoObrarzeñ), false);
+                    PodajObrarzeniaT(celee[z]);
+                    if (efektyWrugT.Count > 0)
+                    {
+                        for (int c = 0; c < efektyWrugT.Count; c++)
+                        {
+                            Na³urzEfekt(celee[z], efektyWrugT[c]);
+                        }
+                    }
                 }
             }
         }
-        else if(trafiony.tag == "wrug")
+        else
         {
-            if (specjalnyTypObrarzeñ.HasFlag(TypObrarzen.nieSkalowalne))
+            for (int x = 0; x < celee.Count; x++)
             {
-                if (specjalnyTypObrarzeñ.HasFlag(TypObrarzen.nieUchronne))
+                if (celee[x].tag == "Player")
                 {
-                    trafiony.GetComponent<WRUG1>().PrzyjmijDmg(Dmg, true);
+                    for (int y = 0; y < DmgGraczRazyT; y++)
+                    {
+                        PodajObrarzeniaT(celee[x]);
+                    }
                 }
-                else
+                else if (celee[x].tag == "wrug")
                 {
-                    trafiony.GetComponent<WRUG1>().PrzyjmijDmg(Dmg, false);
-                }
-            }
-            else
-            {
-                if (specjalnyTypObrarzeñ.HasFlag(TypObrarzen.nieUchronne))
-                {
-                    trafiony.GetComponent<WRUG1>().PrzyjmijDmg((Dmg + Eq.bonusDoObrarzeñ), true);
-                }
-                else
-                {
-                    trafiony.GetComponent<WRUG1>().PrzyjmijDmg((Dmg + Eq.bonusDoObrarzeñ), false);
+                    for (int y = 0; y < DmgRazyT; y++)
+                    {
+                        PodajObrarzeniaT(celee[x]);
+                    }
                 }
             }
         }
@@ -449,6 +543,42 @@ public class taKarta : MonoBehaviour
                 for (int y = 0; y < efektyGracz.Count; y++)
                 {
                     Na³urzEfekt(Eq.gameObject, efektyGracz[y]);
+                }
+            }
+            else if (cele[x].tag == "karta")
+            {
+                for (int y = 0; y < efektyNaKarty.Count; y++)
+                {
+                    Na³urzEfekt(cele[x], efektyNaKarty[y]);
+                }
+            }
+
+        }
+    }
+
+    public void Na³urzEfektyT(List<GameObject> cele)
+    {
+        for (int x = 0; x < cele.Count; x++)
+        {
+            if (cele[x].tag == "wrug")
+            {
+                for (int y = 0; y < efektyWrugT.Count; y++)
+                {
+                    Na³urzEfekt(cele[x], efektyWrugT[y]);
+                }
+            }
+            else if (cele[x].tag == "Player")
+            {
+                for (int y = 0; y < efektyGraczT.Count; y++)
+                {
+                    Na³urzEfekt(Eq.gameObject, efektyGraczT[y]);
+                }
+            }
+            else if (cele[x].tag == "karta")
+            {
+                for (int y = 0; y < efektyNaKartyT.Count; y++)
+                {
+                    Na³urzEfekt(cele[x], efektyNaKartyT[y]);
                 }
             }
         }
@@ -526,6 +656,112 @@ public class taKarta : MonoBehaviour
         }
     }
 
+    private void PodajObrarzenia(GameObject trafiony)
+    {
+        if (trafiony.tag == "Player")
+        {
+            if (specjalnyTypObrarzeñGracz.HasFlag(TypObrarzen.nieSkalowalne))
+            {
+                if (specjalnyTypObrarzeñGracz.HasFlag(TypObrarzen.nieUchronne))
+                {
+                    Eq.PrzyjmijDmg(DmgGraczowi, true);
+                }
+                else
+                {
+                    Eq.PrzyjmijDmg(DmgGraczowi, false);
+                }
+            }
+            else
+            {
+                if (specjalnyTypObrarzeñGracz.HasFlag(TypObrarzen.nieUchronne))
+                {
+                    Eq.PrzyjmijDmg((DmgGraczowi + Eq.bonusDoObrarzeñ), true);
+                }
+                else
+                {
+                    Eq.PrzyjmijDmg((DmgGraczowi + Eq.bonusDoObrarzeñ), false);
+                }
+            }
+        }
+        else if (trafiony.tag == "wrug")
+        {
+            if (specjalnyTypObrarzeñ.HasFlag(TypObrarzen.nieSkalowalne))
+            {
+                if (specjalnyTypObrarzeñ.HasFlag(TypObrarzen.nieUchronne))
+                {
+                    trafiony.GetComponent<WRUG1>().PrzyjmijDmg(Dmg, true);
+                }
+                else
+                {
+                    trafiony.GetComponent<WRUG1>().PrzyjmijDmg(Dmg, false);
+                }
+            }
+            else
+            {
+                if (specjalnyTypObrarzeñ.HasFlag(TypObrarzen.nieUchronne))
+                {
+                    trafiony.GetComponent<WRUG1>().PrzyjmijDmg((Dmg + Eq.bonusDoObrarzeñ), true);
+                }
+                else
+                {
+                    trafiony.GetComponent<WRUG1>().PrzyjmijDmg((Dmg + Eq.bonusDoObrarzeñ), false);
+                }
+            }
+        }
+    }
+    private void PodajObrarzeniaT(GameObject trafiony)
+    {
+        if (trafiony.tag == "Player")
+        {
+            if (specjalnyTypObrarzeñGraczT.HasFlag(TypObrarzen.nieSkalowalne))
+            {
+                if (specjalnyTypObrarzeñGraczT.HasFlag(TypObrarzen.nieUchronne))
+                {
+                    Eq.PrzyjmijDmg(DmgGraczowiT, true);
+                }
+                else
+                {
+                    Eq.PrzyjmijDmg(DmgGraczowiT, false);
+                }
+            }
+            else
+            {
+                if (specjalnyTypObrarzeñGraczT.HasFlag(TypObrarzen.nieUchronne))
+                {
+                    Eq.PrzyjmijDmg((DmgGraczowiT + Eq.bonusDoObrarzeñ), true);
+                }
+                else
+                {
+                    Eq.PrzyjmijDmg((DmgGraczowiT + Eq.bonusDoObrarzeñ), false);
+                }
+            }
+        }
+        else if (trafiony.tag == "wrug")
+        {
+            if (specjalnyTypObrarzeñT.HasFlag(TypObrarzen.nieSkalowalne))
+            {
+                if (specjalnyTypObrarzeñT.HasFlag(TypObrarzen.nieUchronne))
+                {
+                    trafiony.GetComponent<WRUG1>().PrzyjmijDmg(DmgT, true);
+                }
+                else
+                {
+                    trafiony.GetComponent<WRUG1>().PrzyjmijDmg(DmgT, false);
+                }
+            }
+            else
+            {
+                if (specjalnyTypObrarzeñT.HasFlag(TypObrarzen.nieUchronne))
+                {
+                    trafiony.GetComponent<WRUG1>().PrzyjmijDmg((DmgT + Eq.bonusDoObrarzeñ), true);
+                }
+                else
+                {
+                    trafiony.GetComponent<WRUG1>().PrzyjmijDmg((DmgT + Eq.bonusDoObrarzeñ), false);
+                }
+            }
+        }
+    }
     ////////////////////////////////////!!!!!!!!!!!!!!!!!UI!!!!!!!!!!!!!!!////////////////////////////////////
 #if UNITY_EDITOR
     [CustomEditor(typeof(taKarta))]
@@ -556,45 +792,81 @@ public class taKarta : MonoBehaviour
             EditorGUILayout.PropertyField(serializedObject.FindProperty("Opis"), true);
             EditorGUILayout.LabelField(" ");
             EditorGUILayout.LabelField("DZIA£ANIE KARTY: ");
-            script.poUrzyciu = (PoUrzyciu)EditorGUILayout.EnumPopup(label: "Po Urzyciu", script.poUrzyciu);
+            script.grywalnoœæ = (Grywalnoœæ)EditorGUILayout.EnumPopup(label: "Grywalnoœæ", script.grywalnoœæ);
+            if (script.grywalnoœæ != Grywalnoœæ.NieGrywalna)
+            {
+                script.poUrzyciu = (PoUrzyciu)EditorGUILayout.EnumPopup(label: "Po Urzyciu", script.poUrzyciu);
+            }
             script.naKoniecTury = (PoUrzyciu)EditorGUILayout.EnumPopup(label: "Koniec Tury", script.naKoniecTury);
-            script.cele = (Cele)EditorGUILayout.EnumPopup(label: "Cele", script.cele);
+            if (script.grywalnoœæ != Grywalnoœæ.NieGrywalna)
+            {
+                script.cele = (Cele)EditorGUILayout.EnumPopup(label: "Cele", script.cele);
+            }
 
             //aktywowane wyborem celu!
-            if (script.cele == Cele.Gracz)
+            if (script.grywalnoœæ != Grywalnoœæ.NieGrywalna)
             {
-                script.DmgGraczowi = EditorGUILayout.FloatField(label: "obrarzenia gracz", script.DmgGraczowi);
-                if (script.DmgGraczowi != 0)
+                if (script.cele == Cele.Gracz)
                 {
-                    script.DmgGraczRazy = EditorGUILayout.IntSlider(label: "obrarzenia gracz mnorznik", script.DmgGraczRazy, 1, 20);
-                    script.specjalnyTypObrarzeñGracz = (TypObrarzen)EditorGUILayout.EnumFlagsField(label: "specjalny typ obrarzeñ gracz", script.specjalnyTypObrarzeñGracz);
+                    script.DmgGraczowi = EditorGUILayout.FloatField(label: "obrarzenia gracz", script.DmgGraczowi);
+                    if (script.DmgGraczowi != 0)
+                    {
+                        script.DmgGraczRazy = EditorGUILayout.IntSlider(label: "obrarzenia gracz mnorznik", script.DmgGraczRazy, 1, 20);
+                        script.specjalnyTypObrarzeñGracz = (TypObrarzen)EditorGUILayout.EnumFlagsField(label: "specjalny typ obrarzeñ gracz", script.specjalnyTypObrarzeñGracz);
+                    }
+                    EditorGUILayout.PropertyField(serializedObject.FindProperty("efektyGracz"), true);
                 }
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("efektyGracz"), true);
-            }
-            if (script.cele == Cele.Wrug || script.cele == Cele.Wrogowie)
-            {
-                script.Dmg = EditorGUILayout.FloatField(label: "obrarzenia", script.Dmg);
-                if (script.Dmg != 0)
+                if (script.cele == Cele.Wrug || script.cele == Cele.Wrogowie)
                 {
-                    script.DmgRazy = EditorGUILayout.IntSlider(label: "obrarzenia mnorznik",script.DmgRazy, 1, 20);
-                    script.specjalnyTypObrarzeñ = (TypObrarzen)EditorGUILayout.EnumFlagsField(label: "specjalny typ obrarzeñ", script.specjalnyTypObrarzeñ);
+                    script.Dmg = EditorGUILayout.FloatField(label: "obrarzenia", script.Dmg);
+                    if (script.Dmg != 0)
+                    {
+                        script.DmgRazy = EditorGUILayout.IntSlider(label: "obrarzenia mnorznik", script.DmgRazy, 1, 20);
+                        script.specjalnyTypObrarzeñ = (TypObrarzen)EditorGUILayout.EnumFlagsField(label: "specjalny typ obrarzeñ", script.specjalnyTypObrarzeñ);
+                    }
+                    EditorGUILayout.PropertyField(serializedObject.FindProperty("efektyWrug"), true);
                 }
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("efektyWrug"), true);
-            }
-            else if (script.cele == Cele.RandomWrug)
-            {
-                script.RandomRazy = EditorGUILayout.IntSlider(label: "mnorznik random", script.RandomRazy, 1, 20);
-                script.Dmg = EditorGUILayout.FloatField(label: "obrarzenia", script.Dmg);
-                if(script.Dmg != 0)
+                else if (script.cele == Cele.RandomWrug)
                 {
-                    script.specjalnyTypObrarzeñ = (TypObrarzen)EditorGUILayout.EnumFlagsField(label: "specjalny typ obrarzeñ", script.specjalnyTypObrarzeñ);
+                    script.RandomRazy = EditorGUILayout.IntSlider(label: "mnorznik random", script.RandomRazy, 1, 20);
+                    script.Dmg = EditorGUILayout.FloatField(label: "obrarzenia", script.Dmg);
+                    if (script.Dmg != 0)
+                    {
+                        script.specjalnyTypObrarzeñ = (TypObrarzen)EditorGUILayout.EnumFlagsField(label: "specjalny typ obrarzeñ", script.specjalnyTypObrarzeñ);
+                    }
+                    EditorGUILayout.PropertyField(serializedObject.FindProperty("efektyWrug"), true);
                 }
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("efektyWrug"), true);
-            }
-            else if (script.cele == Cele.All || script.cele == Cele.AlboWrugAlboGracz)
-            {
-                if (script.cele == Cele.AlboWrugAlboGracz)
+                else if (script.cele == Cele.All || script.cele == Cele.AlboWrugAlboGracz)
                 {
+                    if (script.cele == Cele.AlboWrugAlboGracz)
+                    {
+                        if (script.DmgGraczowi == 0 && script.efektyGracz.Count == 0)
+                        {
+                            EditorGUILayout.LabelField("    ", "Podaj dzia³ania dla obu stron by wywo³aæ!");
+                        }
+                        else if (script.Dmg == 0 && script.efektyWrug.Count == 0)
+                        {
+                            EditorGUILayout.LabelField("    ", "Podaj dzia³ania dla obu stron by wywo³aæ!");
+                        }
+                    }
+                    script.DmgGraczowi = EditorGUILayout.FloatField(label: "obrarzenia gracz", script.DmgGraczowi);
+                    if (script.DmgGraczowi != 0)
+                    {
+                        script.DmgGraczRazy = EditorGUILayout.IntSlider(label: "obrarzenia gracz mnorznik", script.DmgGraczRazy, 1, 20);
+                        script.specjalnyTypObrarzeñGracz = (TypObrarzen)EditorGUILayout.EnumFlagsField(label: "specjalny typ obrarzeñ gracz", script.specjalnyTypObrarzeñGracz);
+                    }
+                    script.Dmg = EditorGUILayout.FloatField(label: "obrarzenia", script.Dmg);
+                    if (script.Dmg != 0)
+                    {
+                        script.DmgRazy = EditorGUILayout.IntSlider(label: "obrarzenia mnorznik", script.DmgRazy, 1, 20);
+                        script.specjalnyTypObrarzeñ = (TypObrarzen)EditorGUILayout.EnumFlagsField(label: "specjalny typ obrarzeñ", script.specjalnyTypObrarzeñ);
+                    }
+                    EditorGUILayout.PropertyField(serializedObject.FindProperty("efektyGracz"), true);
+                    EditorGUILayout.PropertyField(serializedObject.FindProperty("efektyWrug"), true);
+                }
+                else if (script.cele == Cele.Random)
+                {
+                    script.RandomRazy = EditorGUILayout.IntSlider(label: "mnorznik random", script.RandomRazy, 1, 20);
                     if (script.DmgGraczowi == 0 && script.efektyGracz.Count == 0)
                     {
                         EditorGUILayout.LabelField("    ", "Podaj dzia³ania dla obu stron by wywo³aæ!");
@@ -603,49 +875,107 @@ public class taKarta : MonoBehaviour
                     {
                         EditorGUILayout.LabelField("    ", "Podaj dzia³ania dla obu stron by wywo³aæ!");
                     }
+                    script.DmgGraczowi = EditorGUILayout.FloatField(label: "obrarzenia gracz", script.DmgGraczowi);
+                    if (script.DmgGraczowi != 0)
+                    {
+                        script.specjalnyTypObrarzeñGracz = (TypObrarzen)EditorGUILayout.EnumFlagsField(label: "specjalny typ obrarzeñ gracz", script.specjalnyTypObrarzeñGracz);
+                    }
+                    script.Dmg = EditorGUILayout.FloatField(label: "obrarzenia wrug", script.Dmg);
+                    if (script.Dmg != 0)
+                    {
+                        script.specjalnyTypObrarzeñ = (TypObrarzen)EditorGUILayout.EnumFlagsField(label: "specjalny typ obrarzeñ", script.specjalnyTypObrarzeñ);
+                    }
+                    EditorGUILayout.PropertyField(serializedObject.FindProperty("efektyGracz"), true);
+                    EditorGUILayout.PropertyField(serializedObject.FindProperty("efektyWrug"), true);
                 }
-                script.DmgGraczowi = EditorGUILayout.FloatField(label: "obrarzenia gracz", script.DmgGraczowi);
-                if (script.DmgGraczowi != 0)
+                else if (script.cele == Cele.Karta || script.cele == Cele.KartyWD³oni || script.cele == Cele.RandomKartaWD³oni)
                 {
-                    script.DmgGraczRazy = EditorGUILayout.IntSlider(label: "obrarzenia gracz mnorznik", script.DmgGraczRazy, 1, 20);
-                    script.specjalnyTypObrarzeñGracz = (TypObrarzen)EditorGUILayout.EnumFlagsField(label: "specjalny typ obrarzeñ gracz", script.specjalnyTypObrarzeñGracz);
+                    EditorGUILayout.PropertyField(serializedObject.FindProperty("efektyNaKarty"), true);
                 }
-                script.Dmg = EditorGUILayout.FloatField(label: "obrarzenia", script.Dmg);
-                if (script.Dmg != 0)
-                {
-                    script.DmgRazy = EditorGUILayout.IntSlider(label: "obrarzenia mnorznik", script.DmgRazy, 1, 20);
-                    script.specjalnyTypObrarzeñ = (TypObrarzen)EditorGUILayout.EnumFlagsField(label: "specjalny typ obrarzeñ", script.specjalnyTypObrarzeñ);
-                }
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("efektyGracz"), true);
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("efektyWrug"), true);
             }
-            else if(script.cele == Cele.Random)
+            /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// ///
+            EditorGUILayout.LabelField("DZIA£ANIA KART NIEZAGRANYCH:");
+            script.Dzia³anieNaKoniecTury = EditorGUILayout.Toggle(label: "akcje niezagrane?", script.Dzia³anieNaKoniecTury);
+            if (script.Dzia³anieNaKoniecTury == true)
             {
-                script.RandomRazy = EditorGUILayout.IntSlider(label: "mnorznik random", script.RandomRazy, 1, 20);
-                if (script.DmgGraczowi == 0 && script.efektyGracz.Count == 0)
+                script.celeNieZagranej = (CeleNieZagranej)EditorGUILayout.EnumPopup(label: "Cele", script.celeNieZagranej);
+
+                if (script.celeNieZagranej == CeleNieZagranej.Gracz)
                 {
-                    EditorGUILayout.LabelField("    ", "Podaj dzia³ania dla obu stron by wywo³aæ!");
+                    script.DmgGraczowiT = EditorGUILayout.FloatField(label: "obrarzenia gracz", script.DmgGraczowiT);
+                    if (script.DmgGraczowiT != 0)
+                    {
+                        script.DmgGraczRazyT = EditorGUILayout.IntSlider(label: "obrarzenia gracz mnorznik", script.DmgGraczRazyT, 1, 20);
+                        script.specjalnyTypObrarzeñGraczT = (TypObrarzen)EditorGUILayout.EnumFlagsField(label: "specjalny typ obrarzeñ gracz", script.specjalnyTypObrarzeñGraczT);
+                    }
+                    EditorGUILayout.PropertyField(serializedObject.FindProperty("efektyGraczT"), true);
                 }
-                else if(script.Dmg == 0 && script.efektyWrug.Count == 0)
+                else if (script.celeNieZagranej == CeleNieZagranej.All)
                 {
-                    EditorGUILayout.LabelField("    ", "Podaj dzia³ania dla obu stron by wywo³aæ!");
+                    script.DmgGraczowiT = EditorGUILayout.FloatField(label: "obrarzenia gracz", script.DmgGraczowiT);
+                    if (script.DmgGraczowiT != 0)
+                    {
+                        script.DmgGraczRazyT = EditorGUILayout.IntSlider(label: "obrarzenia gracz mnorznik", script.DmgGraczRazyT, 1, 20);
+                        script.specjalnyTypObrarzeñGraczT = (TypObrarzen)EditorGUILayout.EnumFlagsField(label: "specjalny typ obrarzeñ gracz", script.specjalnyTypObrarzeñGraczT);
+                    }
+                    script.DmgT = EditorGUILayout.FloatField(label: "obrarzenia", script.DmgT);
+                    if (script.DmgT != 0)
+                    {
+                        script.DmgRazyT = EditorGUILayout.IntSlider(label: "obrarzenia mnorznik", script.DmgRazyT, 1, 20);
+                        script.specjalnyTypObrarzeñT = (TypObrarzen)EditorGUILayout.EnumFlagsField(label: "specjalny typ obrarzeñ", script.specjalnyTypObrarzeñT);
+                    }
+                    EditorGUILayout.PropertyField(serializedObject.FindProperty("efektyGraczT"), true);
+                    EditorGUILayout.PropertyField(serializedObject.FindProperty("efektyWrugT"), true);
                 }
-                script.DmgGraczowi = EditorGUILayout.FloatField(label: "obrarzenia gracz", script.DmgGraczowi);
-                if(script.DmgGraczowi != 0)
+                else if (script.celeNieZagranej == CeleNieZagranej.KartyWD³oni || script.celeNieZagranej == CeleNieZagranej.TaKarta || script.celeNieZagranej == CeleNieZagranej.RandomKartaWD³oni)
                 {
-                    script.specjalnyTypObrarzeñGracz = (TypObrarzen)EditorGUILayout.EnumFlagsField(label: "specjalny typ obrarzeñ gracz", script.specjalnyTypObrarzeñGracz);
+                    EditorGUILayout.PropertyField(serializedObject.FindProperty("efektyNaKartyT"), true);
                 }
-                script.Dmg = EditorGUILayout.FloatField(label: "obrarzenia wrug", script.Dmg);
-                if (script.Dmg != 0)
+                else if (script.celeNieZagranej == CeleNieZagranej.Random)
                 {
-                    script.specjalnyTypObrarzeñ = (TypObrarzen)EditorGUILayout.EnumFlagsField(label: "specjalny typ obrarzeñ", script.specjalnyTypObrarzeñ);
+                    script.RandomRazyT = EditorGUILayout.IntSlider(label: "mnorznik random", script.RandomRazyT, 1, 20);
+                    if (script.DmgGraczowiT == 0 && script.efektyGraczT.Count == 0)
+                    {
+                        EditorGUILayout.LabelField("    ", "Podaj dzia³ania dla obu stron by wywo³aæ!");
+                    }
+                    else if (script.DmgT == 0 && script.efektyWrugT.Count == 0)
+                    {
+                        EditorGUILayout.LabelField("    ", "Podaj dzia³ania dla obu stron by wywo³aæ!");
+                    }
+                    script.DmgGraczowiT = EditorGUILayout.FloatField(label: "obrarzenia gracz", script.DmgGraczowiT);
+                    if (script.DmgGraczowiT != 0)
+                    {
+                        script.specjalnyTypObrarzeñGraczT = (TypObrarzen)EditorGUILayout.EnumFlagsField(label: "specjalny typ obrarzeñ gracz", script.specjalnyTypObrarzeñGraczT);
+                    }
+                    script.DmgT = EditorGUILayout.FloatField(label: "obrarzenia wrug", script.DmgT);
+                    if (script.DmgT != 0)
+                    {
+                        script.specjalnyTypObrarzeñT = (TypObrarzen)EditorGUILayout.EnumFlagsField(label: "specjalny typ obrarzeñ", script.specjalnyTypObrarzeñT);
+                    }
+                    EditorGUILayout.PropertyField(serializedObject.FindProperty("efektyGraczT"), true);
+                    EditorGUILayout.PropertyField(serializedObject.FindProperty("efektyWrugT"), true);
                 }
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("efektyGracz"), true);
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("efektyWrug"), true);
-            }
-            else if (script.cele == Cele.Karta || script.cele == Cele.KartyWD³oni)
-            {
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("efektyNaKarty"), true);
+                else if (script.celeNieZagranej == CeleNieZagranej.RandomWrug)
+                {
+                    script.RandomRazyT = EditorGUILayout.IntSlider(label: "mnorznik random", script.RandomRazyT, 1, 20);
+                    script.DmgT = EditorGUILayout.FloatField(label: "obrarzenia", script.DmgT);
+                    if (script.DmgT != 0)
+                    {
+                        script.specjalnyTypObrarzeñT = (TypObrarzen)EditorGUILayout.EnumFlagsField(label: "specjalny typ obrarzeñ", script.specjalnyTypObrarzeñT);
+                    }
+                    EditorGUILayout.PropertyField(serializedObject.FindProperty("efektyWrugT"), true);
+                }
+                else if (script.celeNieZagranej == CeleNieZagranej.Wrogowie)
+                {
+                    script.DmgT = EditorGUILayout.FloatField(label: "obrarzenia", script.DmgT);
+                    if (script.DmgT != 0)
+                    {
+                        script.DmgRazyT = EditorGUILayout.IntSlider(label: "obrarzenia mnorznik", script.DmgRazyT, 1, 20);
+                        script.specjalnyTypObrarzeñT = (TypObrarzen)EditorGUILayout.EnumFlagsField(label: "specjalny typ obrarzeñ", script.specjalnyTypObrarzeñT);
+                    }
+                    EditorGUILayout.PropertyField(serializedObject.FindProperty("efektyWrugT"), true);
+                }
+
             }
             serializedObject.ApplyModifiedProperties();
         }
