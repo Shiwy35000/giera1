@@ -6,9 +6,15 @@ public class sortGrupZ : MonoBehaviour
 {
     public List<GameObject> kartyWD這ni = new List<GameObject>();
     [HideInInspector] public List<GameObject> sloty = new List<GameObject>();
+    private GameObject player, uiWalki;
+    private walkaStart WalkaStart;
 
     void Awake()
     {
+        player = GameObject.FindGameObjectWithTag("Player").gameObject;
+        uiWalki = GameObject.FindGameObjectWithTag("nadUiWalka").gameObject;
+        WalkaStart = uiWalki.transform.parent.gameObject.GetComponent<walkaStart>();
+
         SlotyList();
 
         walkaStart.KoniecTury += NaKoniecTury;
@@ -18,11 +24,60 @@ public class sortGrupZ : MonoBehaviour
         walkaStart.KoniecTury -= NaKoniecTury;
     }
 
+    private void PasywneEfektyKart(GameObject cel)
+    {
+        taKarta karta = cel.GetComponent<taKarta>();
+        if (karta.Dzia豉nieNaKoniecTury)
+        {
+            List<GameObject> ObiektyCele = new List<GameObject>();
+            playerEq eq = WalkaStart.gracz.gameObject.GetComponent<playerEq>();
+
+            if (karta.celeNieZagranej == CeleNieZagranej.Gracz)
+            {
+                ObiektyCele.Add(player);
+                karta.akcjeKoniecTury.Invoke(ObiektyCele);
+            }
+            else if (karta.celeNieZagranej == CeleNieZagranej.Wrogowie || karta.celeNieZagranej == CeleNieZagranej.RandomWrug)
+            {
+                ObiektyCele.AddRange(WalkaStart.przeciwnicyWwalce);
+                karta.akcjeKoniecTury.Invoke(ObiektyCele);
+            }
+            else if (karta.celeNieZagranej == CeleNieZagranej.All || karta.celeNieZagranej == CeleNieZagranej.Random)
+            {
+                ObiektyCele.AddRange(WalkaStart.przeciwnicyWwalce);
+                ObiektyCele.Add(player);
+                karta.akcjeKoniecTury.Invoke(ObiektyCele);
+            }
+            else if (karta.celeNieZagranej == CeleNieZagranej.TaKarta)
+            {
+                ObiektyCele.Add(cel);
+                karta.akcjeKoniecTury.Invoke(ObiektyCele);
+            }
+            else if (karta.celeNieZagranej == CeleNieZagranej.KartyWD這ni) //nie wliczamy tej karty
+            {
+                ObiektyCele.AddRange(kartyWD這ni);
+                ObiektyCele.Remove(cel);
+                karta.akcjeKoniecTury.Invoke(ObiektyCele);
+            }
+            else if (karta.celeNieZagranej == CeleNieZagranej.RandomKartaWD這ni) //nie wliczamy tej karty
+            {
+                List<GameObject> kartyMinusTa = new List<GameObject>();
+                kartyMinusTa.AddRange(kartyWD這ni);
+                kartyMinusTa.Remove(cel);
+                int z = Random.Range(0, kartyMinusTa.Count - 1);
+                ObiektyCele.Add(kartyMinusTa[z]);
+                karta.akcjeKoniecTury.Invoke(ObiektyCele);
+            }
+        }
+    }
+
     private void NaKoniecTury(int nic)
     {
         for (int x = 0; x < kartyWD這ni.Count;)
         {
             taKarta karta = kartyWD這ni[x].GetComponent<taKarta>();
+
+            PasywneEfektyKart(kartyWD這ni[x]);
 
             if (karta.naKoniecTury == PoUrzyciu.Zniszcz)
             {

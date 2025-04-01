@@ -12,6 +12,7 @@ public class walkaStart : MonoBehaviour
     public GameObject gracz;
 
     public static event System.Action<int> KoniecTury;
+    public static event System.Action<int> Pocz¹tekTury;
 
     [HideInInspector] public bool turaGracza;
     private GameObject fizycznyDeck;
@@ -103,10 +104,11 @@ public class walkaStart : MonoBehaviour
 
     public void koniecTury()
     {
-        obecnaTura += 1;
         KoniecTury?.Invoke(obecnaTura);
+        obecnaTura += 1;
         turaGracza = true;
         DodajKartyDoRêkiStart();
+        Pocz¹tekTury?.Invoke(obecnaTura);
     }
 
     public void EwentualniePrzetasuj()

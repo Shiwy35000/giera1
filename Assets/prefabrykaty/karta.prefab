@@ -895,7 +895,7 @@ MonoBehaviour:
   KartaTag: 1
   "Rzadko\u015B\u0107": 0
   "grywalno\u015B\u0107": 0
-  cele: 1
+  cele: 5
   poUrzyciu: 3
   naKoniecTury: 0
   akcje:
@@ -930,21 +930,23 @@ MonoBehaviour:
   DmgGraczRazy: 1
   RandomRazy: 1
   "specjalnyTypObrarze\u0144": 0
-  Dmg: 10
+  Dmg: 0
   DmgRazy: 1
   efektyGracz:
   - NazwaEfektu: 2
     ile: 1
   efektyWrug:
-  - NazwaEfektu: 0
-    ile: 1
   - NazwaEfektu: 4
     ile: 1
-  - NazwaEfektu: 1
-    ile: 1
-  efektyNaKarty: []
+  efektyNaKarty:
+  - adnotacja: 
+    Cel: 0
+    Deklaracja: 0
+    deklaracjaLiczbowa: 0
+    PrzemijanieEfektuKarty: 0
+  efektyNaKartyRandomRazy: 1
   "Dzia\u0142anieNaKoniecTury": 0
-  celeNieZagranej: 3
+  celeNieZagranej: 0
   akcjeKoniecTury:
     m_PersistentCalls:
       m_Calls: []
@@ -955,9 +957,12 @@ MonoBehaviour:
   "specjalnyTypObrarze\u0144T": 0
   DmgT: 0
   DmgRazyT: 1
-  efektyGraczT: []
+  efektyGraczT:
+  - NazwaEfektu: 4
+    ile: 1
   efektyWrugT: []
   efektyNaKartyT: []
+  efektyNaKartyRandomRazyT: 1
   fizycznyDeck: {fileID: 0}
 --- !u!65 &7301124539969855688
 BoxCollider:

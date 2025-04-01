@@ -10,6 +10,7 @@ public class bazaEfektow : MonoBehaviour
     private bool graczEfekty;
     private playerEq eq;
     private WRUG1 wrug;
+    private taKarta karta;
 
     private void Awake()
     {
@@ -20,7 +21,7 @@ public class bazaEfektow : MonoBehaviour
             graczEfekty = true;
             eq = this.GetComponent<playerEq>();
         }
-        else
+        else if (this.gameObject.tag == "wrug")
         {
             graczEfekty = false;
             wrug = this.GetComponent<WRUG1>();
@@ -33,11 +34,11 @@ public class bazaEfektow : MonoBehaviour
         return action;
     }
 
-    public void OtrzymanieEfektu(efekty nowyEfekt)
-    { 
+    public void OtrzymanieEfektu(efekty nowyEfekt, int ile)
+    {
         if (graczEfekty)
-        { 
-            if(nowyEfekt.TypWywo³ania == typWywo³ania.otrzymanieObrarzeñ)
+        {
+            if (nowyEfekt.TypWywo³ania == typWywo³ania.otrzymanieObrarzeñ)
             {
                 UnityAction action = stringFunctionToUnityAction(this, nowyEfekt.nazwa);
                 eq.efektyWywo³anieOtrzyma³Cios.AddListener(action);
@@ -52,9 +53,14 @@ public class bazaEfektow : MonoBehaviour
                 UnityAction action = stringFunctionToUnityAction(this, nowyEfekt.nazwa);
                 eq.efektyWywo³anieKoniecTury.AddListener(action);
             }
-            else if (nowyEfekt.TypWywo³ania == typWywo³ania.natychmiastowy)
+            else if (nowyEfekt.TypWywo³ania == typWywo³ania.pocz¹tekTury)
             {
-                this.gameObject.SendMessage(nowyEfekt.nazwa);
+                UnityAction action = stringFunctionToUnityAction(this, nowyEfekt.nazwa);
+                eq.efektyWywo³aniePocz¹tekTury.AddListener(action);
+            }
+            else if (nowyEfekt.TypWywo³ania == typWywo³ania.natychmiastowy_odrazuPrzemija_bezLicznika)
+            {
+                this.gameObject.SendMessage(nowyEfekt.nazwa ,ile);
             }
         }
         else
@@ -74,9 +80,14 @@ public class bazaEfektow : MonoBehaviour
                 UnityAction action = stringFunctionToUnityAction(this, nowyEfekt.nazwa);
                 wrug.efektyWywo³anieKoniecTury.AddListener(action);
             }
-            else if (nowyEfekt.TypWywo³ania == typWywo³ania.natychmiastowy)
+            else if (nowyEfekt.TypWywo³ania == typWywo³ania.pocz¹tekTury)
             {
-                this.gameObject.SendMessage(nowyEfekt.nazwa);
+                UnityAction action = stringFunctionToUnityAction(this, nowyEfekt.nazwa);
+                wrug.efektyWywo³aniePocz¹tekTury.AddListener(action);
+            }
+            else if (nowyEfekt.TypWywo³ania == typWywo³ania.natychmiastowy_odrazuPrzemija_bezLicznika)
+            {
+                this.gameObject.SendMessage(nowyEfekt.nazwa, ile);
             }
         }
     }
@@ -100,6 +111,11 @@ public class bazaEfektow : MonoBehaviour
                 UnityAction action = stringFunctionToUnityAction(this, Efekt.nazwa);
                 eq.efektyWywo³anieKoniecTury.RemoveListener(action);
             }
+            else if (Efekt.TypWywo³ania == typWywo³ania.pocz¹tekTury)
+            {
+                UnityAction action = stringFunctionToUnityAction(this, Efekt.nazwa);
+                eq.efektyWywo³aniePocz¹tekTury.RemoveListener(action);
+            }
         }
         else
         {
@@ -117,6 +133,11 @@ public class bazaEfektow : MonoBehaviour
             {
                 UnityAction action = stringFunctionToUnityAction(this, Efekt.nazwa);
                 wrug.efektyWywo³anieKoniecTury.RemoveListener(action);
+            }
+            else if (Efekt.TypWywo³ania == typWywo³ania.pocz¹tekTury)
+            {
+                UnityAction action = stringFunctionToUnityAction(this, Efekt.nazwa);
+                wrug.efektyWywo³aniePocz¹tekTury.RemoveListener(action);
             }
         }
     }
@@ -140,7 +161,7 @@ public class bazaEfektow : MonoBehaviour
         }
     }
 
-    public void RozbiciePancerza()
+    public void RozbiciePancerza(int nic)
     {
         if (graczEfekty)
         {
@@ -197,7 +218,7 @@ public class bazaEfektow : MonoBehaviour
         {
             for (int x = 0; x < eq.na³orzoneEfekty.Count; x++)
             {
-                if (eq.na³orzoneEfekty[x].nazwa == "Podpalenie")
+                if (eq.na³orzoneEfekty[x].nazwa == "Trucizna")
                 {
                     float z = (float)eq.na³orzoneEfekty[x].licznik;
                     eq.PrzyjmijDmg(z, true);
@@ -208,7 +229,7 @@ public class bazaEfektow : MonoBehaviour
         {
             for (int x = 0; x < wrug.na³orzoneEfekty.Count; x++)
             {
-                if (wrug.na³orzoneEfekty[x].nazwa == "Podpalenie")
+                if (wrug.na³orzoneEfekty[x].nazwa == "Trucizna")
                 {
                     float z = (float)wrug.na³orzoneEfekty[x].licznik;
                     wrug.PrzyjmijDmg(z, true);
@@ -216,4 +237,17 @@ public class bazaEfektow : MonoBehaviour
             }
         }
     }
+
+    public void Na³urzPancerz(int ile)
+    {
+        if (graczEfekty)
+        {
+            eq.aktualnyPancerz += (float)ile;
+        }
+        else
+        {
+            wrug.aktualnyPancerz += (float)ile;
+        }
+    }
+
 }

@@ -35,6 +35,7 @@ public class playerEq : MonoBehaviour
     [HideInInspector] public UnityEvent efektyWywo³anieOtrzyma³Cios;
     [HideInInspector] public UnityEvent efektyWywo³anieZada³Cios;
     [HideInInspector] public UnityEvent efektyWywo³anieKoniecTury;
+    [HideInInspector] public UnityEvent efektyWywo³aniePocz¹tekTury;
     [HideInInspector] public float ilee;
     [HideInInspector] public bool nieUchronnee;
 
@@ -45,7 +46,8 @@ public class playerEq : MonoBehaviour
         dialog.Walka += CzyœcimyListy;
         walkaStart.KoniecTury += MaxEnergiaTura;
         walkaStart.KoniecTury += Wywo³ajEfektyKoniecT;
-        walkaStart.KoniecTury += PrzemijanieEfektuw;
+        //walkaStart.KoniecTury += PrzemijanieEfektuw;
+        walkaStart.Pocz¹tekTury += Wywo³ajEfektyPocz¹tekT;
         BazaEfektow = this.GetComponent<bazaEfektow>();
         sortZ = GameObject.FindGameObjectWithTag("dlon").gameObject.GetComponent<sortGrupZ>();
     }
@@ -55,7 +57,8 @@ public class playerEq : MonoBehaviour
         dialog.Walka -= CzyœcimyListy;
         walkaStart.KoniecTury -= MaxEnergiaTura;
         walkaStart.KoniecTury -= Wywo³ajEfektyKoniecT;
-        walkaStart.KoniecTury -= PrzemijanieEfektuw;
+        //walkaStart.KoniecTury -= PrzemijanieEfektuw;
+        walkaStart.Pocz¹tekTury -= Wywo³ajEfektyPocz¹tekT;
     }
 
     private void MaxEnergiaWalka(bool nic)
@@ -122,12 +125,42 @@ public class playerEq : MonoBehaviour
         }
     }
 
-    public void PrzemijanieEfektuw(int numerTury)
+    public void PrzemijanieEfektuw(typWywo³ania typ)
     {
-        for (int x = 0; x < na³orzoneEfekty.Count; x++)
+        for (int x = 0; x < na³orzoneEfekty.Count;)
         {
-            na³orzoneEfekty[x].licznik -= 1;
-            if (na³orzoneEfekty[x].licznik <= 0)
+            if (na³orzoneEfekty[x].TypPrzemijania == typPrzemijania.koniecTury_domyœlny)
+            {
+                na³orzoneEfekty[x].licznik -= 1;
+                if (na³orzoneEfekty[x].licznik <= 0)
+                {
+                    BazaEfektow.UsunEfekt(na³orzoneEfekty[x]);
+                    na³orzoneEfekty.Remove(na³orzoneEfekty[x]);
+                }
+                else
+                {
+                    x++;
+                }
+            }
+            else if (na³orzoneEfekty[x].TypPrzemijania == typPrzemijania.koniecTuryCa³kowity)
+            {
+                BazaEfektow.UsunEfekt(na³orzoneEfekty[x]);
+                na³orzoneEfekty.Remove(na³orzoneEfekty[x]);
+            }
+            else if (na³orzoneEfekty[x].TypPrzemijania == typPrzemijania.wywo³anie && na³orzoneEfekty[x].TypWywo³ania == typ)
+            {
+                na³orzoneEfekty[x].licznik -= 1;
+                if (na³orzoneEfekty[x].licznik <= 0)
+                {
+                    BazaEfektow.UsunEfekt(na³orzoneEfekty[x]);
+                    na³orzoneEfekty.Remove(na³orzoneEfekty[x]);
+                }
+                else
+                {
+                    x++;
+                }
+            }
+            else if (na³orzoneEfekty[x].TypPrzemijania == typPrzemijania.koniecTuryCa³kowity && na³orzoneEfekty[x].TypWywo³ania == typ)
             {
                 BazaEfektow.UsunEfekt(na³orzoneEfekty[x]);
                 na³orzoneEfekty.Remove(na³orzoneEfekty[x]);
@@ -144,6 +177,17 @@ public class playerEq : MonoBehaviour
         if(efektyWywo³anieKoniecTury != null)
         {
             efektyWywo³anieKoniecTury.Invoke();
+            typWywo³ania t = typWywo³ania.koniecTury;
+            PrzemijanieEfektuw(t);
+        }
+    }
+    public void Wywo³ajEfektyPocz¹tekT(int numerTury)
+    {
+        if (efektyWywo³aniePocz¹tekTury != null)
+        {
+            efektyWywo³aniePocz¹tekTury.Invoke();
+            typWywo³ania t = typWywo³ania.pocz¹tekTury;
+            PrzemijanieEfektuw(t);
         }
     }
     public void Wywo³ajEfektyOtrzyma³Cios()
@@ -151,6 +195,8 @@ public class playerEq : MonoBehaviour
         if (efektyWywo³anieOtrzyma³Cios != null)
         {
             efektyWywo³anieOtrzyma³Cios.Invoke();
+            typWywo³ania t = typWywo³ania.otrzymanieObrarzeñ;
+            PrzemijanieEfektuw(t);
         }
     }
     public void Wywo³ajEfektyZada³³Cios()
@@ -158,6 +204,8 @@ public class playerEq : MonoBehaviour
         if (efektyWywo³anieZada³Cios != null)
         {
             efektyWywo³anieZada³Cios.Invoke();
+            typWywo³ania t = typWywo³ania.zadawanieObrarzeñ;
+            PrzemijanieEfektuw(t);
         }
     }
     

@@ -77,7 +77,7 @@ public class click : MonoBehaviour
                         {
                             GrabCardOf();
                         }
-                        else if (podniesionaKarta != raycastHit.transform.gameObject && podniesionaKarta != null && podniesionaKarta.GetComponent<taKarta>().cele != Cele.Karta)
+                        else if (podniesionaKarta != raycastHit.transform.gameObject && podniesionaKarta != null && podniesionaKarta.GetComponent<taKarta>().cele != Cele.Karta && podniesionaKarta.GetComponent<taKarta>().cele != Cele.KartyWD³oni && podniesionaKarta.GetComponent<taKarta>().cele != Cele.RandomKartaWD³oni)
                         {
                             GrabCardOf();
                             GrabCard(raycastHit.transform.gameObject);

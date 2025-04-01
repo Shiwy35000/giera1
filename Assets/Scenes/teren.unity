@@ -2031,6 +2031,9 @@ MonoBehaviour:
   "efektyWywo\u0142anieKoniecTury":
     m_PersistentCalls:
       m_Calls: []
+  "efektyWywo\u0142aniePocz\u0105tekTury":
+    m_PersistentCalls:
+      m_Calls: []
   ilee: 0
   nieUchronnee: 0
 --- !u!114 &1017632425
@@ -2111,30 +2114,42 @@ MonoBehaviour:
     sprite: {fileID: 0}
     opis: "50% wi\u0119cej otrzymywanych obrarze\u0144"
     "TypWywo\u0142ania": 2
+    TypPrzemijania: 0
     licznik: 0
   - nazwa: RozbiciePancerza
     odbiurEfektu: 1
     sprite: {fileID: 0}
-    opis: zerujePancerz
-    "TypWywo\u0142ania": 0
+    opis: zeruje pancerz
+    "TypWywo\u0142ania": 4
+    TypPrzemijania: 0
     licznik: 0
   - nazwa: Podpalenie
     odbiurEfektu: 1
     sprite: {fileID: 0}
-    opis: "zadaje obrarzenia co tur\u0119 w wysoko\u015Bci 3(nie uchronne)."
-    "TypWywo\u0142ania": 1
+    opis: "zadaje obrarzenia co tur\u0119 w wysoko\u015Bci 3 (nie uchronne)"
+    "TypWywo\u0142ania": 0
+    TypPrzemijania: 0
     licznik: 0
   - nazwa: LeczenieWczasie
     odbiurEfektu: 0
     sprite: {fileID: 0}
     opis: "przywraca zdrowie co tur\u0119"
     "TypWywo\u0142ania": 1
+    TypPrzemijania: 0
     licznik: 0
   - nazwa: Trucizna
     odbiurEfektu: 1
     sprite: {fileID: 0}
     opis: "traci zdrowie co tur\u0119"
-    "TypWywo\u0142ania": 1
+    "TypWywo\u0142ania": 0
+    TypPrzemijania: 1
+    licznik: 0
+  - nazwa: "Na\u0142urzPancerz"
+    odbiurEfektu: 0
+    sprite: {fileID: 0}
+    opis: "traci zdrowie co tur\u0119"
+    "TypWywo\u0142ania": 4
+    TypPrzemijania: 1
     licznik: 0
 --- !u!1 &1130457170
 GameObject:
