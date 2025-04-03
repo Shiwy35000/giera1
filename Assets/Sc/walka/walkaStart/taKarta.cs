@@ -30,7 +30,7 @@ public class taKarta : MonoBehaviour
     [HideInInspector] public GameObject dlon;
     [HideInInspector] public playerEq Eq;
     private efekty Efektu;
-    [HideInInspector] public GameObject prefabTejKartyWdeck; //tylko potrzebne do usuwania jednorazuwek?
+    [HideInInspector] public GameObject prefabTejKartyWdeck;
 
     [Header("Dane Karty")]
     public string Nazwa;
@@ -292,33 +292,37 @@ public class taKarta : MonoBehaviour
         }
 
 
+        akcje.AddListener(CoPoUrzyciu);
+    }
 
+    private void CoPoUrzyciu(List<GameObject> nieIstotne)
+    {
         if (poUrzyciu == PoUrzyciu.Zniszcz)
         {
-            akcje.AddListener(UsuñTeKarte);
+            UsuñTeKarte();
         }
         else if (poUrzyciu == PoUrzyciu.Zachowaj)
         {
-            akcje.AddListener(ZachowajTeKarte);
+            ZachowajTeKarte();
         }
         else if (poUrzyciu == PoUrzyciu.cmentarz)
         {
-            akcje.AddListener(NaCmentarzTaKarta);
+            NaCmentarzTaKarta();
         }
         else if (poUrzyciu == PoUrzyciu.wyklucz)
         {
-            akcje.AddListener(UsuñTeKarte);
+            UsuñTeKarte();
         }
     }
 
-    private void ZachowajTeKarte(List<GameObject> nieIstotne)
+    private void ZachowajTeKarte()
     {
         click c = GameObject.FindGameObjectWithTag("nadUiWalka").gameObject.GetComponent<click>();
         c.GrabCardOf();
         c.CzyœæCardMorInfo();
         c.CzyœæWskazana();
     }
-    public void UsuñTeKarte(List<GameObject> nieIstotne)
+    public void UsuñTeKarte()
     {
         if (prefabTejKartyWdeck != null)
         {
@@ -326,17 +330,19 @@ public class taKarta : MonoBehaviour
         }
         dlon.GetComponent<sortGrupZ>().UsunKarteZdloni(this.gameObject);
     }
-    public void NaCmentarzTaKarta(List<GameObject> nieIstotne)
+    public void NaCmentarzTaKarta()
     {
         UsuwanieEfektówKarty(na³orzoneEfektyKartaD³on);
+        UsuwanieEfektówKarty(na³orzoneEfektyKartaTura);
         GameObject klon = GameObject.Instantiate(this.gameObject, fizycznyDeck.transform);
         klon.name = this.gameObject.name;
         Eq.cmentarz.Add(klon);
         dlon.GetComponent<sortGrupZ>().UsunKarteZdloni(this.gameObject);
     }
-    public void WykluczTeKarte(List<GameObject> nieIstotne)
+    public void WykluczTeKarte()
     {
         UsuwanieEfektówKarty(na³orzoneEfektyKartaD³on);
+        UsuwanieEfektówKarty(na³orzoneEfektyKartaTura);
         GameObject klon = GameObject.Instantiate(this.gameObject, fizycznyDeck.transform);
         klon.name = this.gameObject.name;
         Eq.wykluczone.Add(klon);
@@ -648,13 +654,11 @@ public class taKarta : MonoBehaviour
         {
             if (ef.Cel == cel.Wyklucz)
             {
-                List<GameObject> nic = new List<GameObject>();
-                ta.WykluczTeKarte(nic);
+                ta.WykluczTeKarte();
             }
             else if (ef.Cel == cel.Cmentarz)
             {
-                List<GameObject> nic = new List<GameObject>();
-                ta.NaCmentarzTaKarta(nic);
+                ta.NaCmentarzTaKarta();
             }
             else if (ef.Cel == cel.dobierz)
             {
@@ -675,17 +679,14 @@ public class taKarta : MonoBehaviour
 
                 if (ef.Cel == cel.grywalonœæ)
                 {
-                    nowyEf.wartoœæ_enumPoz = (int)ta.grywalnoœæ; //zapis porzedniego stanu;
                     ta.grywalnoœæ = (Grywalnoœæ)x;
                 }
                 else if (ef.Cel == cel.poUrzyciu)
                 {
-                    nowyEf.wartoœæ_enumPoz = (int)ta.poUrzyciu; //zapis porzedniego stanu;
                     ta.poUrzyciu = (PoUrzyciu)x;
                 }
                 else if (ef.Cel == cel.KoniecTury)
                 {
-                    nowyEf.wartoœæ_enumPoz = (int)ta.naKoniecTury; //zapis porzedniego stanu;
                     ta.naKoniecTury = (PoUrzyciu)x;
                 }
             }
@@ -695,10 +696,10 @@ public class taKarta : MonoBehaviour
                 {
                     if (ef.Zalerznoœæ == zalerznoœæ.nowaWartoœæ)
                     {
-                        nowyEf.wartoœæ_enumPoz = ta.Koszt;//zapis porzedniego stanu;
+                        nowyEf.wartoœæ_enumPoz = ef.wartoœæ_enumPoz - ta.Koszt;
                         ta.Koszt = ef.wartoœæ_enumPoz;
                     }
-                    else if (ef.Zalerznoœæ == zalerznoœæ.PlusMinus)//poprzedni stan do wyliczenia
+                    else if (ef.Zalerznoœæ == zalerznoœæ.PlusMinus)
                     {
                         ta.Koszt += ef.wartoœæ_enumPoz;
                     }
@@ -706,29 +707,29 @@ public class taKarta : MonoBehaviour
                 else if (ef.Cel == cel.kosztRandom && ef.Zalerznoœæ == zalerznoœæ.nowaWartoœæ)
                 {
                     int z = Random.Range(0, ef.wartoœæ_enumPoz);
-                    nowyEf.wartoœæ_enumPoz = ta.Koszt; //zapis porzedniego stanu;
+                    nowyEf.wartoœæ_enumPoz = z - ta.Koszt;
                     ta.Koszt = z;
                 }
                 else if (ef.Cel == cel.obrarzenia)
                 {
                     if (ef.Zalerznoœæ == zalerznoœæ.nowaWartoœæ)
                     {
-                        nowyEf.wartoœæ_enumPoz = (int)ta.Dmg; //zapis porzedniego stanu;
+                        nowyEf.wartoœæ_enumPoz = ef.wartoœæ_enumPoz - (int)ta.Dmg;
                         ta.Dmg = (float)ef.wartoœæ_enumPoz;
                     }
-                    else if (ef.Zalerznoœæ == zalerznoœæ.PlusMinus) //poprzedni stan do wyliczenia
+                    else if (ef.Zalerznoœæ == zalerznoœæ.PlusMinus)
                     {
                         ta.Dmg += (float)ef.wartoœæ_enumPoz;
                     }
                 }
-                else if (ef.Cel == cel.obrarzeniaAll && ef.Zalerznoœæ == zalerznoœæ.PlusMinus) //poprzedni stan do wyliczenia
+                else if (ef.Cel == cel.obrarzeniaAll && ef.Zalerznoœæ == zalerznoœæ.PlusMinus)
                 {
                     ta.Dmg += (float)ef.wartoœæ_enumPoz;
                     ta.DmgT += (float)ef.wartoœæ_enumPoz;
                     ta.DmgGraczowi += (float)ef.wartoœæ_enumPoz;
                     ta.DmgGraczowiT += (float)ef.wartoœæ_enumPoz;
                 }
-                else if (ef.Cel == cel.obrzarzeniaNegatyw && ef.Zalerznoœæ == zalerznoœæ.PlusMinus) //poprzedni stan do wyliczenia
+                else if (ef.Cel == cel.obrzarzeniaNegatyw && ef.Zalerznoœæ == zalerznoœæ.PlusMinus)
                 {
                     ta.DmgGraczowi += (float)ef.wartoœæ_enumPoz;
                     ta.DmgGraczowiT += (float)ef.wartoœæ_enumPoz;
@@ -736,16 +737,14 @@ public class taKarta : MonoBehaviour
             }
         }
 
-        if (ef.PrzemijanieEfektuKarty != przemijanieEfektuKarty.brak_teraz && ef.Zalerznoœæ != zalerznoœæ.brak_teraz) //jeœli efekt jest czasowy
+
+        if (ef.PrzemijanieEfektuKarty == przemijanieEfektuKarty.tura)
         {
-            if(ef.PrzemijanieEfektuKarty == przemijanieEfektuKarty.tura)
-            {
-                ta.na³orzoneEfektyKartaTura.Add(nowyEf);
-            }
-            else if(ef.PrzemijanieEfektuKarty == przemijanieEfektuKarty.opuszczenieD³oni)
-            {
-                ta.na³orzoneEfektyKartaD³on.Add(nowyEf);
-            }
+            ta.na³orzoneEfektyKartaTura.Add(nowyEf);
+        }
+        else if (ef.PrzemijanieEfektuKarty == przemijanieEfektuKarty.opuszczenieD³oni)
+        {
+            ta.na³orzoneEfektyKartaD³on.Add(nowyEf);
         }
 
         ta.Uzupelnij();
@@ -755,71 +754,64 @@ public class taKarta : MonoBehaviour
     {
         UsuwanieEfektówKarty(na³orzoneEfektyKartaTura);
     }
+
     public void UsuwanieEfektówKarty(List<nalurzEfektKarta> listaE)
     {
-        for (int x = listaE.Count - 1; x >= 0 ; x--)
+        if (listaE.Count != 0)
         {
-            if(listaE[x].Zalerznoœæ == zalerznoœæ.EnumZmiana)
+            for (int x = listaE.Count - 1; x >= 0; x--)
             {
-                if (listaE[x].Cel == cel.grywalonœæ)
+                if (listaE[x].Zalerznoœæ == zalerznoœæ.EnumZmiana)
                 {
-                    grywalnoœæ = (Grywalnoœæ)listaE[x].wartoœæ_enumPoz;
-                }
-                else if (listaE[x].Cel == cel.poUrzyciu)
-                {
-                    poUrzyciu = (PoUrzyciu)listaE[x].wartoœæ_enumPoz;
-                }
-                else if (listaE[x].Cel == cel.KoniecTury)
-                {
-                    naKoniecTury = (PoUrzyciu)listaE[x].wartoœæ_enumPoz;
-                }
-            }
-            else
-            {
-                if (listaE[x].Cel == cel.koszt)
-                {
-                    if (listaE[x].Zalerznoœæ == zalerznoœæ.nowaWartoœæ)
+                    if (listaE[x].Cel == cel.grywalonœæ)
                     {
-                        Koszt = listaE[x].wartoœæ_enumPoz;
+                        grywalnoœæ = prefabTejKartyWdeck.GetComponent<taKarta>().grywalnoœæ;
                     }
-                    else if (listaE[x].Zalerznoœæ == zalerznoœæ.PlusMinus)
+                    else if (listaE[x].Cel == cel.poUrzyciu)
+                    {
+                        poUrzyciu = prefabTejKartyWdeck.GetComponent<taKarta>().poUrzyciu;
+                    }
+                    else if (listaE[x].Cel == cel.KoniecTury)
+                    {
+                        naKoniecTury = prefabTejKartyWdeck.GetComponent<taKarta>().naKoniecTury;
+                    }
+                }
+                else
+                {
+                    if (listaE[x].Cel == cel.koszt || listaE[x].Cel == cel.kosztRandom)
                     {
                         Koszt -= listaE[x].wartoœæ_enumPoz;
                     }
-                }
-                else if (listaE[x].Cel == cel.kosztRandom && listaE[x].Zalerznoœæ == zalerznoœæ.nowaWartoœæ)
-                {
-                    Koszt = listaE[x].wartoœæ_enumPoz;
-                }
-                else if (listaE[x].Cel == cel.obrarzenia)
-                {
-                    if (listaE[x].Zalerznoœæ == zalerznoœæ.nowaWartoœæ)
-                    {
-                        Dmg = (float)listaE[x].wartoœæ_enumPoz;
-                    }
-                    else if (listaE[x].Zalerznoœæ == zalerznoœæ.PlusMinus)
+                    else if (listaE[x].Cel == cel.obrarzenia)
                     {
                         Dmg -= (float)listaE[x].wartoœæ_enumPoz;
                     }
+                    else if (listaE[x].Cel == cel.obrarzeniaAll)
+                    {
+                        Dmg -= (float)listaE[x].wartoœæ_enumPoz;
+                        DmgT -= (float)listaE[x].wartoœæ_enumPoz;
+                        DmgGraczowi -= (float)listaE[x].wartoœæ_enumPoz;
+                        DmgGraczowiT -= (float)listaE[x].wartoœæ_enumPoz;
+                    }
+                    else if (listaE[x].Cel == cel.obrzarzeniaNegatyw)
+                    {
+                        DmgGraczowi -= (float)listaE[x].wartoœæ_enumPoz;
+                        DmgGraczowiT -= (float)listaE[x].wartoœæ_enumPoz;
+                    }
                 }
-                else if (listaE[x].Cel == cel.obrarzeniaAll && listaE[x].Zalerznoœæ == zalerznoœæ.PlusMinus)
-                {
-                    Dmg -= (float)listaE[x].wartoœæ_enumPoz;
-                    DmgT -= (float)listaE[x].wartoœæ_enumPoz;
-                    DmgGraczowi -= (float)listaE[x].wartoœæ_enumPoz;
-                    DmgGraczowiT -= (float)listaE[x].wartoœæ_enumPoz;
-                }
-                else if (listaE[x].Cel == cel.obrzarzeniaNegatyw && listaE[x].Zalerznoœæ == zalerznoœæ.PlusMinus)
-                {
-                    DmgGraczowi -= (float)listaE[x].wartoœæ_enumPoz;
-                    DmgGraczowiT -= (float)listaE[x].wartoœæ_enumPoz;
-                }
-            }
 
-            if (x == 0)
-            {
-                listaE = new List<nalurzEfektKarta>();
-                Uzupelnij();
+                if (x == 0)
+                {
+                    if (listaE == na³orzoneEfektyKartaD³on)
+                    {
+                        na³orzoneEfektyKartaD³on = new List<nalurzEfektKarta>();
+                    }
+                    else if (listaE == na³orzoneEfektyKartaTura)
+                    {
+                        na³orzoneEfektyKartaTura = new List<nalurzEfektKarta>();
+                    }
+                    Uzupelnij();
+                }
             }
         }
     }

@@ -81,25 +81,15 @@ public class sortGrupZ : MonoBehaviour
 
             if (karta.naKoniecTury == PoUrzyciu.Zniszcz)
             {
-                if (karta.prefabTejKartyWdeck != null)
-                {
-                    karta.Eq.deckPrefab.Remove(karta.prefabTejKartyWdeck);
-                }
-                UsunKarteZdloni(karta.gameObject);
+                karta.UsuñTeKarte();
             }
             else if (karta.naKoniecTury == PoUrzyciu.cmentarz)
             {
-                GameObject klon = GameObject.Instantiate(karta.gameObject, karta.fizycznyDeck.transform);
-                klon.name = karta.name;
-                karta.Eq.cmentarz.Add(klon);
-                UsunKarteZdloni(karta.gameObject);
+                karta.NaCmentarzTaKarta();
             }
             else if (karta.naKoniecTury == PoUrzyciu.wyklucz)
             {
-                GameObject klon = GameObject.Instantiate(karta.gameObject, karta.fizycznyDeck.transform);
-                klon.name = karta.name;
-                karta.Eq.wykluczone.Add(klon);
-                UsunKarteZdloni(karta.gameObject);
+                karta.WykluczTeKarte();
             }
             else if(karta.naKoniecTury == PoUrzyciu.Zachowaj)
             {
