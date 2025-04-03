@@ -12,8 +12,8 @@ using System.Linq;
 
 public enum Cele { Gracz, Wrug, Wrogowie, Karta, KartyWD³oni,RandomKartaWD³oni , All, RandomWrug, Random, AlboWrugAlboGracz };
 public enum CeleNieZagranej { Gracz, Wrogowie, TaKarta, KartyWD³oni, RandomKartaWD³oni, All, RandomWrug , Random };
-public enum PoUrzyciu { Zniszcz, Zachowaj, wyklucz, cmentarz};
-public enum Grywalnoœæ { Grywalna, Zablokowana, NieGrywalna };
+public enum PoUrzyciu { Zniszcz = 0, Zachowaj = 1, wyklucz = 2, cmentarz = 3};
+public enum Grywalnoœæ { Grywalna = 0, NieGrywalna = 1};
 [System.Flags]
 public enum TypObrarzen : int { brak = 0x00, nieSkalowalne = 0x01, nieUchronne = 0x02 };
 [System.Flags]
@@ -34,6 +34,7 @@ public class taKarta : MonoBehaviour
 
     [Header("Dane Karty")]
     public string Nazwa;
+    public int Id;
     public int Koszt;
     //public int Priorytet;
     public Sprite GrafikaKarty;
@@ -87,7 +88,8 @@ public class taKarta : MonoBehaviour
     //pozosta³e
     private string finalnyOpis;
     [HideInInspector] public GameObject fizycznyDeck;
-    public List<nalurzEfektKarta> na³orzoneEfektyKarta;
+    public List<nalurzEfektKarta> na³orzoneEfektyKartaD³on;
+    public List<nalurzEfektKarta> na³orzoneEfektyKartaTura;
 
     void Awake()
     {
@@ -106,6 +108,12 @@ public class taKarta : MonoBehaviour
 
         Uzupelnij();
         PodpinajAkcje();
+
+        walkaStart.KoniecTury += UsuwanieEfektówKartyTura;
+    }
+    private void OnDestroy()
+    {
+        walkaStart.KoniecTury -= UsuwanieEfektówKartyTura;
     }
 
     void Update()
@@ -320,6 +328,7 @@ public class taKarta : MonoBehaviour
     }
     public void NaCmentarzTaKarta(List<GameObject> nieIstotne)
     {
+        UsuwanieEfektówKarty(na³orzoneEfektyKartaD³on);
         GameObject klon = GameObject.Instantiate(this.gameObject, fizycznyDeck.transform);
         klon.name = this.gameObject.name;
         Eq.cmentarz.Add(klon);
@@ -327,13 +336,14 @@ public class taKarta : MonoBehaviour
     }
     public void WykluczTeKarte(List<GameObject> nieIstotne)
     {
+        UsuwanieEfektówKarty(na³orzoneEfektyKartaD³on);
         GameObject klon = GameObject.Instantiate(this.gameObject, fizycznyDeck.transform);
         klon.name = this.gameObject.name;
         Eq.wykluczone.Add(klon);
         dlon.GetComponent<sortGrupZ>().UsunKarteZdloni(this.gameObject);
     }
 
-    private void Uzupelnij()
+    public void Uzupelnij()
     {
         grafika.GetComponent<SpriteRenderer>().sprite = GrafikaKarty;
         koszt.GetComponent<TextMeshPro>().text = Koszt.ToString();
@@ -628,106 +638,193 @@ public class taKarta : MonoBehaviour
         }
     }
 
-    public void EfektKartyPodaj(GameObject cell, nalurzEfektKarta ef) //KONTYNU£UJ PISANIE!!! (trzeba funkcje napisaæ kture podpiête wywoluj¹ faktycznie te zmiany statystyk), kolejno: funkcje przemijania tych efektów oraz przy ich przemijaniu przywrucenie stanu przed nimi;
+    public void EfektKartyPodaj(GameObject cell, nalurzEfektKarta ef)
     {
         taKarta ta = cell.GetComponent<taKarta>();
-        if (ef.Cel == cel.terazWyklucz)
+
+        nalurzEfektKarta nowyEf = new nalurzEfektKarta(ef.Cel,ef.Zalerznoœæ,ef.wartoœæ_enumPoz,ef.PrzemijanieEfektuKarty);
+
+        if (ef.Zalerznoœæ == zalerznoœæ.brak_teraz && ef.PrzemijanieEfektuKarty == przemijanieEfektuKarty.brak_teraz) //efekty natychmiastowe !!
         {
-            List<GameObject> nic = new List<GameObject>();
-            ta.WykluczTeKarte(nic);
-        }
-        else if (ef.Cel == cel.terazCmentarz)
-        {
-            List<GameObject> nic = new List<GameObject>();
-            ta.NaCmentarzTaKarta(nic);
-        }
-        else if (ef.Cel == cel.dobierz)
-        {
-            GameObject m = GameObject.FindGameObjectWithTag("nadUiWalka").gameObject;
-            m.transform.parent.transform.gameObject.GetComponent<walkaStart>().DobierzKarteRandom();
-        }
-        else if (ef.Cel == cel.kosztNowaWartoœæ || ef.Cel == cel.kosztRandom)
-        {
-            if (ta.na³orzoneEfektyKarta.Count > 0)
+            if (ef.Cel == cel.Wyklucz)
             {
-                for (int x = 0; x < ta.na³orzoneEfektyKarta.Count;)
-                {
-                    if (ta.na³orzoneEfektyKarta[x].Cel == cel.kosztNowaWartoœæ || ta.na³orzoneEfektyKarta[x].Cel == cel.kosztRandom || ef.Cel == cel.kosztPlusMinus)
-                    {
-                        ta.na³orzoneEfektyKarta.Remove(ta.na³orzoneEfektyKarta[x]);
-                    }
-                    else
-                    {
-                        x++;
-                    }
-                }
+                List<GameObject> nic = new List<GameObject>();
+                ta.WykluczTeKarte(nic);
             }
-
-            if (ef.Cel == cel.kosztRandom)
+            else if (ef.Cel == cel.Cmentarz)
             {
-                int b = Random.Range(0, Eq.maxEnergia);
-                ef.deklaracjaLiczbowa = b;
+                List<GameObject> nic = new List<GameObject>();
+                ta.NaCmentarzTaKarta(nic);
             }
-            ta.na³orzoneEfektyKarta.Add(ef);
-            ta.Uzupe³nijOpis(ta.SkruconyOpis);
-            ta.Uzupe³nijOpis(ta.Opis);
-        }
-        else if (ef.Cel == cel.kosztPlusMinus || ef.Cel == cel.obrarzeniaPlusMinus)
-        {
-            if (ef.Cel == cel.kosztPlusMinus && ta.na³orzoneEfektyKarta.Any(a => a.Cel == cel.kosztNowaWartoœæ)) { Debug.Log("nie mo¿na nadpisaæ efektu karty"); } //celowe nic
-            else if (ef.Cel == cel.kosztPlusMinus && ta.na³orzoneEfektyKarta.Any(a => a.Cel == cel.kosztRandom)) { Debug.Log("nie mo¿na nadpisaæ efektu karty"); } //celowe nic
-            else
+            else if (ef.Cel == cel.dobierz)
             {
-                if (ta.na³orzoneEfektyKarta.Count > 0 && ta.na³orzoneEfektyKarta.Any(a => a.Cel == ef.Cel))
-                {
-                    for (int x = 0; x < ta.na³orzoneEfektyKarta.Count; x++)
-                    {
-                        if (ta.na³orzoneEfektyKarta[x].Cel == ef.Cel)
-                        {
-                            ta.na³orzoneEfektyKarta[x].deklaracjaLiczbowa += ef.deklaracjaLiczbowa;
-
-                            if (ta.na³orzoneEfektyKarta[x].deklaracjaLiczbowa == 0)
-                            {
-                                ta.na³orzoneEfektyKarta.Remove(ta.na³orzoneEfektyKarta[x]);
-                            }
-                            break;
-                        }
-
-                        ta.Uzupe³nijOpis(ta.SkruconyOpis);
-                        ta.Uzupe³nijOpis(ta.Opis);
-                    }
-                }
-                else
-                {
-                    ta.na³orzoneEfektyKarta.Add(ef);
-                    ta.Uzupe³nijOpis(ta.SkruconyOpis);
-                    ta.Uzupe³nijOpis(ta.Opis);
-                }
+                GameObject m = GameObject.FindGameObjectWithTag("nadUiWalka").gameObject;
+                m.transform.parent.transform.gameObject.GetComponent<walkaStart>().DobierzKarteRandom();
+            }
+            else if (ef.Cel == cel.KoniecTury)
+            {
+                GameObject m = GameObject.FindGameObjectWithTag("nadUiWalka").gameObject;
+                m.GetComponent<click>().KonieTury();
             }
         }
-        else if (ef.Cel == cel.grywalonœæZmiana || ef.Cel == cel.poUrzyciuZmiana || ef.Cel == cel.KoniecTuryZmiana)
+        else
         {
-            if (ta.na³orzoneEfektyKarta.Count > 0 && ta.na³orzoneEfektyKarta.Any(a => a.Cel == ef.Cel))
+            if (ef.Zalerznoœæ == zalerznoœæ.EnumZmiana) //zmiany w enumeratorach
             {
-                for (int x = 0; x < ta.na³orzoneEfektyKarta.Count; x++)
+                int x = ef.wartoœæ_enumPoz;
+
+                if (ef.Cel == cel.grywalonœæ)
                 {
-                    if (ta.na³orzoneEfektyKarta[x].Cel == ef.Cel)
-                    {
-                        ta.na³orzoneEfektyKarta[x] = ef;
-                    }
+                    nowyEf.wartoœæ_enumPoz = (int)ta.grywalnoœæ; //zapis porzedniego stanu;
+                    ta.grywalnoœæ = (Grywalnoœæ)x;
+                }
+                else if (ef.Cel == cel.poUrzyciu)
+                {
+                    nowyEf.wartoœæ_enumPoz = (int)ta.poUrzyciu; //zapis porzedniego stanu;
+                    ta.poUrzyciu = (PoUrzyciu)x;
+                }
+                else if (ef.Cel == cel.KoniecTury)
+                {
+                    nowyEf.wartoœæ_enumPoz = (int)ta.naKoniecTury; //zapis porzedniego stanu;
+                    ta.naKoniecTury = (PoUrzyciu)x;
                 }
             }
             else
             {
-                ta.na³orzoneEfektyKarta.Add(ef);
-                ta.Uzupe³nijOpis(ta.SkruconyOpis);
-                ta.Uzupe³nijOpis(ta.Opis);
+                if (ef.Cel == cel.koszt)
+                {
+                    if (ef.Zalerznoœæ == zalerznoœæ.nowaWartoœæ)
+                    {
+                        nowyEf.wartoœæ_enumPoz = ta.Koszt;//zapis porzedniego stanu;
+                        ta.Koszt = ef.wartoœæ_enumPoz;
+                    }
+                    else if (ef.Zalerznoœæ == zalerznoœæ.PlusMinus)//poprzedni stan do wyliczenia
+                    {
+                        ta.Koszt += ef.wartoœæ_enumPoz;
+                    }
+                }
+                else if (ef.Cel == cel.kosztRandom && ef.Zalerznoœæ == zalerznoœæ.nowaWartoœæ)
+                {
+                    int z = Random.Range(0, ef.wartoœæ_enumPoz);
+                    nowyEf.wartoœæ_enumPoz = ta.Koszt; //zapis porzedniego stanu;
+                    ta.Koszt = z;
+                }
+                else if (ef.Cel == cel.obrarzenia)
+                {
+                    if (ef.Zalerznoœæ == zalerznoœæ.nowaWartoœæ)
+                    {
+                        nowyEf.wartoœæ_enumPoz = (int)ta.Dmg; //zapis porzedniego stanu;
+                        ta.Dmg = (float)ef.wartoœæ_enumPoz;
+                    }
+                    else if (ef.Zalerznoœæ == zalerznoœæ.PlusMinus) //poprzedni stan do wyliczenia
+                    {
+                        ta.Dmg += (float)ef.wartoœæ_enumPoz;
+                    }
+                }
+                else if (ef.Cel == cel.obrarzeniaAll && ef.Zalerznoœæ == zalerznoœæ.PlusMinus) //poprzedni stan do wyliczenia
+                {
+                    ta.Dmg += (float)ef.wartoœæ_enumPoz;
+                    ta.DmgT += (float)ef.wartoœæ_enumPoz;
+                    ta.DmgGraczowi += (float)ef.wartoœæ_enumPoz;
+                    ta.DmgGraczowiT += (float)ef.wartoœæ_enumPoz;
+                }
+                else if (ef.Cel == cel.obrzarzeniaNegatyw && ef.Zalerznoœæ == zalerznoœæ.PlusMinus) //poprzedni stan do wyliczenia
+                {
+                    ta.DmgGraczowi += (float)ef.wartoœæ_enumPoz;
+                    ta.DmgGraczowiT += (float)ef.wartoœæ_enumPoz;
+                }
+            }
+        }
+
+        if (ef.PrzemijanieEfektuKarty != przemijanieEfektuKarty.brak_teraz && ef.Zalerznoœæ != zalerznoœæ.brak_teraz) //jeœli efekt jest czasowy
+        {
+            if(ef.PrzemijanieEfektuKarty == przemijanieEfektuKarty.tura)
+            {
+                ta.na³orzoneEfektyKartaTura.Add(nowyEf);
+            }
+            else if(ef.PrzemijanieEfektuKarty == przemijanieEfektuKarty.opuszczenieD³oni)
+            {
+                ta.na³orzoneEfektyKartaD³on.Add(nowyEf);
+            }
+        }
+
+        ta.Uzupelnij();
+    }
+
+    public void UsuwanieEfektówKartyTura(int nic) //wywo³ywane na koniec tury
+    {
+        UsuwanieEfektówKarty(na³orzoneEfektyKartaTura);
+    }
+    public void UsuwanieEfektówKarty(List<nalurzEfektKarta> listaE)
+    {
+        for (int x = listaE.Count - 1; x >= 0 ; x--)
+        {
+            if(listaE[x].Zalerznoœæ == zalerznoœæ.EnumZmiana)
+            {
+                if (listaE[x].Cel == cel.grywalonœæ)
+                {
+                    grywalnoœæ = (Grywalnoœæ)listaE[x].wartoœæ_enumPoz;
+                }
+                else if (listaE[x].Cel == cel.poUrzyciu)
+                {
+                    poUrzyciu = (PoUrzyciu)listaE[x].wartoœæ_enumPoz;
+                }
+                else if (listaE[x].Cel == cel.KoniecTury)
+                {
+                    naKoniecTury = (PoUrzyciu)listaE[x].wartoœæ_enumPoz;
+                }
+            }
+            else
+            {
+                if (listaE[x].Cel == cel.koszt)
+                {
+                    if (listaE[x].Zalerznoœæ == zalerznoœæ.nowaWartoœæ)
+                    {
+                        Koszt = listaE[x].wartoœæ_enumPoz;
+                    }
+                    else if (listaE[x].Zalerznoœæ == zalerznoœæ.PlusMinus)
+                    {
+                        Koszt -= listaE[x].wartoœæ_enumPoz;
+                    }
+                }
+                else if (listaE[x].Cel == cel.kosztRandom && listaE[x].Zalerznoœæ == zalerznoœæ.nowaWartoœæ)
+                {
+                    Koszt = listaE[x].wartoœæ_enumPoz;
+                }
+                else if (listaE[x].Cel == cel.obrarzenia)
+                {
+                    if (listaE[x].Zalerznoœæ == zalerznoœæ.nowaWartoœæ)
+                    {
+                        Dmg = (float)listaE[x].wartoœæ_enumPoz;
+                    }
+                    else if (listaE[x].Zalerznoœæ == zalerznoœæ.PlusMinus)
+                    {
+                        Dmg -= (float)listaE[x].wartoœæ_enumPoz;
+                    }
+                }
+                else if (listaE[x].Cel == cel.obrarzeniaAll && listaE[x].Zalerznoœæ == zalerznoœæ.PlusMinus)
+                {
+                    Dmg -= (float)listaE[x].wartoœæ_enumPoz;
+                    DmgT -= (float)listaE[x].wartoœæ_enumPoz;
+                    DmgGraczowi -= (float)listaE[x].wartoœæ_enumPoz;
+                    DmgGraczowiT -= (float)listaE[x].wartoœæ_enumPoz;
+                }
+                else if (listaE[x].Cel == cel.obrzarzeniaNegatyw && listaE[x].Zalerznoœæ == zalerznoœæ.PlusMinus)
+                {
+                    DmgGraczowi -= (float)listaE[x].wartoœæ_enumPoz;
+                    DmgGraczowiT -= (float)listaE[x].wartoœæ_enumPoz;
+                }
+            }
+
+            if (x == 0)
+            {
+                listaE = new List<nalurzEfektKarta>();
+                Uzupelnij();
             }
         }
     }
-
     //////////////////////////////////////////NARZÊDZIA//////////////////////////////////////////////
-    
+
     private void Na³urzEfekt(GameObject Cel, nalurzEfekt Efektuuu)
     {
         for (int x = 0; x < Biblioteka.dostêpneEfekty.Count; x++)
@@ -916,6 +1013,7 @@ public class taKarta : MonoBehaviour
 
             //zawsze widoczne
             script.Nazwa = EditorGUILayout.TextField(label: "Nazwa", script.Nazwa);
+            script.Id = EditorGUILayout.IntField(label: "ID w bibliotece", script.Id);
             script.Koszt = EditorGUILayout.IntField(label: "Koszt", script.Koszt);
             script.KartaTag = (kartaTag)EditorGUILayout.EnumFlagsField(label: "Karta Tag", script.KartaTag);
             script.Rzadkoœæ = (rzadkoñæ)EditorGUILayout.EnumPopup(label: "Rzadkoœæ", script.Rzadkoœæ);
@@ -924,10 +1022,17 @@ public class taKarta : MonoBehaviour
             EditorGUILayout.LabelField(" ");
             EditorGUILayout.PropertyField(serializedObject.FindProperty("SkruconyOpis"), true);
             EditorGUILayout.PropertyField(serializedObject.FindProperty("Opis"), true);
-            if(script.na³orzoneEfektyKarta.Count > 0)
+            if(script.na³orzoneEfektyKartaD³on.Count > 0 || script.na³orzoneEfektyKartaTura.Count > 0)
             {
-                EditorGUILayout.LabelField( "   ","Tymczasowe zmiany w karcie:");
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("na³orzoneEfektyKarta"), true);
+                EditorGUILayout.LabelField("   ", "Tymczasowe zmiany w karcie:");
+                if (script.na³orzoneEfektyKartaD³on.Count > 0)
+                {
+                    EditorGUILayout.PropertyField(serializedObject.FindProperty("na³orzoneEfektyKartaD³on"), true);
+                }
+                else if(script.na³orzoneEfektyKartaTura.Count > 0)
+                {
+                    EditorGUILayout.PropertyField(serializedObject.FindProperty("na³orzoneEfektyKartaTura"), true);
+                }
             }
             EditorGUILayout.LabelField(" ");
             EditorGUILayout.LabelField("DZIA£ANIE KARTY: ");

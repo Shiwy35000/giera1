@@ -380,7 +380,7 @@ public class click : MonoBehaviour
         }
     }
 
-    void KonieTury()
+    public void KonieTury()
     {
         //Debug.Log("koniecTury!");
         WalkaStart.turaGracza = false;

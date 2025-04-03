@@ -3848,7 +3848,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   idRozmuwcy: 1
-  indexDialogPoWalce: 0
   poprawkaPozycjiDymku: {x: -0.2, y: 1.5, z: 0}
   poczatekDialogu: 0
   listaDialogowa:
@@ -3858,15 +3857,15 @@ MonoBehaviour:
       odp: "jest\u0119\u015B studni\u0105??????????"
       warunkiZaistnienia: []
       reakcje:
-      - typReakcji: 1
-        IdIle_dodatek: 0
+      - TypReakcji: 0
+        "reakcjaUzupe\u0142nienie": 1
       nowyDialogPoczatkowy: 0
     - czyAktywna: 1
       odp: ???
       warunkiZaistnienia: []
       reakcje:
-      - typReakcji: 1
-        IdIle_dodatek: 0
+      - TypReakcji: 0
+        "reakcjaUzupe\u0142nienie": 1
       nowyDialogPoczatkowy: 0
   - tresc: "jaki\u015B problem?!?"
     listaOdpowiedzi:
@@ -3874,8 +3873,8 @@ MonoBehaviour:
       odp: DAWEAJ NA SOLO!!!
       warunkiZaistnienia: []
       reakcje:
-      - typReakcji: -1
-        IdIle_dodatek: 0
+      - TypReakcji: 1
+        "reakcjaUzupe\u0142nienie": 0
       nowyDialogPoczatkowy: 2
     - czyAktywna: 1
       odp: '[...]'

@@ -1,16 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-[System.Serializable]
 
+public enum typReakcji { dalszyDialog, walka, sklep, otrzymanieStrataArtefaktu, otrzymanieStrataKarty, otrzymanieStrataZ³ota, otrzymanieStrataZdrowia};
+
+[System.Serializable]
 public class reakcjaTyp
 {
-    public int typReakcji;
-    public int IdIle_dodatek;
+    public typReakcji TypReakcji;
+    public int reakcjaUzupe³nienie; //numer dialogu, iloœæ otrzymanego/straconego zasobu lub jego indeks w bibliotece;
 
-    public reakcjaTyp(int idIle_dodatek, int TypReakcji)
+    public reakcjaTyp(int idIle_dodatek, typReakcji T)
     {
-        typReakcji = TypReakcji;
-        IdIle_dodatek = idIle_dodatek;
+        TypReakcji = T;
+        reakcjaUzupe³nienie = idIle_dodatek;
     }
 }

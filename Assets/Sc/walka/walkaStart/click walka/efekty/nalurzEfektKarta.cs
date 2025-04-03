@@ -2,20 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum cel { kosztNowaWartoœæ, kosztPlusMinus, kosztRandom, obrarzeniaPlusMinus, grywalonœæZmiana, poUrzyciuZmiana, KoniecTuryZmiana, terazWyklucz, terazCmentarz, dobierz}; //if dopisek "Zmiana" , "deklaracjaLiczbowa" == pozycja w enum wybranej opcji;
-public enum przemijanieEfektuKarty {brak_natychmiastowe, tura, opuszczenieD³oni, koniecWalki};
+public enum cel { koszt, kosztRandom, obrarzenia, obrarzeniaAll, obrzarzeniaNegatyw, grywalonœæ, poUrzyciu, KoniecTury, Wyklucz, Cmentarz, dobierz};
+public enum zalerznoœæ { brak_teraz, nowaWartoœæ, PlusMinus, EnumZmiana};
+public enum przemijanieEfektuKarty {brak_teraz, tura, opuszczenieD³oni};
 
 [System.Serializable]
 public class nalurzEfektKarta
 {
     public cel Cel;
-    public int deklaracjaLiczbowa;
+    public zalerznoœæ Zalerznoœæ;
+    public int wartoœæ_enumPoz;
     public przemijanieEfektuKarty PrzemijanieEfektuKarty;
 
-    public nalurzEfektKarta(cel c, int dL, przemijanieEfektuKarty p)
+    public nalurzEfektKarta(cel c,zalerznoœæ z, int dL, przemijanieEfektuKarty p)
     {
         Cel = c;
-        deklaracjaLiczbowa = dL;
+        Zalerznoœæ = z;
+        wartoœæ_enumPoz = dL;
         PrzemijanieEfektuKarty = p;
     }
 }

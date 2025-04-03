@@ -880,6 +880,7 @@ MonoBehaviour:
   Eq: {fileID: 0}
   prefabTejKartyWdeck: {fileID: 0}
   Nazwa: trawa
+  Id: 0
   Koszt: 1
   GrafikaKarty: {fileID: 21300000, guid: 1b28bfaf24c18e447b1f3b48385bbfe6, type: 3}
   Opis:
@@ -895,9 +896,9 @@ MonoBehaviour:
   KartaTag: 1
   "Rzadko\u015B\u0107": 0
   "grywalno\u015B\u0107": 0
-  cele: 5
+  cele: 3
   poUrzyciu: 3
-  naKoniecTury: 0
+  naKoniecTury: 1
   akcje:
     m_PersistentCalls:
       m_Calls:
@@ -939,14 +940,13 @@ MonoBehaviour:
   - NazwaEfektu: 4
     ile: 1
   efektyNaKarty:
-  - adnotacja: 
-    Cel: 0
-    Deklaracja: 0
-    deklaracjaLiczbowa: 0
+  - Cel: 10
+    "Zalerzno\u015B\u0107": 0
+    "warto\u015B\u0107_enumPoz": 1
     PrzemijanieEfektuKarty: 0
   efektyNaKartyRandomRazy: 1
   "Dzia\u0142anieNaKoniecTury": 0
-  celeNieZagranej: 0
+  celeNieZagranej: 3
   akcjeKoniecTury:
     m_PersistentCalls:
       m_Calls: []
@@ -964,6 +964,8 @@ MonoBehaviour:
   efektyNaKartyT: []
   efektyNaKartyRandomRazyT: 1
   fizycznyDeck: {fileID: 0}
+  "na\u0142orzoneEfektyKartaD\u0142on": []
+  "na\u0142orzoneEfektyKartaTura": []
 --- !u!65 &7301124539969855688
 BoxCollider:
   m_ObjectHideFlags: 0

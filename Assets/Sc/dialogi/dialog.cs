@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class dialog : MonoBehaviour
 {
     public int idRozmuwcy;
-    public int indexDialogPoWalce;
+    //[HideInInspector] public int indexDialogPoWalce;
     public Vector3 poprawkaPozycjiDymku;
     private GameObject gracz;
     private GameObject obecnyDymek;
@@ -130,22 +130,21 @@ public class dialog : MonoBehaviour
 
     private void EfektOdp(reakcjaTyp reakcja, int n)
     {
-        if (reakcja.typReakcji > 0) //kolejny dialog
+        if (reakcja.TypReakcji == typReakcji.dalszyDialog) //kolejny dialog
         {
-            poczatekDialogu = reakcja.typReakcji;
+            poczatekDialogu = reakcja.reakcjaUzupe³nienie;
             obecnyDymek.GetComponent<czyjDymek>().WstawText(listaDialogowa[poczatekDialogu].tresc);
             gracz.GetComponent<OpcjeDialogowe>().UsunOpcjeDialogowe();
             gracz.GetComponent<OpcjeDialogowe>().zKimPrzyjemnoscRozmawiac = this.gameObject;
             SprawdziWarunkiOpcjiDialogowych();
             gracz.GetComponent<OpcjeDialogowe>().WizualizujOdpowiedzi(listaDialogowa[poczatekDialogu].listaOdpowiedzi);
         }
-        else if (reakcja.typReakcji == 0) //test
+        else if (reakcja.TypReakcji == typReakcji.walka) // walka!! 
         {
-            //Debug.Log("dzia³a!!");
-        }
-        else if (reakcja.typReakcji == -1) // walka!! 
-        {
-            poczatekDialogu = listaDialogowa[poczatekDialogu].listaOdpowiedzi[n].nowyDialogPoczatkowy;
+            if (listaDialogowa[poczatekDialogu].listaOdpowiedzi[n].nowyDialogPoczatkowy != 0) //zawsze podaj pocz¹tek dialogu po walce!!
+            {
+                poczatekDialogu = listaDialogowa[poczatekDialogu].listaOdpowiedzi[n].nowyDialogPoczatkowy;
+            }
             PrzygotowaniaDoWalki();
         }
     }
@@ -163,17 +162,18 @@ public class dialog : MonoBehaviour
 
     public void PoWalce()
     {
+        //zdania ponirzej to ju¿ nie aktualne teraz po walce zawsze jest dialog;
         //jesli podamy inny indexDialogPoWalce to po walce bedzie ten dialog;
         //jeœli jednak wpiszemy jako nowy pocz¹tek dialogu zmieni nowy pocz¹tek dialogu (ma to sens);
-        if (indexDialogPoWalce != 0)
+       /* if (indexDialogPoWalce != 0)
         {
-            poczatekDialogu = indexDialogPoWalce;
+            poczatekDialogu = indexDialogPoWalce;*/
             obecnyDymek.GetComponent<czyjDymek>().WstawText(listaDialogowa[poczatekDialogu].tresc);
             gracz.GetComponent<OpcjeDialogowe>().UsunOpcjeDialogowe();
             gracz.GetComponent<OpcjeDialogowe>().zKimPrzyjemnoscRozmawiac = this.gameObject;
             SprawdziWarunkiOpcjiDialogowych();
             gracz.GetComponent<OpcjeDialogowe>().WizualizujOdpowiedzi(listaDialogowa[poczatekDialogu].listaOdpowiedzi);
-        }
+       /* }
         else
         {
             obecnyDymek.GetComponent<czyjDymek>().KoniecDialogu();
@@ -181,7 +181,7 @@ public class dialog : MonoBehaviour
             gracz.GetComponent<moveWASD>().wRozmowie = false;
             gracz.GetComponent<OpcjeDialogowe>().UsunOpcjeDialogowe();
             //poczatekDialogu = listaDialogowa[poczatekDialogu].listaOdpowiedzi[numerOdp].nowyDialogPoczatkowy;
-        }
+        }*/
         Walka?.Invoke(false);
         walkaCanvasUi.SetActive(false);
     }
@@ -225,15 +225,15 @@ public class dialog : MonoBehaviour
         List<warunekOdpowiedzi> warunki = listaDialogowa[poczatekDialogu].listaOdpowiedzi[numerOdp].warunkiZaistnienia;
         for (int y = 0; y < warunki.Count;)
         {
-            if (warunki[y].Czego == "hp")
+            if (warunki[y].czego == Czegoo.zdrowie)
             {
-                if (warunki[y].znak == ">x")
+                if (warunki[y].IleZnak == Znak.wiêksze)
                 {
                     //sprawdza czy hp > od warunki[y].Ile - nie napiszê bo narazie nie ma do czego siê odnieœæ;
                     //gdy powyrzysz warunek jest spe³niony wtedy y++; jesli nie break;!
                 }
             }
-            else if(warunki[y].Czego == "testTrue") //!
+            /*else if(warunki[y].czego == "testTrue") //!
             {
                 warunki[y].czySpelniony = true;
                 y++;
@@ -242,7 +242,7 @@ public class dialog : MonoBehaviour
             {
                 warunki[y].czySpelniony = false;
                 break;
-            }
+            }*/
         }
 
     }

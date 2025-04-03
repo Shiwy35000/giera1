@@ -1,20 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-[System.Serializable]
 
+public enum Czegoo {zdrowie, waluta, karta, artefakt};
+public enum Znak { wiêksze,mniejsze, równe, wiêkszeLubRówne, mniejszeLubRówne};
+[System.Serializable]
 public class warunekOdpowiedzi
 {
-    public string Czego;
-    public int Ile;
-    public string znak; //(w odnieœieniu do Ile ">x","<x","=x",">=x","<=x")
+    public Czegoo czego;
+    public Znak IleZnak; //(w odnieœieniu do Ile ">x","<x","=x",">=x","<=x")
+    public int Ile_Id;
     [HideInInspector] public bool czySpelniony;
 
-    public warunekOdpowiedzi(int ile, string MniejWiecejTyle, string czego, bool CzySpelniony)
+    public warunekOdpowiedzi(int ile, Znak MniejWiecejTyle, Czegoo c, bool CzySpelniony)
     {
-        Ile = ile;
-        znak = MniejWiecejTyle;
-        Czego = czego;
+        Ile_Id = ile;
+        IleZnak = MniejWiecejTyle;
+        czego = c;
         czySpelniony = CzySpelniony;
     }
 }

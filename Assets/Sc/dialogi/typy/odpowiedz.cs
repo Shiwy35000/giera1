@@ -16,6 +16,7 @@ public class odpowiedz
      * walka (-1)
      * sklep (-2)
      * dalszy dialog (numer dialogu == liczba > 0)
+     * 
      * koniec dialogu (0) - NIE AKTUALNE!!
      * otrzymanie przedmiotu (-3)
      * otrzymanie karty (-4)
