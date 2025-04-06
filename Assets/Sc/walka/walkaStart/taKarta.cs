@@ -887,22 +887,22 @@ public class taKarta : MonoBehaviour
             {
                 if (specjalnyTypObrarzeñGracz.HasFlag(TypObrarzen.nieUchronne))
                 {
-                    Eq.PrzyjmijDmg(DmgGraczowi, true);
+                    Eq.PrzyjmijDmg(DmgGraczowi, true, this.gameObject);
                 }
                 else
                 {
-                    Eq.PrzyjmijDmg(DmgGraczowi, false);
+                    Eq.PrzyjmijDmg(DmgGraczowi, false, this.gameObject);
                 }
             }
             else
             {
                 if (specjalnyTypObrarzeñGracz.HasFlag(TypObrarzen.nieUchronne))
                 {
-                    Eq.PrzyjmijDmg((DmgGraczowi + Eq.bonusDoObrarzeñ), true);
+                    Eq.PrzyjmijDmg((DmgGraczowi + Eq.bonusDoObrarzeñ), true , this.gameObject);
                 }
                 else
                 {
-                    Eq.PrzyjmijDmg((DmgGraczowi + Eq.bonusDoObrarzeñ), false);
+                    Eq.PrzyjmijDmg((DmgGraczowi + Eq.bonusDoObrarzeñ), false, this.gameObject);
                 }
             }
         }
@@ -940,22 +940,22 @@ public class taKarta : MonoBehaviour
             {
                 if (specjalnyTypObrarzeñGraczT.HasFlag(TypObrarzen.nieUchronne))
                 {
-                    Eq.PrzyjmijDmg(DmgGraczowiT, true);
+                    Eq.PrzyjmijDmg(DmgGraczowiT, true, this.gameObject);
                 }
                 else
                 {
-                    Eq.PrzyjmijDmg(DmgGraczowiT, false);
+                    Eq.PrzyjmijDmg(DmgGraczowiT, false, this.gameObject);
                 }
             }
             else
             {
                 if (specjalnyTypObrarzeñGraczT.HasFlag(TypObrarzen.nieUchronne))
                 {
-                    Eq.PrzyjmijDmg((DmgGraczowiT + Eq.bonusDoObrarzeñ), true);
+                    Eq.PrzyjmijDmg((DmgGraczowiT + Eq.bonusDoObrarzeñ), true, this.gameObject);
                 }
                 else
                 {
-                    Eq.PrzyjmijDmg((DmgGraczowiT + Eq.bonusDoObrarzeñ), false);
+                    Eq.PrzyjmijDmg((DmgGraczowiT + Eq.bonusDoObrarzeñ), false, this.gameObject);
                 }
             }
         }

@@ -136,7 +136,7 @@ public class click : MonoBehaviour
             CzyœæCardMorInfo();
             CzyœæWskazana();
 
-            if(InfoObjT³o.enabled == true)
+            if (InfoObjT³o.enabled == true)
             {
                 InfoObj.GetComponent<wPozMyszy>().ResetPoz();
                 infoEfektAnim.Play("nic");

@@ -38,7 +38,7 @@ public class playerEq : MonoBehaviour
     [HideInInspector] public UnityEvent efektyWywo³aniePocz¹tekTury;
     [HideInInspector] public float ilee;
     [HideInInspector] public bool nieUchronnee;
-
+    [HideInInspector] public GameObject atakuj¹cyy;
     void Awake()
     {
         maxEnergia = 3; // narazie?
@@ -46,7 +46,6 @@ public class playerEq : MonoBehaviour
         dialog.Walka += CzyœcimyListy;
         walkaStart.KoniecTury += MaxEnergiaTura;
         walkaStart.KoniecTury += Wywo³ajEfektyKoniecT;
-        //walkaStart.KoniecTury += PrzemijanieEfektuw;
         walkaStart.Pocz¹tekTury += Wywo³ajEfektyPocz¹tekT;
         BazaEfektow = this.GetComponent<bazaEfektow>();
         sortZ = GameObject.FindGameObjectWithTag("dlon").gameObject.GetComponent<sortGrupZ>();
@@ -57,7 +56,6 @@ public class playerEq : MonoBehaviour
         dialog.Walka -= CzyœcimyListy;
         walkaStart.KoniecTury -= MaxEnergiaTura;
         walkaStart.KoniecTury -= Wywo³ajEfektyKoniecT;
-        //walkaStart.KoniecTury -= PrzemijanieEfektuw;
         walkaStart.Pocz¹tekTury -= Wywo³ajEfektyPocz¹tekT;
     }
 
@@ -102,10 +100,11 @@ public class playerEq : MonoBehaviour
         }
     }
 
-    public void PrzyjmijDmg(float ile, bool nieUchronne)
+    public void PrzyjmijDmg(float ile, bool nieUchronne, GameObject atakuj¹cy)
     {
         ilee = ile;
         nieUchronnee = nieUchronne;
+        atakuj¹cyy = atakuj¹cy;
         Wywo³ajEfektyOtrzyma³Cios();
 
         if (nieUchronnee)
