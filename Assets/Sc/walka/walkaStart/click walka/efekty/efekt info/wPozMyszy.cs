@@ -42,7 +42,7 @@ public class wPozMyszy : MonoBehaviour
 
         if(kolizjaD)
         {
-            nowaPozycja.y = -wysokoœæ;
+            nowaPozycja.y = +wysokoœæ;
         }
         else
         {

@@ -6,7 +6,7 @@ using TMPro;
 
 public class clickNieWalka : MonoBehaviour
 {
-
+    [HideInInspector] public bool czyWalka;
     public GameObject InfoObj;
     public TextMeshProUGUI textMorInfo;
 
@@ -18,13 +18,22 @@ public class clickNieWalka : MonoBehaviour
 
     void Awake()
     {
+        dialog.Walka += CzyWalkaSwitch;
         cam = this.gameObject.transform.parent.gameObject.GetComponent<Camera>();
         InfoObjT³o = textMorInfo.gameObject.transform.parent.gameObject.GetComponent<Image>();
         infoEfektAnim = InfoObj.GetComponent<Animator>();
     }
+    private void OnDestroy()
+    {
+        dialog.Walka -= CzyWalkaSwitch;
+    }
+
     void LateUpdate()
     {
-        Cast();
+        if (Cursor.visible)
+        {
+            Cast();
+        }
     }
 
     void Cast()
@@ -46,6 +55,11 @@ public class clickNieWalka : MonoBehaviour
         {
             ArtefaktInfo(null);
         }
+    }
+
+    void CzyWalkaSwitch(bool walka)
+    {
+        czyWalka = walka;
     }
 
     void ArtefaktInfo(GameObject target)

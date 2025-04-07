@@ -16,6 +16,7 @@ public class artefakt : MonoBehaviour
     public string nazwa;
     public int Id;
     public Sprite sprite;
+    [TextArea]
     public string opis;
     [HideInInspector] public UnityEvent efekty; //trzeba zewnêtrzny skrypt dodaæ do efektów który ma byæ wywo³ywany!!
     [HideInInspector] public int licznik;
@@ -200,7 +201,8 @@ public class artefakt : MonoBehaviour
             script.nazwa = EditorGUILayout.TextField(label: "Nazwa", script.nazwa);
             script.Id = EditorGUILayout.IntField(label: "ID w bibliotece", script.Id);
             script.sprite = (Sprite)EditorGUILayout.ObjectField(label: "Sprite", script.sprite, typeof(Sprite), true);
-            script.opis = EditorGUILayout.TextField(label: "Opis", script.opis);
+            EditorGUILayout.LabelField("Opis:");
+            script.opis = EditorGUILayout.TextArea(script.opis);
             script.typDzia³ania = (TypDzia³ania)EditorGUILayout.EnumPopup(label: "Typ Dzia³ania", script.typDzia³ania);
 
             if(script.typDzia³ania == TypDzia³ania.licznik)

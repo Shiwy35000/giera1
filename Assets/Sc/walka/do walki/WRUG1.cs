@@ -19,7 +19,7 @@ public class WRUG1 : MonoBehaviour
     public List<efekty> na³orzoneEfekty;
 
     //pozosta³e / przypisy
-    [HideInInspector] public GameObject morInfo;
+    //[HideInInspector] public GameObject morInfo;
     private bazaEfektow BazaEfektow;
     [HideInInspector] public UnityEvent efektyWywo³anieOtrzyma³Cios;
     [HideInInspector] public UnityEvent efektyWywo³anieZada³Cios;
@@ -31,8 +31,8 @@ public class WRUG1 : MonoBehaviour
 
     private void Awake()
     {
-        morInfo = this.gameObject.transform.GetChild(1).gameObject;
-        morInfo.SetActive(false);
+        //morInfo = this.gameObject.transform.GetChild(1).gameObject;
+        //morInfo.SetActive(false);
         hpAktualne = hpMax;
         this.gameObject.transform.GetChild(0).gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = WrugGragika;
         BazaEfektow = this.GetComponent<bazaEfektow>();

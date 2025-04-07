@@ -13,6 +13,7 @@ public class efekty
     public string nazwa;
     public odbiurEfektu odbiurEfektu; // do np (neutralizacji wszystkich negatywnych efektów itp.)
     public Sprite sprite;
+    [TextArea]
     public string opis;
 
     [Header("Dzia³anie")]

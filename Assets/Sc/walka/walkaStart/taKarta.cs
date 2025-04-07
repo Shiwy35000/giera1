@@ -26,12 +26,11 @@ public class taKarta : MonoBehaviour
     private GameObject grafika, opis, koszt, ramka, nazwa;
     private Vector3 pozEnd, pozEndRamka;
     private biblioteka Biblioteka;
-    [HideInInspector] public GameObject podgl¹dOpis;
     [HideInInspector] public GameObject dlon;
     [HideInInspector] public playerEq Eq;
     private efekty Efektu;
     [HideInInspector] public GameObject prefabTejKartyWdeck;
-
+    [HideInInspector] public string publicznyPrzekszta³conyOpis;
     [Header("Dane Karty")]
     public string Nazwa;
     public int Id;
@@ -99,8 +98,6 @@ public class taKarta : MonoBehaviour
         koszt = ramka.transform.GetChild(1).gameObject;
         opis = ramka.transform.GetChild(2).gameObject;
         nazwa = ramka.transform.GetChild(3).gameObject;
-        podgl¹dOpis = this.gameObject.transform.GetChild(1).gameObject;
-        podgl¹dOpis.SetActive(false);
 
         Eq = GameObject.FindGameObjectWithTag("Player").GetComponent<playerEq>();
         Biblioteka = GameObject.FindGameObjectWithTag("saveGame").GetComponent<biblioteka>();
@@ -319,7 +316,6 @@ public class taKarta : MonoBehaviour
     {
         click c = GameObject.FindGameObjectWithTag("nadUiWalka").gameObject.GetComponent<click>();
         c.GrabCardOf();
-        c.CzyœæCardMorInfo();
         c.CzyœæWskazana();
     }
     public void UsuñTeKarte()
@@ -403,7 +399,7 @@ public class taKarta : MonoBehaviour
         }
         else if (tx == Opis)
         {
-            podgl¹dOpis.gameObject.transform.GetChild(1).gameObject.GetComponent<TextMeshPro>().text = finalnyOpis;
+            publicznyPrzekszta³conyOpis = finalnyOpis;
         }
     }
 

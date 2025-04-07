@@ -9,8 +9,6 @@ public class click : MonoBehaviour
 {
     private Camera cam;
     
-    //cardInfo;
-    private GameObject cel;
     private GameObject poprzedniCel;
 
     //grab
@@ -19,7 +17,6 @@ public class click : MonoBehaviour
     private GameObject wskazana;
 
     //inne
-    private GameObject graczImg, graczMorInfo;
     private walkaStart WalkaStart;
     private GameObject d³on;
     private GameObject player;
@@ -32,9 +29,6 @@ public class click : MonoBehaviour
     void Awake()
     {
         WalkaStart = this.gameObject.transform.parent.gameObject.GetComponent<walkaStart>();
-        graczImg = GameObject.FindGameObjectWithTag("gracz").gameObject;
-        graczMorInfo = graczImg.transform.GetChild(1).gameObject;
-        graczMorInfo.SetActive(false);
         cam = this.gameObject.transform.parent.gameObject.GetComponent<Camera>();
         d³on = GameObject.FindGameObjectWithTag("dlon").gameObject;
         player = GameObject.FindGameObjectWithTag("Player").gameObject;
@@ -42,7 +36,7 @@ public class click : MonoBehaviour
         infoEfektAnim = InfoObj.GetComponent<Animator>();
     }
 
-    void LateUpdate() //nie pewna, ale zmiana na LATE!!!
+    void LateUpdate()
     {
         Cast();
     }
@@ -61,7 +55,6 @@ public class click : MonoBehaviour
             {
                 if (podniesionaKarta == null)
                 {
-                    MorInfo(raycastHit.transform.gameObject);
                     CardWskazana(raycastHit.transform.gameObject);
                 }
                 if (WalkaStart.turaGracza)
@@ -71,7 +64,6 @@ public class click : MonoBehaviour
                         if (podniesionaKarta == null)
                         {
                             GrabCard(raycastHit.transform.gameObject);
-                            CzyœæCardMorInfo();
                         }
                         else if (podniesionaKarta == raycastHit.transform.gameObject)
                         {
@@ -81,11 +73,11 @@ public class click : MonoBehaviour
                         {
                             GrabCardOf();
                             GrabCard(raycastHit.transform.gameObject);
-                            CzyœæCardMorInfo();
                         }
                     }
                 }
             }
+
             if (WalkaStart.turaGracza)
             {
                 if (raycastHit.transform.gameObject.name == "graczImg" || raycastHit.transform.gameObject.tag == "wrug" || raycastHit.transform.gameObject.tag == "karta")
@@ -98,42 +90,29 @@ public class click : MonoBehaviour
                         }
                     }
                 }
-            }
 
-            if (podniesionaKarta == null)
-            {
-                if (raycastHit.transform.gameObject.tag == "wrug")
-                {
-                    MorInfo(raycastHit.transform.gameObject);
-                    InfoOEfekcie(raycastHit.transform.gameObject);
-                }
-                else if(raycastHit.transform.gameObject.name == "graczImg")
-                {
-                    MorInfo(raycastHit.transform.gameObject);
-                    InfoOEfekcie(raycastHit.transform.gameObject);
-                }
-                else if (raycastHit.transform.gameObject.tag == "moreInfo" || raycastHit.transform.gameObject.tag == "efektImg")
-                {
-                    MorInfo(cel);
-                    InfoOEfekcie(raycastHit.transform.gameObject);
-                }
-
-            }
-            if (WalkaStart.turaGracza)
-            {
                 if (raycastHit.transform.gameObject.name == "koniecTury" && Input.GetButtonDown("LewyMysz"))
                 {
                     GrabCardOf();
-                    CzyœæCardMorInfo();
                     CzyœæWskazana();
                     KonieTury();
                 }
             }
-          
+
+            if (podniesionaKarta == null)
+            {
+                if (raycastHit.transform.gameObject.tag == "efektImg")
+                {
+                    InfoOEfekcie(raycastHit.transform.gameObject);
+                }
+                else if(raycastHit.transform.gameObject.tag == "karta")
+                {
+                    InfoOKarcie(raycastHit.transform.gameObject);
+                }
+            }
         }
         else
         {
-            CzyœæCardMorInfo();
             CzyœæWskazana();
 
             if (InfoObjT³o.enabled == true)
@@ -160,11 +139,18 @@ public class click : MonoBehaviour
         }
     }
 
+    void InfoOKarcie(GameObject target)
+    {
+        infoEfektAnim.Play("pojawia");
+        textMorInfo.text = target.GetComponent<taKarta>().publicznyPrzekszta³conyOpis;
+        InfoObj.GetComponent<wPozMyszy>().WyliczKorektePoz();
+    }
+
     void InfoOEfekcie(GameObject target)
     {
         if (target.tag == "efektImg")
         {
-
+            GameObject cel = target.transform.parent.transform.parent.transform.transform.parent.gameObject;
             GameObject targetParent = target.transform.parent.gameObject;
             for (int x = 0; x < targetParent.transform.childCount; x++)
             {
@@ -199,27 +185,6 @@ public class click : MonoBehaviour
         }
     }
 
-    public void CzyœæCardMorInfo()
-    {
-        if (cel != null)
-        {
-            if (cel.tag == "karta")
-            {
-                cel.GetComponent<taKarta>().podgl¹dOpis.SetActive(false);
-                cel = null;
-            }
-            else if (cel.tag == "wrug")
-            {
-                cel.GetComponent<WRUG1>().morInfo.SetActive(false);
-                cel = null;
-            }
-            else if (cel.name == "graczImg")
-            {
-                graczMorInfo.SetActive(false);
-                cel = null;
-            }
-        }
-    }
     public void CzyœæWskazana()
     {
         if (wskazana != null)
@@ -234,30 +199,7 @@ public class click : MonoBehaviour
             }
         }
     }
-    void MorInfo(GameObject traf)
-    {
-        if (cel == null || cel != traf)
-        {
-            CzyœæCardMorInfo();
-            cel = traf;
-        }
-        else
-        {
-            if (cel.tag == "karta")
-            {
-                cel.GetComponent<taKarta>().podgl¹dOpis.SetActive(true);
-            }
-            else if (cel.tag == "wrug")
-            {
-                cel.GetComponent<WRUG1>().morInfo.SetActive(true);
-            }
-            else if(cel == graczImg)
-            {
-                graczMorInfo.SetActive(true);
-            }
-        }
-    }
-
+  
     void CardWskazana(GameObject traf)
     {
         if (wskazana == null || wskazana != traf)
@@ -293,7 +235,7 @@ public class click : MonoBehaviour
         {
             if(karta.cele == Cele.Gracz)
             {
-                if(traf == graczImg)
+                if(traf.tag == "gracz")
                 {
                     eq.aktualnaEnergia -= karta.Koszt;
                     ObiektyCele.Add(WalkaStart.gracz.gameObject);
@@ -329,7 +271,7 @@ public class click : MonoBehaviour
             }
             else if (karta.cele == Cele.All || karta.cele == Cele.Random)
             {
-                if (traf.tag == "wrug" || traf == graczImg)
+                if (traf.tag == "wrug" || traf.tag == "gracz")
                 {
                     eq.aktualnaEnergia -= karta.Koszt;
                     ObiektyCele.AddRange(WalkaStart.przeciwnicyWwalce);
@@ -358,7 +300,7 @@ public class click : MonoBehaviour
             }
             else if(karta.cele == Cele.AlboWrugAlboGracz)
             {
-                if (traf == graczImg)
+                if (traf.tag == "gracz")
                 {
                     eq.aktualnaEnergia -= karta.Koszt;
                     ObiektyCele.Add(WalkaStart.gracz.gameObject);
