@@ -9,6 +9,7 @@ public class clickNieWalka : MonoBehaviour
     [HideInInspector] public bool czyWalka;
     public GameObject InfoObj;
     public TextMeshProUGUI textMorInfo;
+    public GameObject podgl¹dKart, UiPozaWalk¹;
 
     //przypisy
     private Camera cam;
@@ -16,12 +17,17 @@ public class clickNieWalka : MonoBehaviour
     private Animator infoEfektAnim;
     private string TreœæArtefaktu;
 
+    public static event System.Action<bool> ekwipunekWidoczny;
+
     void Awake()
     {
         dialog.Walka += CzyWalkaSwitch;
         cam = this.gameObject.transform.parent.gameObject.GetComponent<Camera>();
         InfoObjT³o = textMorInfo.gameObject.transform.parent.gameObject.GetComponent<Image>();
         infoEfektAnim = InfoObj.GetComponent<Animator>();
+
+        UiPozaWalk¹.SetActive(false);
+        podgl¹dKart.SetActive(false);
     }
     private void OnDestroy()
     {
@@ -33,6 +39,25 @@ public class clickNieWalka : MonoBehaviour
         if (Cursor.visible)
         {
             Cast();
+        }
+
+        AkcjeUiNieWalka();
+    }
+
+    void AkcjeUiNieWalka()
+    {
+        if(Input.GetButtonDown("Eq"))
+        {
+            if (UiPozaWalk¹.activeSelf)
+            {
+                UiPozaWalk¹.SetActive(false);
+                ekwipunekWidoczny?.Invoke(false);
+            }
+            else
+            {
+                UiPozaWalk¹.SetActive(true);
+                ekwipunekWidoczny?.Invoke(true);
+            }
         }
     }
 
@@ -50,6 +75,10 @@ public class clickNieWalka : MonoBehaviour
             {
                 ArtefaktInfo(raycastHit.transform.gameObject);
             }
+            else if(raycastHit.transform.gameObject.tag == "karta" && czyWalka == false)
+            {
+                InfoOKarcie(raycastHit.transform.gameObject);
+            }
         }
         else
         {
@@ -60,6 +89,12 @@ public class clickNieWalka : MonoBehaviour
     void CzyWalkaSwitch(bool walka)
     {
         czyWalka = walka;
+    }
+    void InfoOKarcie(GameObject target)
+    {
+        infoEfektAnim.Play("pojawia");
+        textMorInfo.text = target.GetComponent<taKarta>().publicznyPrzekszta³conyOpis;
+        InfoObj.GetComponent<wPozMyszy>().WyliczKorektePoz();
     }
 
     void ArtefaktInfo(GameObject target)

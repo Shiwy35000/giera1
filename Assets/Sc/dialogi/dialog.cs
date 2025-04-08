@@ -23,6 +23,20 @@ public class dialog : MonoBehaviour
 
     public static event System.Action<bool> Walka;
 
+    private bool czyEkwipunekOtwarty;
+    private void Awake()
+    {
+        clickNieWalka.ekwipunekWidoczny += CzyEkwipunekOtwarty;
+    }
+    private void OnDestroy()
+    {
+        clickNieWalka.ekwipunekWidoczny -= CzyEkwipunekOtwarty;
+    }
+    void CzyEkwipunekOtwarty(bool czy)
+    {
+        czyEkwipunekOtwarty = czy;
+    }
+
     void Start()
     {
         gracz = GameObject.FindGameObjectWithTag("Player");
@@ -37,7 +51,7 @@ public class dialog : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetButtonDown("LewyMysz") && dialogZnacznik.activeSelf == true)
+        if (Input.GetButtonDown("LewyMysz") && dialogZnacznik.activeSelf == true && czyEkwipunekOtwarty == false)
         {
             WczytajPoczatekDialogu();
             PodejmijDialog();

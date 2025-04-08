@@ -12,10 +12,22 @@ public class moveWASD : MonoBehaviour
     private Vector3 camPoz;
     [HideInInspector] public bool wRozmowie;
 
+    private bool czyEkwipunekOtwarty;
+   
     void Awake()
     {
         sprite = this.transform.GetChild(0).transform;
         cam = GameObject.FindGameObjectWithTag("MainCamera").transform;
+
+        clickNieWalka.ekwipunekWidoczny += CzyEkwipunekOtwarty;
+    }
+    private void OnDestroy()
+    {
+        clickNieWalka.ekwipunekWidoczny -= CzyEkwipunekOtwarty;
+    }
+    void CzyEkwipunekOtwarty(bool czy)
+    {
+        czyEkwipunekOtwarty = czy;
     }
 
     void Start()
@@ -27,19 +39,19 @@ public class moveWASD : MonoBehaviour
     
     void Update()
     {
-        if (wRozmowie == false)
-        {
-            forwardMovement = Input.GetAxis("Vertical") * playerWalkingSpeed * 2;
-            sidewaysMovement = Input.GetAxis("Horizontal") * playerWalkingSpeed;
-            Cursor.visible = false;
-            Cursor.lockState = CursorLockMode.Locked;
-        }
-        else
+        if (wRozmowie  || czyEkwipunekOtwarty)
         {
             forwardMovement = 0;
             sidewaysMovement = 0;
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
+        }
+        else
+        {
+            forwardMovement = Input.GetAxis("Vertical") * playerWalkingSpeed * 2;
+            sidewaysMovement = Input.GetAxis("Horizontal") * playerWalkingSpeed;
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
         }
 
         if(forwardMovement != 0 && sidewaysMovement != 0)

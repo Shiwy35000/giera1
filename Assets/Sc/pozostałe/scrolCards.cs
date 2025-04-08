@@ -1,0 +1,82 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class scrolCards : MonoBehaviour
+{
+    private float pozycjaScroll;
+    private float czu³oœæScroll = 0.05f;
+    private float scrollSpeed = 6;
+
+    private int iloœæKartOdKturychScroll = 19;
+    private int iloœæKartWLini = 6;
+    private Vector3 pozycjaPocz¹tkowa;
+    private Vector3 pozycjaMax;
+    private float przesuniecieOlinijkêY = 2.8f;
+
+    void Update()
+    {
+        if(this.gameObject.transform.childCount >= iloœæKartOdKturychScroll)
+        {
+            ScrolujListe();
+        }
+    }
+
+    public void Aktywuj(List<GameObject> zawartoœæ)
+    {
+        Czyœæ();
+        Wype³nij(zawartoœæ);
+        PozycjaMaxWylicz();
+    }
+
+    void PozycjaMaxWylicz()
+    {
+        if (this.gameObject.transform.childCount >= iloœæKartOdKturychScroll)
+        {
+            pozycjaPocz¹tkowa = new Vector3 (transform.position.x, transform.position.y, transform.position.z);
+            pozycjaScroll = pozycjaPocz¹tkowa.y;
+            int Y = this.gameObject.transform.childCount - (iloœæKartOdKturychScroll - 1);
+            Y /= iloœæKartWLini;
+            float yFloat = Y * przesuniecieOlinijkêY;
+            pozycjaMax = new Vector3(pozycjaPocz¹tkowa.x, pozycjaPocz¹tkowa.y + yFloat, pozycjaPocz¹tkowa.z);
+        }
+    }
+    void Wype³nij(List<GameObject> zawartoœæ)
+    {
+        if (zawartoœæ.Count > 0)
+        {
+            for (int x = 0; x < zawartoœæ.Count; x++)
+            {
+                GameObject kartaa = Instantiate(zawartoœæ[x], this.transform);
+                kartaa.name = zawartoœæ[x].name;
+                kartaa.GetComponent<taKarta>().prefabTejKartyWdeck = zawartoœæ[x];
+            }
+        }
+    }
+    void Czyœæ()
+    {
+        foreach (Transform child in this.gameObject.transform)
+        {
+            Destroy(child.gameObject);
+        }
+    }
+
+    void ScrolujListe()
+    {
+        if (Input.GetAxis("ScrollWheel") != 0f)
+        {
+            pozycjaScroll += Input.GetAxis("ScrollWheel") * czu³oœæScroll;
+
+            if (pozycjaScroll > pozycjaMax.y)
+            {
+                pozycjaScroll = pozycjaMax.y;
+            }
+            else if (pozycjaScroll < pozycjaPocz¹tkowa.y)
+            {
+                pozycjaScroll = pozycjaPocz¹tkowa.y;
+            }
+        }
+
+        transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, pozycjaScroll, transform.position.z), scrollSpeed * Time.deltaTime);
+    }
+}

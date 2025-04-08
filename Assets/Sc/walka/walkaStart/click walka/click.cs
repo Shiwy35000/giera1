@@ -25,7 +25,8 @@ public class click : MonoBehaviour
     public TextMeshProUGUI textMorInfo;
     private Image InfoObjT³o;
     private Animator infoEfektAnim;
-
+    private bool czyEkwipunekOtwarty;
+    
     void Awake()
     {
         WalkaStart = this.gameObject.transform.parent.gameObject.GetComponent<walkaStart>();
@@ -34,11 +35,24 @@ public class click : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player").gameObject;
         InfoObjT³o = textMorInfo.gameObject.transform.parent.gameObject.GetComponent<Image>();
         infoEfektAnim = InfoObj.GetComponent<Animator>();
+
+        clickNieWalka.ekwipunekWidoczny += CzyEkwipunekOtwarty;
+    }
+    private void OnDestroy()
+    {
+        clickNieWalka.ekwipunekWidoczny -= CzyEkwipunekOtwarty;
+    }
+    void CzyEkwipunekOtwarty(bool czy)
+    {
+        czyEkwipunekOtwarty = czy;
     }
 
     void LateUpdate()
     {
-        Cast();
+        if (czyEkwipunekOtwarty == false)
+        {
+            Cast();
+        }
     }
 
     void Cast()

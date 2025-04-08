@@ -7,15 +7,22 @@ public class cameraRuch : MonoBehaviour
     private float rotacjaY;
     private float rotacjaAktualna;
     [HideInInspector] public bool walka = false;
-
+    private bool czyEkwipunekOtwarty;
 
     void Awake()
     {
         dialog.Walka += Wwalce;
+        clickNieWalka.ekwipunekWidoczny += CzyEkwipunekOtwarty;
     }
     private void OnDestroy()
     {
         dialog.Walka -= Wwalce;
+        clickNieWalka.ekwipunekWidoczny -= CzyEkwipunekOtwarty;
+    }
+
+    void CzyEkwipunekOtwarty(bool czy)
+    {
+        czyEkwipunekOtwarty = czy;
     }
 
     void Wwalce(bool czy)
@@ -32,7 +39,7 @@ public class cameraRuch : MonoBehaviour
     {
         rotacjaAktualna = transform.eulerAngles.y;
 
-        if (walka == false)
+        if (walka == false && czyEkwipunekOtwarty == false)
         {
             if (Input.GetAxis("ScrollWheel") != 0f)
             {
