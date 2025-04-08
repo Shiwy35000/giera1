@@ -7,7 +7,6 @@ using UnityEngine.SceneManagement;
 public class dialog : MonoBehaviour
 {
     public int idRozmuwcy;
-    //[HideInInspector] public int indexDialogPoWalce;
     public Vector3 poprawkaPozycjiDymku;
     private GameObject gracz;
     private GameObject obecnyDymek;
@@ -22,8 +21,9 @@ public class dialog : MonoBehaviour
     private playerEq playerEQ;
 
     public static event System.Action<bool> Walka;
-
+    public static event System.Action<bool> wDialogu;
     private bool czyEkwipunekOtwarty;
+
     private void Awake()
     {
         clickNieWalka.ekwipunekWidoczny += CzyEkwipunekOtwarty;
@@ -88,6 +88,7 @@ public class dialog : MonoBehaviour
     {
         if (obecnyDymek == null)
         {
+            wDialogu?.Invoke(true);
             obecnyDymek = Instantiate(prefabDialogu, WordCanvas.transform);
             obecnyDymek.GetComponent<czyjDymek>().wlasciciel = this.gameObject;
             obecnyDymek.GetComponent<czyjDymek>().WstawText(listaDialogowa[poczatekDialogu].tresc);
@@ -130,6 +131,8 @@ public class dialog : MonoBehaviour
                 playerEQ.dialogiWybory.Add(new nowyDialogTyp(idRozmuwcy, poczatekDialogu));
             }
 
+            wDialogu?.Invoke(false);
+
         }
         else if(listaDialogowa[poczatekDialogu].listaOdpowiedzi[numerOdp].reakcje.Count >= 1)
         {
@@ -171,31 +174,18 @@ public class dialog : MonoBehaviour
         walkaCanvasUi.SetActive(true);
         WalkaStart.turaGracza = true;
         Walka?.Invoke(true);
+        wDialogu?.Invoke(false);
         WalkaStart.DodajKartyDoRêkiStart();
     }
 
     public void PoWalce()
     {
-        //zdania ponirzej to ju¿ nie aktualne teraz po walce zawsze jest dialog;
-        //jesli podamy inny indexDialogPoWalce to po walce bedzie ten dialog;
-        //jeœli jednak wpiszemy jako nowy pocz¹tek dialogu zmieni nowy pocz¹tek dialogu (ma to sens);
-       /* if (indexDialogPoWalce != 0)
-        {
-            poczatekDialogu = indexDialogPoWalce;*/
-            obecnyDymek.GetComponent<czyjDymek>().WstawText(listaDialogowa[poczatekDialogu].tresc);
-            gracz.GetComponent<OpcjeDialogowe>().UsunOpcjeDialogowe();
-            gracz.GetComponent<OpcjeDialogowe>().zKimPrzyjemnoscRozmawiac = this.gameObject;
-            SprawdziWarunkiOpcjiDialogowych();
-            gracz.GetComponent<OpcjeDialogowe>().WizualizujOdpowiedzi(listaDialogowa[poczatekDialogu].listaOdpowiedzi);
-       /* }
-        else
-        {
-            obecnyDymek.GetComponent<czyjDymek>().KoniecDialogu();
-            obecnyDymek = null;
-            gracz.GetComponent<moveWASD>().wRozmowie = false;
-            gracz.GetComponent<OpcjeDialogowe>().UsunOpcjeDialogowe();
-            //poczatekDialogu = listaDialogowa[poczatekDialogu].listaOdpowiedzi[numerOdp].nowyDialogPoczatkowy;
-        }*/
+        obecnyDymek.GetComponent<czyjDymek>().WstawText(listaDialogowa[poczatekDialogu].tresc);
+        gracz.GetComponent<OpcjeDialogowe>().UsunOpcjeDialogowe();
+        gracz.GetComponent<OpcjeDialogowe>().zKimPrzyjemnoscRozmawiac = this.gameObject;
+        SprawdziWarunkiOpcjiDialogowych();
+        gracz.GetComponent<OpcjeDialogowe>().WizualizujOdpowiedzi(listaDialogowa[poczatekDialogu].listaOdpowiedzi);
+        wDialogu?.Invoke(true);
         Walka?.Invoke(false);
         walkaCanvasUi.SetActive(false);
     }

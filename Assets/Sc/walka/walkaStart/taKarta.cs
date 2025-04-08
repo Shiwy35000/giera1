@@ -89,6 +89,7 @@ public class taKarta : MonoBehaviour
     [HideInInspector] public GameObject fizycznyDeck;
     public List<nalurzEfektKarta> na³orzoneEfektyKartaD³on;
     public List<nalurzEfektKarta> na³orzoneEfektyKartaTura;
+    [HideInInspector] public bool podgl¹d;
 
     void Awake()
     {
@@ -99,12 +100,17 @@ public class taKarta : MonoBehaviour
         opis = ramka.transform.GetChild(2).gameObject;
         nazwa = ramka.transform.GetChild(3).gameObject;
 
+
         Eq = GameObject.FindGameObjectWithTag("Player").GetComponent<playerEq>();
         Biblioteka = GameObject.FindGameObjectWithTag("saveGame").GetComponent<biblioteka>();
-        fizycznyDeck = GameObject.FindGameObjectWithTag("fizycznyDeck").gameObject;
+        if (podgl¹d == false)
+        {
+            fizycznyDeck = GameObject.FindGameObjectWithTag("fizycznyDeck").gameObject;
+        }
 
         Uzupelnij();
         PodpinajAkcje();
+
 
         walkaStart.KoniecTury += UsuwanieEfektówKartyTura;
     }
@@ -115,15 +121,23 @@ public class taKarta : MonoBehaviour
 
     void Update()
     {
-        if (transform.localPosition != pozEnd)
-        {
-            Move();
-        }
+        //if (podgl¹d == false)
+        //{
+            if (transform.localPosition != pozEnd)
+            {
+                Move();
+            }
 
-        if (ramka.transform.localPosition != pozEndRamka)
+            if (ramka.transform.localPosition != pozEndRamka)
+            {
+                MoveRamka();
+            }
+        /*}
+        else
         {
-            MoveRamka();
-        }
+            transform.localPosition = Vector3.Lerp(transform.localPosition, Vector3.zero, 20f * Time.deltaTime);
+        }*/
+       
     }
 
     private void PodpinajAkcje()

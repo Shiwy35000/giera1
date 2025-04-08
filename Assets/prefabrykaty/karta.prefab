@@ -651,6 +651,7 @@ MonoBehaviour:
   fizycznyDeck: {fileID: 0}
   "na\u0142orzoneEfektyKartaD\u0142on": []
   "na\u0142orzoneEfektyKartaTura": []
+  "podgl\u0105d": 1
 --- !u!65 &7301124539969855688
 BoxCollider:
   m_ObjectHideFlags: 0

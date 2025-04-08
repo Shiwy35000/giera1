@@ -7,12 +7,14 @@ public class scrolCards : MonoBehaviour
     private float pozycjaScroll;
     private float czu³oœæScroll = 0.05f;
     private float scrollSpeed = 6;
-
     private int iloœæKartOdKturychScroll = 19;
     private int iloœæKartWLini = 6;
     private Vector3 pozycjaPocz¹tkowa;
     private Vector3 pozycjaMax;
     private float przesuniecieOlinijkêY = 2.8f;
+
+    [HideInInspector] public List<GameObject> obecnieWyœwietlanyZbiurKart;
+    public GameObject pustySlotPrefab;
 
     void Update()
     {
@@ -45,11 +47,14 @@ public class scrolCards : MonoBehaviour
     {
         if (zawartoœæ.Count > 0)
         {
+            obecnieWyœwietlanyZbiurKart = zawartoœæ;
+
             for (int x = 0; x < zawartoœæ.Count; x++)
             {
-                GameObject kartaa = Instantiate(zawartoœæ[x], this.transform);
+                GameObject nowySlot = Instantiate(pustySlotPrefab, this.transform);
+                GameObject kartaa = Instantiate(zawartoœæ[x], nowySlot.transform);
                 kartaa.name = zawartoœæ[x].name;
-                kartaa.GetComponent<taKarta>().prefabTejKartyWdeck = zawartoœæ[x];
+                kartaa.GetComponent<taKarta>().podgl¹d = true;
             }
         }
     }

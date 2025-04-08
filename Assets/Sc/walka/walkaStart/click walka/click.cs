@@ -26,7 +26,8 @@ public class click : MonoBehaviour
     private Image InfoObjT³o;
     private Animator infoEfektAnim;
     private bool czyEkwipunekOtwarty;
-    
+    private bool clickLag;
+
     void Awake()
     {
         WalkaStart = this.gameObject.transform.parent.gameObject.GetComponent<walkaStart>();
@@ -37,16 +38,27 @@ public class click : MonoBehaviour
         infoEfektAnim = InfoObj.GetComponent<Animator>();
 
         clickNieWalka.ekwipunekWidoczny += CzyEkwipunekOtwarty;
+        clickNieWalka.clickLag += lagCorutineStart;
     }
     private void OnDestroy()
     {
         clickNieWalka.ekwipunekWidoczny -= CzyEkwipunekOtwarty;
+        clickNieWalka.clickLag -= lagCorutineStart;
     }
     void CzyEkwipunekOtwarty(bool czy)
     {
         czyEkwipunekOtwarty = czy;
     }
-
+    void lagCorutineStart(bool nic)
+    {
+        StartCoroutine(lagCorutine(0.1f));
+    }
+    IEnumerator lagCorutine(float PauzaColdown)
+    {
+        clickLag = true;
+        yield return new WaitForSeconds(PauzaColdown);
+        clickLag = false;
+    }
     void LateUpdate()
     {
         if (czyEkwipunekOtwarty == false)
@@ -73,7 +85,7 @@ public class click : MonoBehaviour
                 }
                 if (WalkaStart.turaGracza)
                 {
-                    if (Input.GetButtonDown("LewyMysz"))
+                    if (Input.GetButtonDown("LewyMysz") && clickLag == false)
                     {
                         if (podniesionaKarta == null)
                         {
@@ -96,7 +108,7 @@ public class click : MonoBehaviour
             {
                 if (raycastHit.transform.gameObject.name == "graczImg" || raycastHit.transform.gameObject.tag == "wrug" || raycastHit.transform.gameObject.tag == "karta")
                 {
-                    if (podniesionaKarta != null && podniesionaKarta != raycastHit.transform.gameObject)
+                    if (podniesionaKarta != null && podniesionaKarta != raycastHit.transform.gameObject && clickLag == false)
                     {
                         if (Input.GetButtonDown("LewyMysz") || Input.GetButtonUp("LewyMysz"))
                         {
@@ -105,7 +117,7 @@ public class click : MonoBehaviour
                     }
                 }
 
-                if (raycastHit.transform.gameObject.name == "koniecTury" && Input.GetButtonDown("LewyMysz"))
+                if (raycastHit.transform.gameObject.name == "koniecTury" && Input.GetButtonDown("LewyMysz") && clickLag == false)
                 {
                     GrabCardOf();
                     CzyœæWskazana();
@@ -137,7 +149,7 @@ public class click : MonoBehaviour
 
             if (WalkaStart.turaGracza)
             {
-                if (Input.GetButtonDown("LewyMysz") && podniesionaKarta != null)
+                if (Input.GetButtonDown("LewyMysz") && podniesionaKarta != null && clickLag == false)
                 {
                     GrabCardOf();
                 }
@@ -146,7 +158,7 @@ public class click : MonoBehaviour
 
         if (WalkaStart.turaGracza)
         {
-            if (Input.GetButtonDown("PrawyMysz") && podniesionaKarta != null)
+            if (Input.GetButtonDown("PrawyMysz") && podniesionaKarta != null && clickLag == false)
             {
                 GrabCardOf();
             }
