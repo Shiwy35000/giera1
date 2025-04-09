@@ -38,7 +38,7 @@ public class scrolCards : MonoBehaviour
         {
             if (pozycjaPocz¹tkowa!= Vector3.zero)
             {
-                transform.position = pozycjaPocz¹tkowa;
+                transform.position = new Vector3(transform.position.x, pozycjaPocz¹tkowa.y, transform.position.z);
             }
             pozycjaPocz¹tkowa = new Vector3 (transform.position.x, transform.position.y, transform.position.z);
             pozycjaScroll = pozycjaPocz¹tkowa.y;
