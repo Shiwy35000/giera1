@@ -29,16 +29,26 @@ public class scrolCards : MonoBehaviour
         Czyœæ();
         Wype³nij(zawartoœæ);
         PozycjaMaxWylicz();
+
     }
 
     void PozycjaMaxWylicz()
     {
         if (this.gameObject.transform.childCount >= iloœæKartOdKturychScroll)
         {
+            if (pozycjaPocz¹tkowa!= Vector3.zero)
+            {
+                transform.position = pozycjaPocz¹tkowa;
+            }
             pozycjaPocz¹tkowa = new Vector3 (transform.position.x, transform.position.y, transform.position.z);
             pozycjaScroll = pozycjaPocz¹tkowa.y;
             int Y = this.gameObject.transform.childCount - (iloœæKartOdKturychScroll - 1);
+            int reszta = Y % iloœæKartWLini;
             Y /= iloœæKartWLini;
+            if(reszta > 0)
+            {
+                Y += 1;
+            }
             float yFloat = Y * przesuniecieOlinijkêY;
             pozycjaMax = new Vector3(pozycjaPocz¹tkowa.x, pozycjaPocz¹tkowa.y + yFloat, pozycjaPocz¹tkowa.z);
         }
@@ -54,11 +64,10 @@ public class scrolCards : MonoBehaviour
                 GameObject nowySlot = Instantiate(pustySlotPrefab, this.transform);
                 GameObject kartaa = Instantiate(zawartoœæ[x], nowySlot.transform);
                 kartaa.name = zawartoœæ[x].name;
-                kartaa.GetComponent<taKarta>().podgl¹d = true;
             }
         }
     }
-    void Czyœæ()
+    public void Czyœæ()
     {
         foreach (Transform child in this.gameObject.transform)
         {
@@ -70,7 +79,7 @@ public class scrolCards : MonoBehaviour
     {
         if (Input.GetAxis("ScrollWheel") != 0f)
         {
-            pozycjaScroll += Input.GetAxis("ScrollWheel") * czu³oœæScroll;
+            pozycjaScroll -= Input.GetAxis("ScrollWheel") * czu³oœæScroll;
 
             if (pozycjaScroll > pozycjaMax.y)
             {

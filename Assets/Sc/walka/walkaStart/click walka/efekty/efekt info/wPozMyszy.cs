@@ -17,7 +17,6 @@ public class wPozMyszy : MonoBehaviour
 
     public void ResetPoz()
     {
-        //infoWizualia.GetComponent<RectTransform>().localPosition = Vector3.zero;
         rugColider.GetComponent<RectTransform>().position = rug.GetComponent<RectTransform>().position;
     }
 

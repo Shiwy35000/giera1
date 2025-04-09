@@ -89,7 +89,6 @@ public class taKarta : MonoBehaviour
     [HideInInspector] public GameObject fizycznyDeck;
     public List<nalurzEfektKarta> na³orzoneEfektyKartaD³on;
     public List<nalurzEfektKarta> na³orzoneEfektyKartaTura;
-    [HideInInspector] public bool podgl¹d;
 
     void Awake()
     {
@@ -103,10 +102,7 @@ public class taKarta : MonoBehaviour
 
         Eq = GameObject.FindGameObjectWithTag("Player").GetComponent<playerEq>();
         Biblioteka = GameObject.FindGameObjectWithTag("saveGame").GetComponent<biblioteka>();
-        if (podgl¹d == false)
-        {
-            fizycznyDeck = GameObject.FindGameObjectWithTag("fizycznyDeck").gameObject;
-        }
+        fizycznyDeck = GameObject.FindGameObjectWithTag("fizycznyDeck").gameObject;
 
         Uzupelnij();
         PodpinajAkcje();
@@ -121,23 +117,15 @@ public class taKarta : MonoBehaviour
 
     void Update()
     {
-        //if (podgl¹d == false)
-        //{
-            if (transform.localPosition != pozEnd)
-            {
-                Move();
-            }
-
-            if (ramka.transform.localPosition != pozEndRamka)
-            {
-                MoveRamka();
-            }
-        /*}
-        else
+        if (transform.localPosition != pozEnd)
         {
-            transform.localPosition = Vector3.Lerp(transform.localPosition, Vector3.zero, 20f * Time.deltaTime);
-        }*/
-       
+            Move();
+        }
+
+        if (ramka.transform.localPosition != pozEndRamka)
+        {
+            MoveRamka();
+        }
     }
 
     private void PodpinajAkcje()
@@ -232,7 +220,7 @@ public class taKarta : MonoBehaviour
             }
         }
 
-        if (Dzia³anieNaKoniecTury == true) //NO BEDZIE TROCHÊ UZUPE£NIANIA
+        if (Dzia³anieNaKoniecTury == true)
         {
             if (celeNieZagranej == CeleNieZagranej.Gracz)
             {

@@ -135,6 +135,7 @@ GameObject:
   - component: {fileID: 87450412}
   - component: {fileID: 87450416}
   - component: {fileID: 87450417}
+  - component: {fileID: 87450418}
   m_Layer: 6
   m_Name: CameraWALKA
   m_TagString: Untagged
@@ -250,6 +251,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1235178498}
   - {fileID: 1988571568}
   - {fileID: 130604883}
   m_Father: {fileID: 380216048}
@@ -289,6 +291,20 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 192
   m_MaxRayIntersections: 0
+--- !u!114 &87450418
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 87450411}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5820772f8f7c504409b0148878d98754, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  InfoObj: {fileID: 622165805}
+  textMorInfo: {fileID: 1662968955}
 --- !u!1 &90174259
 GameObject:
   m_ObjectHideFlags: 0
@@ -1438,6 +1454,7 @@ GameObject:
   m_Component:
   - component: {fileID: 827592185}
   - component: {fileID: 827592186}
+  - component: {fileID: 827592187}
   m_Layer: 6
   m_Name: "t\u0142o"
   m_TagString: Untagged
@@ -1512,6 +1529,27 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!65 &827592187
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 827592184}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 10.000002, y: 10.000004, z: 0.20000066}
+  m_Center: {x: 0.0000003434252, y: 0.0000009536743, z: 0.0000076293945}
 --- !u!1 &830247648
 GameObject:
   m_ObjectHideFlags: 0
@@ -2280,6 +2318,23 @@ MonoBehaviour:
   - {fileID: 7271937273496504588, guid: 519d4bafd93464947a5a881b7922a65c, type: 3}
   - {fileID: 7271937273496504588, guid: 519d4bafd93464947a5a881b7922a65c, type: 3}
   - {fileID: 7271937273496504588, guid: 519d4bafd93464947a5a881b7922a65c, type: 3}
+  - {fileID: 7271937273496504588, guid: 519d4bafd93464947a5a881b7922a65c, type: 3}
+  - {fileID: 7271937273496504588, guid: 519d4bafd93464947a5a881b7922a65c, type: 3}
+  - {fileID: 7271937273496504588, guid: 519d4bafd93464947a5a881b7922a65c, type: 3}
+  - {fileID: 7271937273496504588, guid: 519d4bafd93464947a5a881b7922a65c, type: 3}
+  - {fileID: 7271937273496504588, guid: 519d4bafd93464947a5a881b7922a65c, type: 3}
+  - {fileID: 7271937273496504588, guid: 519d4bafd93464947a5a881b7922a65c, type: 3}
+  - {fileID: 7271937273496504588, guid: 519d4bafd93464947a5a881b7922a65c, type: 3}
+  - {fileID: 7271937273496504588, guid: 519d4bafd93464947a5a881b7922a65c, type: 3}
+  - {fileID: 7271937273496504588, guid: 519d4bafd93464947a5a881b7922a65c, type: 3}
+  - {fileID: 7271937273496504588, guid: 519d4bafd93464947a5a881b7922a65c, type: 3}
+  - {fileID: 7271937273496504588, guid: 519d4bafd93464947a5a881b7922a65c, type: 3}
+  - {fileID: 7271937273496504588, guid: 519d4bafd93464947a5a881b7922a65c, type: 3}
+  - {fileID: 7271937273496504588, guid: 519d4bafd93464947a5a881b7922a65c, type: 3}
+  - {fileID: 7271937273496504588, guid: 519d4bafd93464947a5a881b7922a65c, type: 3}
+  - {fileID: 7271937273496504588, guid: 519d4bafd93464947a5a881b7922a65c, type: 3}
+  - {fileID: 7271937273496504588, guid: 519d4bafd93464947a5a881b7922a65c, type: 3}
+  - {fileID: 7271937273496504588, guid: 519d4bafd93464947a5a881b7922a65c, type: 3}
   sakiewka: 0
   rzar: 0
   dialogiWybory: []
@@ -3007,12 +3062,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1235178497}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: 0.0000000074505797, w: 1}
-  m_LocalPosition: {x: 25, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0.000000007450579, w: 1}
+  m_LocalPosition: {x: 25, y: 0, z: 40.000015}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1988571568}
+  m_Father: {fileID: 87450415}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1274583613
 GameObject:
@@ -5226,7 +5281,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1988571568}
-  - component: {fileID: 1988571569}
   m_Layer: 6
   m_Name: uIWALKA
   m_TagString: nadUiWalka
@@ -5253,24 +5307,9 @@ Transform:
   - {fileID: 804419300}
   - {fileID: 763064637}
   - {fileID: 2105838909}
-  - {fileID: 1235178498}
   - {fileID: 1536757176}
   m_Father: {fileID: 87450415}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1988571569
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1988571567}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5820772f8f7c504409b0148878d98754, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  InfoObj: {fileID: 622165805}
-  textMorInfo: {fileID: 1662968955}
 --- !u!1 &2042654802
 GameObject:
   m_ObjectHideFlags: 0

@@ -71,6 +71,7 @@ public class clickNieWalka : MonoBehaviour
         {
             if (UiPozaWalk¹.activeSelf)
             {
+                ScrolCards.Czyœæ();
                 UiPozaWalk¹.SetActive(false);
                 ekwipunekWidoczny?.Invoke(false);
             }
@@ -99,15 +100,24 @@ public class clickNieWalka : MonoBehaviour
             {
                 ArtefaktInfo(raycastHit.transform.gameObject);
             }
-            else if(raycastHit.transform.gameObject.tag == "karta" && czyWalka == false)
+            else if(raycastHit.transform.gameObject.tag == "karta")
             {
                 InfoOKarcie(raycastHit.transform.gameObject);
+            }
+            else if(raycastHit.transform.gameObject.tag == "efektImg")
+            {
+                //celowo puste!
+            }
+            else
+            {
+                InfoPlusOf();
             }
 
             if (Input.GetButtonDown("LewyMysz") && ClickLag == false) //przyciski
             {
                 if (raycastHit.transform.gameObject == eqOffButton)
                 {
+                    ScrolCards.Czyœæ();
                     UiPozaWalk¹.SetActive(false);
                     ekwipunekWidoczny?.Invoke(false);
                     clickLag?.Invoke(false);
@@ -125,6 +135,7 @@ public class clickNieWalka : MonoBehaviour
                     {
                         if(ScrolCards.obecnieWyœwietlanyZbiurKart == eq.deckPrefab)
                         {
+                            ScrolCards.Czyœæ();
                             podgl¹dKart.SetActive(false);
                         }
                         else
@@ -143,7 +154,7 @@ public class clickNieWalka : MonoBehaviour
         }
         else
         {
-            ArtefaktInfo(null);
+            InfoPlusOf();
         }
     }
 
@@ -158,6 +169,15 @@ public class clickNieWalka : MonoBehaviour
         InfoObj.GetComponent<wPozMyszy>().WyliczKorektePoz();
     }
 
+    void InfoPlusOf()
+    {
+        if(InfoObj.GetComponent<wPozMyszy>().infoWizualia.transform.GetChild(0).GetComponent<Image>().enabled == true)
+        {
+            InfoObj.GetComponent<wPozMyszy>().ResetPoz();
+            infoEfektAnim.Play("nic");
+        }
+    }
+
     void ArtefaktInfo(GameObject target)
     {
         if (target != null)
@@ -170,15 +190,9 @@ public class clickNieWalka : MonoBehaviour
                 InfoObj.GetComponent<wPozMyszy>().WyliczKorektePoz();
             }
         }
-        else if (TreœæArtefaktu != null && target == null)
-        {
-            TreœæArtefaktu = null;
-            InfoObj.GetComponent<wPozMyszy>().ResetPoz();
-            infoEfektAnim.Play("nic");
-        }
     }
 
-    void lagCorutineStart() //narazie nie ma zastosowania?
+    void lagCorutineStart()
     {
         StartCoroutine(lagCorutine(0.1f));
     }

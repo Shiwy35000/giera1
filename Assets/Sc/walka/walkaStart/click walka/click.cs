@@ -30,8 +30,8 @@ public class click : MonoBehaviour
 
     void Awake()
     {
-        WalkaStart = this.gameObject.transform.parent.gameObject.GetComponent<walkaStart>();
-        cam = this.gameObject.transform.parent.gameObject.GetComponent<Camera>();
+        WalkaStart = this.gameObject.GetComponent<walkaStart>();
+        cam = this.gameObject.GetComponent<Camera>();
         d³on = GameObject.FindGameObjectWithTag("dlon").gameObject;
         player = GameObject.FindGameObjectWithTag("Player").gameObject;
         InfoObjT³o = textMorInfo.gameObject.transform.parent.gameObject.GetComponent<Image>();
