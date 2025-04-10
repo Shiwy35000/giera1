@@ -34,13 +34,14 @@ public class scrolCards : MonoBehaviour
 
     void PozycjaMaxWylicz()
     {
+        if (pozycjaPocz¹tkowa != Vector3.zero)
+        {
+            transform.position = new Vector3(transform.position.x, pozycjaPocz¹tkowa.y, transform.position.z);
+        }
+        pozycjaPocz¹tkowa = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+
         if (this.gameObject.transform.childCount >= iloœæKartOdKturychScroll)
         {
-            if (pozycjaPocz¹tkowa!= Vector3.zero)
-            {
-                transform.position = new Vector3(transform.position.x, pozycjaPocz¹tkowa.y, transform.position.z);
-            }
-            pozycjaPocz¹tkowa = new Vector3 (transform.position.x, transform.position.y, transform.position.z);
             pozycjaScroll = pozycjaPocz¹tkowa.y;
             int Y = this.gameObject.transform.childCount - (iloœæKartOdKturychScroll - 1);
             int reszta = Y % iloœæKartWLini;
@@ -55,10 +56,10 @@ public class scrolCards : MonoBehaviour
     }
     void Wype³nij(List<GameObject> zawartoœæ)
     {
+        obecnieWyœwietlanyZbiurKart = zawartoœæ;
+
         if (zawartoœæ.Count > 0)
         {
-            obecnieWyœwietlanyZbiurKart = zawartoœæ;
-
             for (int x = 0; x < zawartoœæ.Count; x++)
             {
                 GameObject nowySlot = Instantiate(pustySlotPrefab, this.transform);

@@ -9,12 +9,18 @@ public class clickNieWalka : MonoBehaviour
     [HideInInspector] public bool czyWalka;
     public GameObject InfoObj;
     public TextMeshProUGUI textMorInfo;
-    public GameObject podgl¹dKart, UiPozaWalk¹;
+    public GameObject podgl¹dKart, UiPozaWalk¹, przyciskiWWalce, przyciskiPozaWalk¹;
 
-    [Header("Przyciski")]
+    [Header("Przyciski:")]
+    [Header("ZAWSZE W EQ")]
     public GameObject eqOffButton;
-    public GameObject eqOnButton;
     public GameObject deckButton;
+    [Header("NIE W EQ")]
+    public GameObject eqOnButton;
+    [Header("EQ W WALCE")]
+    public GameObject cmentarzButton;
+    public GameObject wykluczoneButton;
+    [Header("EQ POZA WALK¥")]
 
     //przypisy
     private Camera cam;
@@ -42,8 +48,7 @@ public class clickNieWalka : MonoBehaviour
         ScrolCards = podgl¹dKart.gameObject.transform.GetChild(0).GetComponent<scrolCards>();
         eq = GameObject.FindGameObjectWithTag("Player").gameObject.GetComponent<playerEq>();
 
-        UiPozaWalk¹.SetActive(false);
-        podgl¹dKart.SetActive(false);
+        ZamknijEq();
     }
     private void OnDestroy()
     {
@@ -54,7 +59,15 @@ public class clickNieWalka : MonoBehaviour
     {
         wDialogu = czy;
     }
-
+    void ZamknijEq()
+    {
+        ScrolCards.Czyœæ();
+        podgl¹dKart.SetActive(false);
+        przyciskiWWalce.SetActive(false);
+        przyciskiPozaWalk¹.SetActive(false);
+        UiPozaWalk¹.SetActive(false);
+        ekwipunekWidoczny?.Invoke(false);
+    }
     void LateUpdate()
     {
         if (Cursor.visible)
@@ -71,15 +84,21 @@ public class clickNieWalka : MonoBehaviour
         {
             if (UiPozaWalk¹.activeSelf)
             {
-                ScrolCards.Czyœæ();
-                UiPozaWalk¹.SetActive(false);
-                ekwipunekWidoczny?.Invoke(false);
+                ZamknijEq();
             }
             else
             {
                 UiPozaWalk¹.SetActive(true);
                 ekwipunekWidoczny?.Invoke(true);
                 podgl¹dKart.SetActive(false);
+                if(czyWalka)
+                {
+                    przyciskiWWalce.SetActive(true);
+                }
+                else
+                {
+                    przyciskiPozaWalk¹.SetActive(true);
+                }
             }
             InfoObj.GetComponent<wPozMyszy>().ResetPoz();
             infoEfektAnim.Play("nic");
@@ -117,9 +136,7 @@ public class clickNieWalka : MonoBehaviour
             {
                 if (raycastHit.transform.gameObject == eqOffButton)
                 {
-                    ScrolCards.Czyœæ();
-                    UiPozaWalk¹.SetActive(false);
-                    ekwipunekWidoczny?.Invoke(false);
+                    ZamknijEq();
                     clickLag?.Invoke(false);
                 }
                 else if(raycastHit.transform.gameObject == eqOnButton)
@@ -127,26 +144,96 @@ public class clickNieWalka : MonoBehaviour
                     UiPozaWalk¹.SetActive(true);
                     ekwipunekWidoczny?.Invoke(true);
                     lagCorutineStart();
-                    podgl¹dKart.SetActive(false);
+                    if (czyWalka)
+                    {
+                        przyciskiWWalce.SetActive(true);
+                    }
+                    else
+                    {
+                        przyciskiPozaWalk¹.SetActive(true);
+                    }
                 }
                 else if(raycastHit.transform.gameObject == deckButton)
                 {
-                    if(podgl¹dKart.activeSelf)
+                    if (czyWalka)
                     {
-                        if(ScrolCards.obecnieWyœwietlanyZbiurKart == eq.deckPrefab)
+                        if (podgl¹dKart.activeSelf)
+                        {
+                            if (ScrolCards.obecnieWyœwietlanyZbiurKart == eq.deck)
+                            {
+                                ScrolCards.Czyœæ();
+                                podgl¹dKart.SetActive(false);
+                            }
+                            else
+                            {
+                                ScrolCards.Aktywuj(eq.deck);
+                            }
+                        }
+                        else
+                        {
+                            podgl¹dKart.SetActive(true);
+                            ScrolCards.Aktywuj(eq.deck);
+                        }
+                    }
+                    else
+                    {
+                        if (podgl¹dKart.activeSelf)
+                        {
+                            if (ScrolCards.obecnieWyœwietlanyZbiurKart == eq.deckPrefab)
+                            {
+                                ScrolCards.Czyœæ();
+                                podgl¹dKart.SetActive(false);
+                            }
+                            else
+                            {
+                                ScrolCards.Aktywuj(eq.deckPrefab);
+                            }
+                        }
+                        else
+                        {
+                            podgl¹dKart.SetActive(true);
+                            ScrolCards.Aktywuj(eq.deckPrefab);
+                        }
+                    }
+                }
+                else if (raycastHit.transform.gameObject == cmentarzButton)
+                {
+                    if (podgl¹dKart.activeSelf)
+                    {
+                        if (ScrolCards.obecnieWyœwietlanyZbiurKart == eq.cmentarz)
                         {
                             ScrolCards.Czyœæ();
                             podgl¹dKart.SetActive(false);
                         }
                         else
                         {
-                            ScrolCards.Aktywuj(eq.deckPrefab);
+                            ScrolCards.Aktywuj(eq.cmentarz);
                         }
                     }
                     else
                     {
                         podgl¹dKart.SetActive(true);
-                        ScrolCards.Aktywuj(eq.deckPrefab);
+                        ScrolCards.Aktywuj(eq.cmentarz);
+                    }
+                }
+                else if (raycastHit.transform.gameObject == wykluczoneButton)
+                {
+                    if (podgl¹dKart.activeSelf)
+                    {
+                        if (ScrolCards.obecnieWyœwietlanyZbiurKart == eq.wykluczone)
+                        {
+                            ScrolCards.Czyœæ();
+                            podgl¹dKart.SetActive(false);
+                        }
+                        else
+                        {
+                            ScrolCards.Aktywuj(eq.wykluczone);
+                        }
+                    }
+                    else
+                    {
+                        podgl¹dKart.SetActive(true);
+                        ScrolCards.Aktywuj(eq.wykluczone);
                     }
                 }
 
