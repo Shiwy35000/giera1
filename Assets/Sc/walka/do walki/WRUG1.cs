@@ -28,6 +28,7 @@ public class WRUG1 : MonoBehaviour
     [HideInInspector] public float ilee;
     [HideInInspector] public bool nieUchronnee;
     [HideInInspector] public UnityEvent obecnaAkcja;
+    [HideInInspector] public GameObject punktLinia;
 
     private void Awake()
     {
@@ -36,6 +37,8 @@ public class WRUG1 : MonoBehaviour
         hpAktualne = hpMax;
         this.gameObject.transform.GetChild(0).gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = WrugGragika;
         BazaEfektow = this.GetComponent<bazaEfektow>();
+        punktLinia = this.gameObject.transform.GetChild(2).gameObject;
+
         walkaStart.KoniecTury += Wywo³ajEfektyKoniecT;
         walkaStart.Pocz¹tekTury += Wywo³ajEfektyPocz¹tekT;
     }

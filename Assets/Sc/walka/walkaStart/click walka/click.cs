@@ -27,6 +27,9 @@ public class click : MonoBehaviour
     private Animator infoEfektAnim;
     private bool czyEkwipunekOtwarty;
     private bool clickLag;
+    private GameObject punktLiniaGracz;
+    public GameObject nadLinia;
+    private celLinia CelLinia;
 
     void Awake()
     {
@@ -36,6 +39,9 @@ public class click : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player").gameObject;
         InfoObjT³o = textMorInfo.gameObject.transform.parent.gameObject.GetComponent<Image>();
         infoEfektAnim = InfoObj.GetComponent<Animator>();
+        punktLiniaGracz = GameObject.FindGameObjectWithTag("gracz").gameObject.transform.GetChild(2).gameObject;
+        CelLinia = nadLinia.GetComponent<celLinia>();
+        nadLinia.SetActive(false);
 
         clickNieWalka.ekwipunekWidoczny += CzyEkwipunekOtwarty;
         clickNieWalka.clickLag += lagCorutineStart;
@@ -156,6 +162,98 @@ public class click : MonoBehaviour
             }
         }
 
+        if (podniesionaKarta != null)
+        {
+            if (weHitSomthing)
+            {
+                if(podniesionaKarta.GetComponent<taKarta>().cele == Cele.Wrug)
+                {
+                    nadLinia.SetActive(true);
+
+                    if (raycastHit.transform.gameObject.tag == "wrug")
+                    {
+                        CelLinia.trybDzia³ania = TrybDzia³ania.celWrug;
+
+                        taKarta k = podniesionaKarta.GetComponent<taKarta>();
+                        CelLinia.pocz¹tek = k.punktLinia.transform.position;
+                        WRUG1 k2 = raycastHit.transform.gameObject.GetComponent<WRUG1>();
+                        CelLinia.koniec = k2.punktLinia.transform.position;
+                    }
+                    else
+                    {
+                        if (nadLinia.activeSelf == true)
+                        {
+                            nadLinia.SetActive(false);
+                        }
+                    }
+                    /*else
+                    {
+                        LiniaDoMyszy();
+                    }*/
+                }
+                else if (podniesionaKarta.GetComponent<taKarta>().cele == Cele.Gracz)
+                {
+                    nadLinia.SetActive(true);
+
+                    if (raycastHit.transform.gameObject.tag == "gracz")
+                    {
+                        CelLinia.trybDzia³ania = TrybDzia³ania.celKarta;
+
+                        taKarta k = podniesionaKarta.GetComponent<taKarta>();
+                        CelLinia.pocz¹tek = k.punktLinia.transform.position;
+                        CelLinia.koniec = punktLiniaGracz.transform.position;
+                    }
+                    else
+                    {
+                        if (nadLinia.activeSelf == true)
+                        {
+                            nadLinia.SetActive(false);
+                        }
+                    }
+                    /*else
+                    {
+                        LiniaDoMyszy();
+                    }*/
+                }
+                else if (podniesionaKarta.GetComponent<taKarta>().cele == Cele.Karta)
+                {
+                    nadLinia.SetActive(true);
+
+                    if (raycastHit.transform.gameObject.tag == "karta" && raycastHit.transform.gameObject != podniesionaKarta)
+                    {
+                        CelLinia.trybDzia³ania = TrybDzia³ania.celKarta;
+
+                        taKarta k = podniesionaKarta.GetComponent<taKarta>();
+                        CelLinia.pocz¹tek = k.punktLinia.transform.position;
+                        taKarta k2 = raycastHit.transform.gameObject.GetComponent<taKarta>();
+                        CelLinia.koniec = k2.punktLinia.transform.position;
+                    }
+                    else
+                    {
+                        if (nadLinia.activeSelf == true)
+                        {
+                            nadLinia.SetActive(false);
+                        }
+                    }
+                   /* else
+                    {
+                        LiniaDoMyszy();
+                    }*/
+                }
+            }
+            else
+            {
+                if(nadLinia.activeSelf == true)
+                {
+                    nadLinia.SetActive(false);
+                }
+                /*if(podniesionaKarta.GetComponent<taKarta>().cele == Cele.Wrug || podniesionaKarta.GetComponent<taKarta>().cele == Cele.Gracz || podniesionaKarta.GetComponent<taKarta>().cele == Cele.Karta)
+                {
+                    LiniaDoMyszy();
+                }*/
+            }
+        }
+
         if (WalkaStart.turaGracza)
         {
             if (Input.GetButtonDown("PrawyMysz") && podniesionaKarta != null && clickLag == false)
@@ -164,6 +262,23 @@ public class click : MonoBehaviour
             }
         }
     }
+
+    /*void LiniaDoMyszy()
+    {
+        /*if(podniesionaKarta.GetComponent<taKarta>().cele == Cele.Wrug)
+        {
+            CelLinia.trybDzia³ania = TrybDzia³ania.celWrug;
+        }
+        else if(podniesionaKarta.GetComponent<taKarta>().cele == Cele.Gracz || podniesionaKarta.GetComponent<taKarta>().cele == Cele.Karta)
+        {
+            CelLinia.trybDzia³ania = TrybDzia³ania.celKarta; 
+        }
+
+        taKarta k = podniesionaKarta.GetComponent<taKarta>();
+        CelLinia.pocz¹tek = k.punktLinia.transform.position;
+        Vector3 mousePos = cam.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Input.mousePosition.z));    
+        CelLinia.koniec = mousePos;*/
+    //}
 
     void InfoOKarcie(GameObject target)
     {
@@ -248,6 +363,7 @@ public class click : MonoBehaviour
         {
             podniesionaKarta.GetComponent<taKarta>().PodniesionaPoz(false);
             podniesionaKarta = null;
+            nadLinia.SetActive(false);
         }
     }
 

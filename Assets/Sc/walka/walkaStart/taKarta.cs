@@ -89,6 +89,7 @@ public class taKarta : MonoBehaviour
     [HideInInspector] public GameObject fizycznyDeck;
     public List<nalurzEfektKarta> na³orzoneEfektyKartaD³on;
     public List<nalurzEfektKarta> na³orzoneEfektyKartaTura;
+    [HideInInspector] public GameObject punktLinia;
 
     void Awake()
     {
@@ -98,7 +99,7 @@ public class taKarta : MonoBehaviour
         koszt = ramka.transform.GetChild(1).gameObject;
         opis = ramka.transform.GetChild(2).gameObject;
         nazwa = ramka.transform.GetChild(3).gameObject;
-
+        punktLinia = this.gameObject.transform.GetChild(1).gameObject;
 
         Eq = GameObject.FindGameObjectWithTag("Player").GetComponent<playerEq>();
         Biblioteka = GameObject.FindGameObjectWithTag("saveGame").GetComponent<biblioteka>();
@@ -418,7 +419,7 @@ public class taKarta : MonoBehaviour
     {
         if (czyPodniesiona)
         {
-            pozEnd = new Vector3(transform.localPosition.x, transform.localPosition.y + 2, transform.localPosition.z - 6f);
+            pozEnd = new Vector3(transform.localPosition.x, transform.localPosition.y + 1.8f, transform.localPosition.z - 0.5f);
         }
         else
         {
@@ -430,7 +431,7 @@ public class taKarta : MonoBehaviour
     {
         if (naTo)
         {
-            pozEndRamka = new Vector3(ramka.transform.localPosition.x, ramka.transform.localPosition.y + 0.5f, transform.localPosition.z - 5f);
+            pozEndRamka = new Vector3(ramka.transform.localPosition.x, ramka.transform.localPosition.y + 0.5f, transform.localPosition.z - 0.5f);
         }
         else
         {
