@@ -613,7 +613,7 @@ MonoBehaviour:
   KartaTag: 1
   "Rzadko\u015B\u0107": 0
   "grywalno\u015B\u0107": 0
-  cele: 3
+  cele: 1
   poUrzyciu: 3
   naKoniecTury: 1
   akcje:
@@ -648,7 +648,7 @@ MonoBehaviour:
   DmgGraczRazy: 1
   RandomRazy: 1
   "specjalnyTypObrarze\u0144": 0
-  Dmg: 0
+  Dmg: 10
   DmgRazy: 1
   efektyGracz:
   - NazwaEfektu: 2
