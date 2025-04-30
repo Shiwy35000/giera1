@@ -26,7 +26,7 @@ public class taKarta : MonoBehaviour
     private GameObject grafika, opis, koszt, ramka, nazwa;
     private Vector3 pozEnd, pozEndRamka;
     private biblioteka Biblioteka;
-    [HideInInspector] public GameObject dlon;
+    [HideInInspector] public GameObject dlon, ramkaCelu;
     [HideInInspector] public playerEq Eq;
     private efekty Efektu;
     [HideInInspector] public GameObject prefabTejKartyWdeck;
@@ -99,7 +99,9 @@ public class taKarta : MonoBehaviour
         koszt = ramka.transform.GetChild(1).gameObject;
         opis = ramka.transform.GetChild(2).gameObject;
         nazwa = ramka.transform.GetChild(3).gameObject;
+        ramkaCelu = ramka.transform.GetChild(4).gameObject;
         punktLinia = this.gameObject.transform.GetChild(1).gameObject;
+        ramkaCelu.SetActive(false);
 
         Eq = GameObject.FindGameObjectWithTag("Player").GetComponent<playerEq>();
         Biblioteka = GameObject.FindGameObjectWithTag("saveGame").GetComponent<biblioteka>();
@@ -201,22 +203,12 @@ public class taKarta : MonoBehaviour
         }
         else if (cele == Cele.AlboWrugAlboGracz)
         {
-            if (Dmg != 0 && DmgGraczowi != 0)
+            if (Dmg != 0 || DmgGraczowi != 0)
             {
                 akcje.AddListener(DmgDiler);
             }
-            else if (efektyWrug.Count > 0 && efektyGracz.Count > 0)
+            if (efektyWrug.Count > 0 || efektyGracz.Count > 0)
             {
-                akcje.AddListener(Na³urzEfekty);
-            }
-            else if (Dmg != 0 && efektyGracz.Count > 0)
-            {
-                akcje.AddListener(DmgDiler);
-                akcje.AddListener(Na³urzEfekty);
-            }
-            else if (DmgGraczowi != 0 && efektyWrug.Count > 0)
-            {
-                akcje.AddListener(DmgDiler);
                 akcje.AddListener(Na³urzEfekty);
             }
         }
@@ -724,14 +716,14 @@ public class taKarta : MonoBehaviour
                 else if (ef.Cel == cel.obrarzeniaAll && ef.Zalerznoœæ == zalerznoœæ.PlusMinus)
                 {
                     ta.Dmg += (float)ef.wartoœæ_enumPoz;
-                    ta.DmgT += (float)ef.wartoœæ_enumPoz;
+                    //ta.DmgT += (float)ef.wartoœæ_enumPoz;
                     ta.DmgGraczowi += (float)ef.wartoœæ_enumPoz;
-                    ta.DmgGraczowiT += (float)ef.wartoœæ_enumPoz;
+                    //ta.DmgGraczowiT += (float)ef.wartoœæ_enumPoz;
                 }
                 else if (ef.Cel == cel.obrzarzeniaNegatyw && ef.Zalerznoœæ == zalerznoœæ.PlusMinus)
                 {
                     ta.DmgGraczowi += (float)ef.wartoœæ_enumPoz;
-                    ta.DmgGraczowiT += (float)ef.wartoœæ_enumPoz;
+                    //ta.DmgGraczowiT += (float)ef.wartoœæ_enumPoz;
                 }
             }
         }
@@ -788,14 +780,14 @@ public class taKarta : MonoBehaviour
                     else if (listaE[x].Cel == cel.obrarzeniaAll)
                     {
                         Dmg -= (float)listaE[x].wartoœæ_enumPoz;
-                        DmgT -= (float)listaE[x].wartoœæ_enumPoz;
+                        //DmgT -= (float)listaE[x].wartoœæ_enumPoz;
                         DmgGraczowi -= (float)listaE[x].wartoœæ_enumPoz;
-                        DmgGraczowiT -= (float)listaE[x].wartoœæ_enumPoz;
+                        //DmgGraczowiT -= (float)listaE[x].wartoœæ_enumPoz;
                     }
                     else if (listaE[x].Cel == cel.obrzarzeniaNegatyw)
                     {
                         DmgGraczowi -= (float)listaE[x].wartoœæ_enumPoz;
-                        DmgGraczowiT -= (float)listaE[x].wartoœæ_enumPoz;
+                        //DmgGraczowiT -= (float)listaE[x].wartoœæ_enumPoz;
                     }
                 }
 
@@ -904,6 +896,10 @@ public class taKarta : MonoBehaviour
                     Eq.PrzyjmijDmg((DmgGraczowi + Eq.bonusDoObrarzeñ), false, this.gameObject);
                 }
             }
+            if (DmgGraczowi > 0)
+            {
+                Eq.Wywo³ajEfektyZada³³Cios();
+            }
         }
         else if (trafiony.tag == "wrug")
         {
@@ -928,6 +924,10 @@ public class taKarta : MonoBehaviour
                 {
                     trafiony.GetComponent<WRUG1>().PrzyjmijDmg((Dmg + Eq.bonusDoObrarzeñ), false);
                 }
+            }
+            if (Dmg > 0)
+            {
+                Eq.Wywo³ajEfektyZada³³Cios();
             }
         }
     }

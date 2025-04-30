@@ -65,6 +65,7 @@ Transform:
   - {fileID: 1282149721035542181}
   - {fileID: 3491867422732982804}
   - {fileID: 7149951408712206470}
+  - {fileID: 7497594031030162463}
   m_Father: {fileID: 5864864309267431288}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &4610159675346501817
@@ -593,6 +594,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dlon: {fileID: 0}
+  ramkaCelu: {fileID: 0}
   Eq: {fileID: 0}
   prefabTejKartyWdeck: {fileID: 0}
   "publicznyPrzekszta\u0142conyOpis": 
@@ -613,7 +615,7 @@ MonoBehaviour:
   KartaTag: 1
   "Rzadko\u015B\u0107": 0
   "grywalno\u015B\u0107": 0
-  cele: 1
+  cele: 9
   poUrzyciu: 3
   naKoniecTury: 1
   akcje:
@@ -652,17 +654,17 @@ MonoBehaviour:
   DmgRazy: 1
   efektyGracz:
   - NazwaEfektu: 2
-    ile: 2
+    ile: 1
   efektyWrug:
   - NazwaEfektu: 4
-    ile: 2
+    ile: 1
   efektyNaKarty:
   - Cel: 10
     "Zalerzno\u015B\u0107": 0
     "warto\u015B\u0107_enumPoz": 1
     PrzemijanieEfektuKarty: 0
   efektyNaKartyRandomRazy: 1
-  "Dzia\u0142anieNaKoniecTury": 0
+  "Dzia\u0142anieNaKoniecTury": 1
   celeNieZagranej: 3
   akcjeKoniecTury:
     m_PersistentCalls:
@@ -876,3 +878,77 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 8948165115384537975}
   m_maskType: 0
+--- !u!1001 &7611242221671175925
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 6377215200144958197}
+    m_Modifications:
+    - target: {fileID: 120575148306596586, guid: 72c8b51e9fff4b4469e66eecbee49aa6, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 120575148306596586, guid: 72c8b51e9fff4b4469e66eecbee49aa6, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 120575148306596586, guid: 72c8b51e9fff4b4469e66eecbee49aa6, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 120575148306596586, guid: 72c8b51e9fff4b4469e66eecbee49aa6, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 120575148306596586, guid: 72c8b51e9fff4b4469e66eecbee49aa6, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 120575148306596586, guid: 72c8b51e9fff4b4469e66eecbee49aa6, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 120575148306596586, guid: 72c8b51e9fff4b4469e66eecbee49aa6, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 120575148306596586, guid: 72c8b51e9fff4b4469e66eecbee49aa6, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 120575148306596586, guid: 72c8b51e9fff4b4469e66eecbee49aa6, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.0000000074505797
+      objectReference: {fileID: 0}
+    - target: {fileID: 120575148306596586, guid: 72c8b51e9fff4b4469e66eecbee49aa6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 120575148306596586, guid: 72c8b51e9fff4b4469e66eecbee49aa6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 120575148306596586, guid: 72c8b51e9fff4b4469e66eecbee49aa6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1465571149076749432, guid: 72c8b51e9fff4b4469e66eecbee49aa6, type: 3}
+      propertyPath: m_Name
+      value: ramka celu
+      objectReference: {fileID: 0}
+    - target: {fileID: 4716140598201694377, guid: 72c8b51e9fff4b4469e66eecbee49aa6, type: 3}
+      propertyPath: wymiarX
+      value: 0.215
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 72c8b51e9fff4b4469e66eecbee49aa6, type: 3}
+--- !u!4 &7497594031030162463 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 120575148306596586, guid: 72c8b51e9fff4b4469e66eecbee49aa6, type: 3}
+  m_PrefabInstance: {fileID: 7611242221671175925}
+  m_PrefabAsset: {fileID: 0}

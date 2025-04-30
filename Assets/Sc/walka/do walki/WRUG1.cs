@@ -17,7 +17,7 @@ public class WRUG1 : MonoBehaviour
     public float aktualnyPancerz;
     public float bonusDoObrarzeñ;
     public List<efekty> na³orzoneEfekty;
-
+    public GameObject ramkaCelu;
     //pozosta³e / przypisy
     //[HideInInspector] public GameObject morInfo;
     private bazaEfektow BazaEfektow;
@@ -38,6 +38,8 @@ public class WRUG1 : MonoBehaviour
         this.gameObject.transform.GetChild(0).gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = WrugGragika;
         BazaEfektow = this.GetComponent<bazaEfektow>();
         punktLinia = this.gameObject.transform.GetChild(2).gameObject;
+        ramkaCelu = this.gameObject.transform.GetChild(3).gameObject;
+        ramkaCelu.SetActive(false);
 
         walkaStart.KoniecTury += Wywo³ajEfektyKoniecT;
         walkaStart.Pocz¹tekTury += Wywo³ajEfektyPocz¹tekT;
@@ -99,7 +101,7 @@ public class WRUG1 : MonoBehaviour
         }
     }
 
-    public void PrzemijanieEfektuw(typWywo³ania typ)
+    public void PrzemijanieEfektówTura()
     {
         for (int x = 0; x < na³orzoneEfekty.Count;)
         {
@@ -121,7 +123,7 @@ public class WRUG1 : MonoBehaviour
                 BazaEfektow.UsunEfekt(na³orzoneEfekty[x]);
                 na³orzoneEfekty.Remove(na³orzoneEfekty[x]);
             }
-            else if (na³orzoneEfekty[x].TypPrzemijania == typPrzemijania.wywo³anie && na³orzoneEfekty[x].TypWywo³ania == typ)
+            else if (na³orzoneEfekty[x].TypPrzemijania == typPrzemijania.wywo³anie && na³orzoneEfekty[x].TypWywo³ania == typWywo³ania.koniecTury)
             {
                 na³orzoneEfekty[x].licznik -= 1;
                 if (na³orzoneEfekty[x].licznik <= 0)
@@ -134,10 +136,45 @@ public class WRUG1 : MonoBehaviour
                     x++;
                 }
             }
-            else if (na³orzoneEfekty[x].TypPrzemijania == typPrzemijania.koniecTuryCa³kowity && na³orzoneEfekty[x].TypWywo³ania == typ)
+            else if (na³orzoneEfekty[x].TypPrzemijania == typPrzemijania.wywo³aniemCa³kowity && na³orzoneEfekty[x].TypWywo³ania == typWywo³ania.koniecTury)
             {
                 BazaEfektow.UsunEfekt(na³orzoneEfekty[x]);
                 na³orzoneEfekty.Remove(na³orzoneEfekty[x]);
+            }
+            else
+            {
+                x++;
+            }
+        }
+    }
+    public void PrzemijanieEfektówWywo³aniem(typWywo³ania typ)
+    {
+        for (int x = 0; x < na³orzoneEfekty.Count;)
+        {
+            if (na³orzoneEfekty[x].TypWywo³ania == typ)
+            {
+                if (na³orzoneEfekty[x].TypPrzemijania == typPrzemijania.wywo³anie)
+                {
+                    na³orzoneEfekty[x].licznik -= 1;
+                    if (na³orzoneEfekty[x].licznik <= 0)
+                    {
+                        BazaEfektow.UsunEfekt(na³orzoneEfekty[x]);
+                        na³orzoneEfekty.Remove(na³orzoneEfekty[x]);
+                    }
+                    else
+                    {
+                        x++;
+                    }
+                }
+                else if (na³orzoneEfekty[x].TypPrzemijania == typPrzemijania.wywo³aniemCa³kowity)
+                {
+                    BazaEfektow.UsunEfekt(na³orzoneEfekty[x]);
+                    na³orzoneEfekty.Remove(na³orzoneEfekty[x]);
+                }
+                else
+                {
+                    x++;
+                }
             }
             else
             {
@@ -152,8 +189,7 @@ public class WRUG1 : MonoBehaviour
         if (efektyWywo³anieKoniecTury != null)
         {
             efektyWywo³anieKoniecTury.Invoke();
-            typWywo³ania t = typWywo³ania.koniecTury;
-            PrzemijanieEfektuw(t);
+            PrzemijanieEfektówTura();
         }
     }
     public void Wywo³ajEfektyPocz¹tekT(int numerTury)
@@ -161,8 +197,7 @@ public class WRUG1 : MonoBehaviour
         if (efektyWywo³aniePocz¹tekTury != null)
         {
             efektyWywo³aniePocz¹tekTury.Invoke();
-            typWywo³ania t = typWywo³ania.pocz¹tekTury;
-            PrzemijanieEfektuw(t);
+            PrzemijanieEfektówWywo³aniem(typWywo³ania.pocz¹tekTury);
         }
     }
     public void Wywo³ajEfektyOtrzyma³Cios()
@@ -170,8 +205,7 @@ public class WRUG1 : MonoBehaviour
         if (efektyWywo³anieOtrzyma³Cios != null)
         {
             efektyWywo³anieOtrzyma³Cios.Invoke();
-            typWywo³ania t = typWywo³ania.otrzymanieObrarzeñ;
-            PrzemijanieEfektuw(t);
+            PrzemijanieEfektówWywo³aniem(typWywo³ania.otrzymanieObrarzeñ);
         }
     }
     public void Wywo³ajEfektyZada³³Cios()
@@ -179,8 +213,7 @@ public class WRUG1 : MonoBehaviour
         if (efektyWywo³anieZada³Cios != null)
         {
             efektyWywo³anieZada³Cios.Invoke();
-            typWywo³ania t = typWywo³ania.zadawanieObrarzeñ;
-            PrzemijanieEfektuw(t);
+            PrzemijanieEfektówWywo³aniem(typWywo³ania.otrzymanieObrarzeñ);
         }
     }
 

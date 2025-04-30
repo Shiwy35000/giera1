@@ -30,6 +30,7 @@ public class click : MonoBehaviour
     private GameObject punktLiniaGracz;
     public GameObject nadLinia;
     private celLinia CelLinia;
+    private GameObject ramkaCeluGracz;
 
     void Awake()
     {
@@ -42,6 +43,8 @@ public class click : MonoBehaviour
         punktLiniaGracz = GameObject.FindGameObjectWithTag("gracz").gameObject.transform.GetChild(2).gameObject;
         CelLinia = nadLinia.GetComponent<celLinia>();
         nadLinia.SetActive(false);
+        ramkaCeluGracz = GameObject.FindGameObjectWithTag("gracz").gameObject.transform.GetChild(3).gameObject;
+        ramkaCeluGracz.SetActive(false);
 
         clickNieWalka.ekwipunekWidoczny += CzyEkwipunekOtwarty;
         clickNieWalka.clickLag += lagCorutineStart;
@@ -142,9 +145,11 @@ public class click : MonoBehaviour
                     InfoOKarcie(raycastHit.transform.gameObject);
                 }
             }
+            CeleRamkiRysuj(raycastHit.transform.gameObject);
         }
         else
         {
+            CeleRamkiRysuj(null);
             CzyœæWskazana();
 
             if (InfoObjT³o.enabled == true)
@@ -164,14 +169,14 @@ public class click : MonoBehaviour
 
         if (podniesionaKarta != null)
         {
+
             if (weHitSomthing)
             {
                 if(podniesionaKarta.GetComponent<taKarta>().cele == Cele.Wrug)
                 {
-                    nadLinia.SetActive(true);
-
                     if (raycastHit.transform.gameObject.tag == "wrug")
                     {
+                        nadLinia.SetActive(true);
                         CelLinia.trybDzia³ania = TrybDzia³ania.celWrug;
 
                         taKarta k = podniesionaKarta.GetComponent<taKarta>();
@@ -186,17 +191,12 @@ public class click : MonoBehaviour
                             nadLinia.SetActive(false);
                         }
                     }
-                    /*else
-                    {
-                        LiniaDoMyszy();
-                    }*/
                 }
                 else if (podniesionaKarta.GetComponent<taKarta>().cele == Cele.Gracz)
                 {
-                    nadLinia.SetActive(true);
-
                     if (raycastHit.transform.gameObject.tag == "gracz")
                     {
+                        nadLinia.SetActive(true);
                         CelLinia.trybDzia³ania = TrybDzia³ania.celKarta;
 
                         taKarta k = podniesionaKarta.GetComponent<taKarta>();
@@ -210,17 +210,12 @@ public class click : MonoBehaviour
                             nadLinia.SetActive(false);
                         }
                     }
-                    /*else
-                    {
-                        LiniaDoMyszy();
-                    }*/
                 }
                 else if (podniesionaKarta.GetComponent<taKarta>().cele == Cele.Karta)
                 {
-                    nadLinia.SetActive(true);
-
                     if (raycastHit.transform.gameObject.tag == "karta" && raycastHit.transform.gameObject != podniesionaKarta)
                     {
+                        nadLinia.SetActive(true);
                         CelLinia.trybDzia³ania = TrybDzia³ania.celKarta;
 
                         taKarta k = podniesionaKarta.GetComponent<taKarta>();
@@ -235,10 +230,35 @@ public class click : MonoBehaviour
                             nadLinia.SetActive(false);
                         }
                     }
-                   /* else
+                }
+                else if(podniesionaKarta.GetComponent<taKarta>().cele == Cele.AlboWrugAlboGracz)
+                {
+                    if (raycastHit.transform.gameObject.tag == "gracz")
                     {
-                        LiniaDoMyszy();
-                    }*/
+                        nadLinia.SetActive(true);
+                        CelLinia.trybDzia³ania = TrybDzia³ania.celKarta;
+
+                        taKarta k = podniesionaKarta.GetComponent<taKarta>();
+                        CelLinia.pocz¹tek = k.punktLinia.transform.position;
+                        CelLinia.koniec = punktLiniaGracz.transform.position;
+                    }
+                    else if (raycastHit.transform.gameObject.tag == "wrug")
+                    {
+                        nadLinia.SetActive(true);
+                        CelLinia.trybDzia³ania = TrybDzia³ania.celWrug;
+
+                        taKarta k = podniesionaKarta.GetComponent<taKarta>();
+                        CelLinia.pocz¹tek = k.punktLinia.transform.position;
+                        WRUG1 k2 = raycastHit.transform.gameObject.GetComponent<WRUG1>();
+                        CelLinia.koniec = k2.punktLinia.transform.position;
+                    }
+                    else
+                    {
+                        if (nadLinia.activeSelf == true)
+                        {
+                            nadLinia.SetActive(false);
+                        }
+                    }
                 }
             }
             else
@@ -247,10 +267,6 @@ public class click : MonoBehaviour
                 {
                     nadLinia.SetActive(false);
                 }
-                /*if(podniesionaKarta.GetComponent<taKarta>().cele == Cele.Wrug || podniesionaKarta.GetComponent<taKarta>().cele == Cele.Gracz || podniesionaKarta.GetComponent<taKarta>().cele == Cele.Karta)
-                {
-                    LiniaDoMyszy();
-                }*/
             }
         }
 
@@ -262,23 +278,6 @@ public class click : MonoBehaviour
             }
         }
     }
-
-    /*void LiniaDoMyszy()
-    {
-        /*if(podniesionaKarta.GetComponent<taKarta>().cele == Cele.Wrug)
-        {
-            CelLinia.trybDzia³ania = TrybDzia³ania.celWrug;
-        }
-        else if(podniesionaKarta.GetComponent<taKarta>().cele == Cele.Gracz || podniesionaKarta.GetComponent<taKarta>().cele == Cele.Karta)
-        {
-            CelLinia.trybDzia³ania = TrybDzia³ania.celKarta; 
-        }
-
-        taKarta k = podniesionaKarta.GetComponent<taKarta>();
-        CelLinia.pocz¹tek = k.punktLinia.transform.position;
-        Vector3 mousePos = cam.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Input.mousePosition.z));    
-        CelLinia.koniec = mousePos;*/
-    //}
 
     void InfoOKarcie(GameObject target)
     {
@@ -364,6 +363,149 @@ public class click : MonoBehaviour
             podniesionaKarta.GetComponent<taKarta>().PodniesionaPoz(false);
             podniesionaKarta = null;
             nadLinia.SetActive(false);
+        }
+    }
+
+    void CeleRamkiRysuj(GameObject traf)
+    {
+        if (podniesionaKarta != null)
+        {
+            taKarta karta = podniesionaKarta.GetComponent<taKarta>();
+            if (karta.cele == Cele.Wrogowie || karta.cele == Cele.RandomWrug)
+            {
+                for (int x = 0; x < WalkaStart.przeciwnicyWwalce.Count; x++)
+                {
+                    if (WalkaStart.przeciwnicyWwalce[x].GetComponent<WRUG1>().ramkaCelu.activeSelf == false)
+                    {
+                        WalkaStart.przeciwnicyWwalce[x].GetComponent<WRUG1>().ramkaCelu.SetActive(true);
+                    }
+                }
+            }
+            else if (karta.cele == Cele.All || karta.cele == Cele.Random)
+            {
+                ramkaCeluGracz.SetActive(true);
+                for (int x = 0; x < WalkaStart.przeciwnicyWwalce.Count; x++)
+                {
+                    if (WalkaStart.przeciwnicyWwalce[x].GetComponent<WRUG1>().ramkaCelu.activeSelf == false)
+                    {
+                        WalkaStart.przeciwnicyWwalce[x].GetComponent<WRUG1>().ramkaCelu.SetActive(true);
+                    }
+                }
+            }
+            else if (karta.cele == Cele.KartyWD³oni || karta.cele == Cele.RandomKartaWD³oni)
+            {
+                for (int x = 0; x < d³on.GetComponent<sortGrupZ>().kartyWD³oni.Count; x++)
+                {
+                    if (d³on.GetComponent<sortGrupZ>().kartyWD³oni[x].GetComponent<taKarta>().ramkaCelu.activeSelf == false)
+                    {
+                        d³on.GetComponent<sortGrupZ>().kartyWD³oni[x].GetComponent<taKarta>().ramkaCelu.SetActive(true);
+                    }
+                }
+            }
+            else if(karta.cele == Cele.Gracz && traf != null)
+            {
+                if (traf.tag == "gracz")
+                {
+                    ramkaCeluGracz.SetActive(true);
+                }
+                else
+                {
+                    ramkaCeluGracz.SetActive(false);
+                }
+            }
+            else if(karta.cele == Cele.Wrug && traf != null)
+            {
+                for (int x = 0; x < WalkaStart.przeciwnicyWwalce.Count; x++)
+                {
+                    if(WalkaStart.przeciwnicyWwalce[x] == traf)
+                    {
+                        WalkaStart.przeciwnicyWwalce[x].GetComponent<WRUG1>().ramkaCelu.SetActive(true);
+                    }
+                    else
+                    {
+                        WalkaStart.przeciwnicyWwalce[x].GetComponent<WRUG1>().ramkaCelu.SetActive(false);
+                    }
+                }
+            }
+            else if(karta.cele == Cele.Karta && traf != null && traf != podniesionaKarta)
+            {
+                for (int x = 0; x < d³on.GetComponent<sortGrupZ>().kartyWD³oni.Count; x++)
+                {
+                    if (d³on.GetComponent<sortGrupZ>().kartyWD³oni[x] == traf)
+                    {
+                        d³on.GetComponent<sortGrupZ>().kartyWD³oni[x].GetComponent<taKarta>().ramkaCelu.SetActive(true);
+                    }
+                    else
+                    {
+                        d³on.GetComponent<sortGrupZ>().kartyWD³oni[x].GetComponent<taKarta>().ramkaCelu.SetActive(false);
+                    }
+                }
+            }
+            else if(karta.cele == Cele.AlboWrugAlboGracz && traf != null)
+            {
+                if(traf.tag == "wrug")
+                {
+                    ramkaCeluGracz.SetActive(false);
+                    for (int x = 0; x < WalkaStart.przeciwnicyWwalce.Count; x++)
+                    {
+                        if (WalkaStart.przeciwnicyWwalce[x] == traf)
+                        {
+                            WalkaStart.przeciwnicyWwalce[x].GetComponent<WRUG1>().ramkaCelu.SetActive(true);
+                        }
+                        else
+                        {
+                            WalkaStart.przeciwnicyWwalce[x].GetComponent<WRUG1>().ramkaCelu.SetActive(false);
+                        }
+                    }
+                }
+                else if(traf.tag == "gracz")
+                {
+                    ramkaCeluGracz.SetActive(true);
+                    for (int x = 0; x < WalkaStart.przeciwnicyWwalce.Count; x++)
+                    {
+                        if (WalkaStart.przeciwnicyWwalce[x].GetComponent<WRUG1>().ramkaCelu.activeSelf == true)
+                        {
+                            WalkaStart.przeciwnicyWwalce[x].GetComponent<WRUG1>().ramkaCelu.SetActive(false);
+                        }
+                    }
+                }
+            }
+            else //czyszczenie
+            {
+                ramkaCeluGracz.SetActive(false);
+                for (int x = 0; x < d³on.GetComponent<sortGrupZ>().kartyWD³oni.Count; x++)
+                {
+                    if (d³on.GetComponent<sortGrupZ>().kartyWD³oni[x].GetComponent<taKarta>().ramkaCelu.activeSelf == true)
+                    {
+                        d³on.GetComponent<sortGrupZ>().kartyWD³oni[x].GetComponent<taKarta>().ramkaCelu.SetActive(false);
+                    }
+                }
+                for (int x = 0; x < WalkaStart.przeciwnicyWwalce.Count; x++)
+                {
+                    if (WalkaStart.przeciwnicyWwalce[x].GetComponent<WRUG1>().ramkaCelu.activeSelf == true)
+                    {
+                        WalkaStart.przeciwnicyWwalce[x].GetComponent<WRUG1>().ramkaCelu.SetActive(false);
+                    }
+                }
+            }
+        }
+        else //czyszczenie
+        {
+            ramkaCeluGracz.SetActive(false);
+            for (int x = 0; x < d³on.GetComponent<sortGrupZ>().kartyWD³oni.Count; x++)
+            {
+                if (d³on.GetComponent<sortGrupZ>().kartyWD³oni[x].GetComponent<taKarta>().ramkaCelu.activeSelf == true)
+                {
+                    d³on.GetComponent<sortGrupZ>().kartyWD³oni[x].GetComponent<taKarta>().ramkaCelu.SetActive(false);
+                }
+            }
+            for (int x = 0; x < WalkaStart.przeciwnicyWwalce.Count; x++)
+            {
+                if (WalkaStart.przeciwnicyWwalce[x].GetComponent<WRUG1>().ramkaCelu.activeSelf == true)
+                {
+                    WalkaStart.przeciwnicyWwalce[x].GetComponent<WRUG1>().ramkaCelu.SetActive(false);
+                }
+            }
         }
     }
 
