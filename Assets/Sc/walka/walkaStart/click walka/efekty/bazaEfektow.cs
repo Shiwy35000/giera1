@@ -58,6 +58,11 @@ public class bazaEfektow : MonoBehaviour
                 UnityAction action = stringFunctionToUnityAction(this, nowyEfekt.nazwa);
                 eq.efektyWywo³aniePocz¹tekTury.AddListener(action);
             }
+            else if (nowyEfekt.TypWywo³ania == typWywo³ania.atak)
+            {
+                UnityAction action = stringFunctionToUnityAction(this, nowyEfekt.nazwa);
+                eq.efektyWywo³anieAtak.AddListener(action);
+            }
             else if (nowyEfekt.TypWywo³ania == typWywo³ania.natychmiastowy_odrazuPrzemija_bezLicznika)
             {
                 this.gameObject.SendMessage(nowyEfekt.nazwa ,ile);
@@ -84,6 +89,11 @@ public class bazaEfektow : MonoBehaviour
             {
                 UnityAction action = stringFunctionToUnityAction(this, nowyEfekt.nazwa);
                 wrug.efektyWywo³aniePocz¹tekTury.AddListener(action);
+            }
+            else if (nowyEfekt.TypWywo³ania == typWywo³ania.atak)
+            {
+                UnityAction action = stringFunctionToUnityAction(this, nowyEfekt.nazwa);
+                wrug.efektyWywo³anieAtak.AddListener(action);
             }
             else if (nowyEfekt.TypWywo³ania == typWywo³ania.natychmiastowy_odrazuPrzemija_bezLicznika)
             {
@@ -116,6 +126,11 @@ public class bazaEfektow : MonoBehaviour
                 UnityAction action = stringFunctionToUnityAction(this, Efekt.nazwa);
                 eq.efektyWywo³aniePocz¹tekTury.RemoveListener(action);
             }
+            else if (Efekt.TypWywo³ania == typWywo³ania.atak)
+            {
+                UnityAction action = stringFunctionToUnityAction(this, Efekt.nazwa);
+                eq.efektyWywo³anieAtak.RemoveListener(action);
+            }
         }
         else
         {
@@ -138,6 +153,11 @@ public class bazaEfektow : MonoBehaviour
             {
                 UnityAction action = stringFunctionToUnityAction(this, Efekt.nazwa);
                 wrug.efektyWywo³aniePocz¹tekTury.RemoveListener(action);
+            }
+            else if (Efekt.TypWywo³ania == typWywo³ania.atak)
+            {
+                UnityAction action = stringFunctionToUnityAction(this, Efekt.nazwa);
+                wrug.efektyWywo³anieAtak.RemoveListener(action);
             }
         }
     }
@@ -185,6 +205,32 @@ public class bazaEfektow : MonoBehaviour
         }
     }
 
+    public void Wampiryzm()
+    {
+        if (graczEfekty)
+        {
+            for (int x = 0; x < eq.na³orzoneEfekty.Count; x++)
+            {
+                if (eq.na³orzoneEfekty[x].nazwa == "Wampiryzm")
+                {
+                    float z = (float)eq.na³orzoneEfekty[x].licznik;
+                    eq.hp += z;
+                }
+            }
+        }
+        else
+        {
+            for (int x = 0; x < wrug.na³orzoneEfekty.Count; x++)
+            {
+                if (wrug.na³orzoneEfekty[x].nazwa == "Wampiryzm")
+                {
+                    float z = (float)wrug.na³orzoneEfekty[x].licznik;
+                    wrug.hpAktualne += z;
+                }
+            }
+        }
+    }
+
     public void LeczenieWczasie()
     {
         if (graczEfekty)
@@ -209,7 +255,6 @@ public class bazaEfektow : MonoBehaviour
                 }
             }
         }
-
     }
 
     public void Trucizna()

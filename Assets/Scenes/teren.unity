@@ -2864,6 +2864,9 @@ MonoBehaviour:
   "efektyWywo\u0142aniePocz\u0105tekTury":
     m_PersistentCalls:
       m_Calls: []
+  "efektyWywo\u0142anieAtak":
+    m_PersistentCalls:
+      m_Calls: []
   ilee: 0
   nieUchronnee: 0
   "atakuj\u0105cyy": {fileID: 0}
@@ -3446,7 +3449,7 @@ MonoBehaviour:
     odbiurEfektu: 0
     sprite: {fileID: 0}
     opis: "przywraca zdrowie co tur\u0119"
-    "TypWywo\u0142ania": 3
+    "TypWywo\u0142ania": 1
     TypPrzemijania: 1
     licznik: 0
   - nazwa: Trucizna
@@ -3462,6 +3465,14 @@ MonoBehaviour:
     opis: "traci zdrowie co tur\u0119"
     "TypWywo\u0142ania": 4
     TypPrzemijania: 1
+    licznik: 0
+  - nazwa: Wampiryzm
+    odbiurEfektu: 0
+    sprite: {fileID: 0}
+    opis: "W obecnej turze karzdy cios, kt\xF3ry zada\u0142 obrarzenie \nleczy o
+      ilo\u015B\u0107 P\u017B r\xF3wn\u0105 wielokrotno\u015Bci tego efektu."
+    "TypWywo\u0142ania": 3
+    TypPrzemijania: 2
     licznik: 0
 --- !u!1 &1130457170
 GameObject:

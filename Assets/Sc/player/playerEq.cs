@@ -36,6 +36,7 @@ public class playerEq : MonoBehaviour
     [HideInInspector] public UnityEvent efektyWywo³anieZada³Cios;
     [HideInInspector] public UnityEvent efektyWywo³anieKoniecTury;
     [HideInInspector] public UnityEvent efektyWywo³aniePocz¹tekTury;
+    [HideInInspector] public UnityEvent efektyWywo³anieAtak;
     [HideInInspector] public float ilee;
     [HideInInspector] public bool nieUchronnee;
     [HideInInspector] public GameObject atakuj¹cyy;
@@ -132,6 +133,10 @@ public class playerEq : MonoBehaviour
                 }
                 aktualnyPancerz = 0;
             }
+        }
+        if (atakuj¹cy.tag == "wrug")
+        {
+            atakuj¹cy.GetComponent<WRUG1>().Wywo³ajEfektyAtak(); //niezalerznie od tego czy obrarzenia zosta³y zadane;
         }
     }
     public void PrzemijanieEfektówTura()
@@ -247,7 +252,15 @@ public class playerEq : MonoBehaviour
             PrzemijanieEfektówWywo³aniem(typWywo³ania.zadawanieObrarzeñ);
         }
     }
-    
+    public void Wywo³ajEfektyAtak()
+    {
+        if (efektyWywo³anieAtak != null)
+        {
+            efektyWywo³anieAtak.Invoke();
+            PrzemijanieEfektówWywo³aniem(typWywo³ania.atak);
+        }
+    }
+
     private void Die()
     {
         //Destroy(this.gameObject);

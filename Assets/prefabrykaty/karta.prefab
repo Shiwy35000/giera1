@@ -651,13 +651,11 @@ MonoBehaviour:
   RandomRazy: 1
   "specjalnyTypObrarze\u0144": 0
   Dmg: 10
-  DmgRazy: 1
+  DmgRazy: 2
   efektyGracz:
-  - NazwaEfektu: 2
-    ile: 2
-  efektyWrug:
   - NazwaEfektu: 4
     ile: 2
+  efektyWrug: []
   efektyNaKarty:
   - Cel: 10
     "Zalerzno\u015B\u0107": 0

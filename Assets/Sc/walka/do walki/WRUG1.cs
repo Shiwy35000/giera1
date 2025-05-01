@@ -25,6 +25,7 @@ public class WRUG1 : MonoBehaviour
     [HideInInspector] public UnityEvent efektyWywo³anieZada³Cios;
     [HideInInspector] public UnityEvent efektyWywo³anieKoniecTury;
     [HideInInspector] public UnityEvent efektyWywo³aniePocz¹tekTury;
+    [HideInInspector] public UnityEvent efektyWywo³anieAtak;
     [HideInInspector] public float ilee;
     [HideInInspector] public bool nieUchronnee;
     [HideInInspector] public UnityEvent obecnaAkcja;
@@ -87,7 +88,6 @@ public class WRUG1 : MonoBehaviour
         ilee = ile;
         nieUchronnee = nieUchronne;
         atakuj¹cyy = atakuj¹cy;
-        Wywo³ajEfektyOtrzyma³Cios();
 
         if (nieUchronnee)
         {
@@ -113,6 +113,10 @@ public class WRUG1 : MonoBehaviour
                 }
                 aktualnyPancerz = 0;
             }
+        }
+        if (atakuj¹cy.tag == "karta")
+        {
+            Eq.Wywo³ajEfektyAtak(); //niezalerznie od tego czy obrarzenia zosta³y zadane;
         }
     }
 
@@ -231,10 +235,17 @@ public class WRUG1 : MonoBehaviour
             PrzemijanieEfektówWywo³aniem(typWywo³ania.zadawanieObrarzeñ);
         }
     }
-
+    public void Wywo³ajEfektyAtak()
+    {
+        if (efektyWywo³anieAtak != null)
+        {
+            efektyWywo³anieAtak.Invoke();
+            PrzemijanieEfektówWywo³aniem(typWywo³ania.atak);
+        }
+    }
 
     ////////////////////////////////////////////|||||| FUNKCJE PODSTAWOWE DO DZIA£AÑ PRZECIWNIKA |||||||///////////////////////
-    
+
     public void KolejnaAkcjaWywo³aj() //wywo³uje kolejn¹ akcjê lub jeœli jest ostatnia zakañcza akcje tego wroga;
     {
         for (int x = 0; x < dzia³anie.Count; x++)

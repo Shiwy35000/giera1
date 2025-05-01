@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public enum typWywo³ania {koniecTury, pocz¹tekTury, otrzymanieObrarzeñ, zadawanieObrarzeñ, natychmiastowy_odrazuPrzemija_bezLicznika};
+public enum typWywo³ania {koniecTury, pocz¹tekTury, otrzymanieObrarzeñ, zadawanieObrarzeñ, atak, natychmiastowy_odrazuPrzemija_bezLicznika};
 public enum typPrzemijania {koniecTury_domyœlny, wywo³anie, koniecTuryCa³kowity, wywo³aniemCa³kowity, niePrzemija}; //dopisek "ca³kowity" spawia ¿e niezalerznie od staków efekt znika gdy zadzia³a;
 public enum odbiurEfektu { buff, debuff, nieUsuwalne_pasyw};
 [System.Serializable]

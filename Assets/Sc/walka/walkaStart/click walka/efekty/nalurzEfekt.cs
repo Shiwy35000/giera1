@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//nazwy musz¹ byæ identyczne jak w BIBLIOTECE inaczej nie zadzia³a!!!
-public enum nazwaEfektu { Kruchoœæ, Podpalenie, LeczenieWczasie, RozbiciePancerza, Trucizna, Na³urzPancerz}; 
+//nazwy musz¹ byæ identyczne jak w BIBLIOTECE inaczej nie zadzia³a!!! oraz bazie efektów!!!
+public enum nazwaEfektu { Kruchoœæ, Podpalenie, LeczenieWczasie, RozbiciePancerza, Wampiryzm, Trucizna, Na³urzPancerz}; 
 
 [System.Serializable]
 public class nalurzEfekt
