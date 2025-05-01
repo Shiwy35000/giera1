@@ -896,10 +896,11 @@ public class taKarta : MonoBehaviour
                     Eq.PrzyjmijDmg((DmgGraczowi + Eq.bonusDoObrarzeñ), false, this.gameObject);
                 }
             }
-            if (DmgGraczowi > 0)
+
+            /*if (DmgGraczowi > 0)
             {
                 Eq.Wywo³ajEfektyZada³³Cios();
-            }
+            }*/
         }
         else if (trafiony.tag == "wrug")
         {
@@ -907,28 +908,29 @@ public class taKarta : MonoBehaviour
             {
                 if (specjalnyTypObrarzeñ.HasFlag(TypObrarzen.nieUchronne))
                 {
-                    trafiony.GetComponent<WRUG1>().PrzyjmijDmg(Dmg, true);
+                    trafiony.GetComponent<WRUG1>().PrzyjmijDmg(Dmg, true, this.gameObject);
                 }
                 else
                 {
-                    trafiony.GetComponent<WRUG1>().PrzyjmijDmg(Dmg, false);
+                    trafiony.GetComponent<WRUG1>().PrzyjmijDmg(Dmg, false, this.gameObject);
                 }
             }
             else
             {
                 if (specjalnyTypObrarzeñ.HasFlag(TypObrarzen.nieUchronne))
                 {
-                    trafiony.GetComponent<WRUG1>().PrzyjmijDmg((Dmg + Eq.bonusDoObrarzeñ), true);
+                    trafiony.GetComponent<WRUG1>().PrzyjmijDmg((Dmg + Eq.bonusDoObrarzeñ), true, this.gameObject);
                 }
                 else
                 {
-                    trafiony.GetComponent<WRUG1>().PrzyjmijDmg((Dmg + Eq.bonusDoObrarzeñ), false);
+                    trafiony.GetComponent<WRUG1>().PrzyjmijDmg((Dmg + Eq.bonusDoObrarzeñ), false, this.gameObject);
                 }
             }
-            if (Dmg > 0)
+
+            /*if (Dmg > 0)
             {
                 Eq.Wywo³ajEfektyZada³³Cios();
-            }
+            }*/
         }
     }
     private void PodajObrarzeniaT(GameObject trafiony)
@@ -964,22 +966,22 @@ public class taKarta : MonoBehaviour
             {
                 if (specjalnyTypObrarzeñT.HasFlag(TypObrarzen.nieUchronne))
                 {
-                    trafiony.GetComponent<WRUG1>().PrzyjmijDmg(DmgT, true);
+                    trafiony.GetComponent<WRUG1>().PrzyjmijDmg(DmgT, true, this.gameObject);
                 }
                 else
                 {
-                    trafiony.GetComponent<WRUG1>().PrzyjmijDmg(DmgT, false);
+                    trafiony.GetComponent<WRUG1>().PrzyjmijDmg(DmgT, false, this.gameObject);
                 }
             }
             else
             {
                 if (specjalnyTypObrarzeñT.HasFlag(TypObrarzen.nieUchronne))
                 {
-                    trafiony.GetComponent<WRUG1>().PrzyjmijDmg((DmgT + Eq.bonusDoObrarzeñ), true);
+                    trafiony.GetComponent<WRUG1>().PrzyjmijDmg((DmgT + Eq.bonusDoObrarzeñ), true, this.gameObject);
                 }
                 else
                 {
-                    trafiony.GetComponent<WRUG1>().PrzyjmijDmg((DmgT + Eq.bonusDoObrarzeñ), false);
+                    trafiony.GetComponent<WRUG1>().PrzyjmijDmg((DmgT + Eq.bonusDoObrarzeñ), false, this.gameObject);
                 }
             }
         }

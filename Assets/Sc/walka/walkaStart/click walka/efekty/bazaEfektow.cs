@@ -232,7 +232,7 @@ public class bazaEfektow : MonoBehaviour
                 if (wrug.na³orzoneEfekty[x].nazwa == "Trucizna")
                 {
                     float z = (float)wrug.na³orzoneEfekty[x].licznik;
-                    wrug.PrzyjmijDmg(z, true);
+                    wrug.PrzyjmijDmg(z, true, this.gameObject);
                 }
             }
         }

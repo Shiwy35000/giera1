@@ -29,11 +29,15 @@ public class WRUG1 : MonoBehaviour
     [HideInInspector] public bool nieUchronnee;
     [HideInInspector] public UnityEvent obecnaAkcja;
     [HideInInspector] public GameObject punktLinia;
+    [HideInInspector] public GameObject atakuj¹cyy;
+    [HideInInspector] public playerEq Eq;
+    [HideInInspector] public float otrzymywaneDMG;
 
     private void Awake()
     {
         //morInfo = this.gameObject.transform.GetChild(1).gameObject;
         //morInfo.SetActive(false);
+        Eq = GameObject.FindGameObjectWithTag("Player").GetComponent<playerEq>();
         hpAktualne = hpMax;
         this.gameObject.transform.GetChild(0).gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = WrugGragika;
         BazaEfektow = this.GetComponent<bazaEfektow>();
@@ -78,24 +82,35 @@ public class WRUG1 : MonoBehaviour
         Destroy(this.gameObject);
     }
 
-    public void PrzyjmijDmg(float ile , bool nieUchronne)
+    public void PrzyjmijDmg(float ile , bool nieUchronne, GameObject atakuj¹cy)
     {
         ilee = ile;
         nieUchronnee = nieUchronne;
+        atakuj¹cyy = atakuj¹cy;
         Wywo³ajEfektyOtrzyma³Cios();
 
         if (nieUchronnee)
         {
-            hpAktualne -= Mathf.Round(ilee);
+            otrzymywaneDMG = Mathf.Round(ilee);
+            hpAktualne -= otrzymywaneDMG;
+            Wywo³ajEfektyOtrzyma³Cios();
+            if(atakuj¹cy.tag == "karta")
+            {
+                Eq.Wywo³ajEfektyZada³³Cios();
+            }
         }
         else
         {
-            float z;
             aktualnyPancerz -= Mathf.Round(ilee);
             if (aktualnyPancerz < 0)
             {
-                z = Mathf.Abs(aktualnyPancerz);
-                hpAktualne -= z;
+                otrzymywaneDMG = Mathf.Abs(aktualnyPancerz);
+                hpAktualne -= otrzymywaneDMG;
+                Wywo³ajEfektyOtrzyma³Cios();
+                if (atakuj¹cy.tag == "karta")
+                {
+                    Eq.Wywo³ajEfektyZada³³Cios();
+                }
                 aktualnyPancerz = 0;
             }
         }
@@ -213,7 +228,7 @@ public class WRUG1 : MonoBehaviour
         if (efektyWywo³anieZada³Cios != null)
         {
             efektyWywo³anieZada³Cios.Invoke();
-            PrzemijanieEfektówWywo³aniem(typWywo³ania.otrzymanieObrarzeñ);
+            PrzemijanieEfektówWywo³aniem(typWywo³ania.zadawanieObrarzeñ);
         }
     }
 

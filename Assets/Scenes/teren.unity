@@ -2867,6 +2867,7 @@ MonoBehaviour:
   ilee: 0
   nieUchronnee: 0
   "atakuj\u0105cyy": {fileID: 0}
+  otrzymywaneDMG: 0
 --- !u!114 &1017632425
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3445,7 +3446,7 @@ MonoBehaviour:
     odbiurEfektu: 0
     sprite: {fileID: 0}
     opis: "przywraca zdrowie co tur\u0119"
-    "TypWywo\u0142ania": 1
+    "TypWywo\u0142ania": 3
     TypPrzemijania: 1
     licznik: 0
   - nazwa: Trucizna

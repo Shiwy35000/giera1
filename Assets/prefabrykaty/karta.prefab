@@ -654,10 +654,10 @@ MonoBehaviour:
   DmgRazy: 1
   efektyGracz:
   - NazwaEfektu: 2
-    ile: 1
+    ile: 2
   efektyWrug:
   - NazwaEfektu: 4
-    ile: 1
+    ile: 2
   efektyNaKarty:
   - Cel: 10
     "Zalerzno\u015B\u0107": 0

@@ -39,6 +39,8 @@ public class playerEq : MonoBehaviour
     [HideInInspector] public float ilee;
     [HideInInspector] public bool nieUchronnee;
     [HideInInspector] public GameObject atakuj¹cyy;
+    [HideInInspector] public float otrzymywaneDMG;
+
     void Awake()
     {
         maxEnergia = 3; // narazie?
@@ -105,20 +107,29 @@ public class playerEq : MonoBehaviour
         ilee = ile;
         nieUchronnee = nieUchronne;
         atakuj¹cyy = atakuj¹cy;
-        Wywo³ajEfektyOtrzyma³Cios();
 
         if (nieUchronnee)
         {
-            hp -= Mathf.Round(ilee);
+            otrzymywaneDMG = Mathf.Round(ilee);
+            hp -= otrzymywaneDMG;
+            Wywo³ajEfektyOtrzyma³Cios();
+            if(atakuj¹cy.tag == "wrug")
+            {
+                atakuj¹cy.GetComponent<WRUG1>().Wywo³ajEfektyZada³³Cios();
+            }
         }
         else
         {
-            float z;
             aktualnyPancerz -= Mathf.Round(ilee);
             if (aktualnyPancerz < 0)
             {
-                z = Mathf.Abs(aktualnyPancerz);
-                hp -= z;
+                otrzymywaneDMG = Mathf.Abs(aktualnyPancerz);
+                hp -= otrzymywaneDMG;
+                Wywo³ajEfektyOtrzyma³Cios();
+                if (atakuj¹cy.tag == "wrug")
+                {
+                    atakuj¹cy.GetComponent<WRUG1>().Wywo³ajEfektyZada³³Cios();
+                }
                 aktualnyPancerz = 0;
             }
         }
@@ -233,7 +244,7 @@ public class playerEq : MonoBehaviour
         if (efektyWywo³anieZada³Cios != null)
         {
             efektyWywo³anieZada³Cios.Invoke();
-            PrzemijanieEfektówWywo³aniem(typWywo³ania.otrzymanieObrarzeñ);
+            PrzemijanieEfektówWywo³aniem(typWywo³ania.zadawanieObrarzeñ);
         }
     }
     
