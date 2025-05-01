@@ -655,7 +655,9 @@ MonoBehaviour:
   efektyGracz:
   - NazwaEfektu: 4
     ile: 2
-  efektyWrug: []
+  efektyWrug:
+  - NazwaEfektu: 5
+    ile: 2
   efektyNaKarty:
   - Cel: 10
     "Zalerzno\u015B\u0107": 0

@@ -198,10 +198,12 @@ public class bazaEfektow : MonoBehaviour
         if(graczEfekty)
         {
             eq.hp -= 3;
+            eq.hpZasady();
         }
         else
         {
             wrug.hpAktualne -= 3;
+            wrug.hpZasady();
         }
     }
 
@@ -215,6 +217,7 @@ public class bazaEfektow : MonoBehaviour
                 {
                     float z = (float)eq.na這rzoneEfekty[x].licznik;
                     eq.hp += z;
+                    eq.hpZasady();
                 }
             }
         }
@@ -226,6 +229,7 @@ public class bazaEfektow : MonoBehaviour
                 {
                     float z = (float)wrug.na這rzoneEfekty[x].licznik;
                     wrug.hpAktualne += z;
+                    wrug.hpZasady();
                 }
             }
         }
@@ -241,6 +245,7 @@ public class bazaEfektow : MonoBehaviour
                 {
                     float z = (float)eq.na這rzoneEfekty[x].licznik;
                     eq.hp += z;
+                    eq.hpZasady();
                 }
             }
         }
@@ -252,6 +257,7 @@ public class bazaEfektow : MonoBehaviour
                 {
                     float z = (float)wrug.na這rzoneEfekty[x].licznik;
                     wrug.hpAktualne += z;
+                    wrug.hpZasady();
                 }
             }
         }

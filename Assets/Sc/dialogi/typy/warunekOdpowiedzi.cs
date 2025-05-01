@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public enum Czegoo {zdrowie, waluta, karta, artefakt};
-public enum Znak { wiêksze,mniejsze, równe, wiêkszeLubRówne, mniejszeLubRówne};
+public enum Znak { wiêksze_posiada,mniejsze_niePosida, równe, wiêkszeLubRówne, mniejszeLubRówne};
 [System.Serializable]
 public class warunekOdpowiedzi
 {

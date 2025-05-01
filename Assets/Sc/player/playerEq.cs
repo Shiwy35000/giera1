@@ -74,10 +74,10 @@ public class playerEq : MonoBehaviour
 
     private void Update()
     {
-        hpZasady();
+        //hpZasady();
     }
 
-    private void hpZasady()
+    public void hpZasady()
     {
         if (hp > hpMax)
         {
@@ -90,6 +90,14 @@ public class playerEq : MonoBehaviour
         else if (hp == 0)
         {
             Die();
+        }
+    }
+
+    public void sakiewkaZasady()
+    {
+        if (sakiewka < 0)
+        {
+            sakiewka = 0;
         }
     }
     private void CzyœcimyListy(bool walka)
@@ -138,6 +146,7 @@ public class playerEq : MonoBehaviour
         {
             atakuj¹cy.GetComponent<WRUG1>().Wywo³ajEfektyAtak(); //niezalerznie od tego czy obrarzenia zosta³y zadane;
         }
+        hpZasady();
     }
     public void PrzemijanieEfektówTura()
     {

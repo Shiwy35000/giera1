@@ -539,6 +539,7 @@ Transform:
   m_Children:
   - {fileID: 1414497035}
   - {fileID: 1508874689}
+  - {fileID: 1354045704}
   m_Father: {fileID: 87450415}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &130604884
@@ -4071,6 +4072,37 @@ MonoBehaviour:
   GizmoSecondaryColor: {r: 0, g: 1, b: 0, a: 1}
   GizmoTertiaryColor: {r: 1, g: 0, b: 0, a: 1}
   ShowGizmoSettings: 0
+--- !u!1 &1354045703
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1354045704}
+  m_Layer: 6
+  m_Name: Sklep
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1354045704
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1354045703}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 130604883}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1354149880
 GameObject:
   m_ObjectHideFlags: 0
@@ -5892,9 +5924,8 @@ GameObject:
   - component: {fileID: 1896643136}
   - component: {fileID: 1896643138}
   - component: {fileID: 1896643137}
-  - component: {fileID: 1896643139}
   m_Layer: 0
-  m_Name: studnia (1)
+  m_Name: studnia
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5999,7 +6030,11 @@ MonoBehaviour:
     listaOdpowiedzi:
     - czyAktywna: 1
       odp: "jest\u0119\u015B studni\u0105??????????"
-      warunkiZaistnienia: []
+      warunkiZaistnienia:
+      - czego: 1
+        IleZnak: 0
+        Ile_Id: 0
+        czySpelniony: 0
       reakcje:
       - TypReakcji: 0
         "reakcjaUzupe\u0142nienie": 1
@@ -6034,6 +6069,11 @@ MonoBehaviour:
       nowyDialogPoczatkowy: 2
   prefabDialogu: {fileID: 5390485930928716448, guid: e112299a6bf62104cb855e31fbb35318, type: 3}
   dialogZnacznik: {fileID: 920740351}
+  Przeciwnicy:
+  - obj:
+    - {fileID: 528014565647558395, guid: f91a0069ab8832d43aec82763a2cf751, type: 3}
+    - {fileID: 528014565647558395, guid: f91a0069ab8832d43aec82763a2cf751, type: 3}
+  SklepyAsortyment: []
 --- !u!54 &1896643137
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -6082,23 +6122,6 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 3.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1896643139
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1896643132}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 400fec1e6227cb54f852afb3c86908cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  przeciwnicy:
-  - {fileID: 528014565647558395, guid: f91a0069ab8832d43aec82763a2cf751, type: 3}
-  - {fileID: 528014565647558395, guid: f91a0069ab8832d43aec82763a2cf751, type: 3}
-  - {fileID: 528014565647558395, guid: f91a0069ab8832d43aec82763a2cf751, type: 3}
-  - {fileID: 528014565647558395, guid: f91a0069ab8832d43aec82763a2cf751, type: 3}
 --- !u!1 &1918147875
 GameObject:
   m_ObjectHideFlags: 0

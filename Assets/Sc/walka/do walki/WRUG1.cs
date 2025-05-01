@@ -57,10 +57,10 @@ public class WRUG1 : MonoBehaviour
 
     private void Update()
     {
-        hpZasady();
+        //hpZasady();
     }
 
-    private void hpZasady()
+    public void hpZasady()
     {
         if (hpAktualne > hpMax)
         {
@@ -118,6 +118,7 @@ public class WRUG1 : MonoBehaviour
         {
             Eq.Wywo³ajEfektyAtak(); //niezalerznie od tego czy obrarzenia zosta³y zadane;
         }
+        hpZasady();
     }
 
     public void PrzemijanieEfektówTura()

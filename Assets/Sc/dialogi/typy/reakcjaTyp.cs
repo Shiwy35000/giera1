@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum typReakcji { dalszyDialog, walka, sklep, otrzymanieStrataArtefaktu, otrzymanieStrataKarty, otrzymanieStrataZ³ota, otrzymanieStrataZdrowia};
+public enum typReakcji { dalszyDialog, walka, sklep, otrzymanieStrataArtefaktu, otrzymanieStrataKarty, otrzymanieStrataZ³ota, otrzymanieStrataZdrowia, otrzymanieStrataMaxZdrowia};
 
 [System.Serializable]
 public class reakcjaTyp
