@@ -9,7 +9,7 @@ public class clickNieWalka : MonoBehaviour
     [HideInInspector] public bool czyWalka;
     public GameObject InfoObj;
     public TextMeshProUGUI textMorInfo;
-    public GameObject podgl¹dKart, UiPozaWalk¹, przyciskiWWalce, przyciskiPozaWalk¹;
+    public GameObject podgl¹dKart, UiPozaWalk¹, przyciskiWWalce, przyciskiPozaWalk¹, sklep;
 
     [Header("Przyciski:")]
     [Header("ZAWSZE W EQ")]
@@ -121,7 +121,21 @@ public class clickNieWalka : MonoBehaviour
             }
             else if(raycastHit.transform.gameObject.tag == "karta")
             {
-                InfoOKarcie(raycastHit.transform.gameObject);
+                if (sklep.activeSelf == true || UiPozaWalk¹.activeSelf == true)
+                {
+                    InfoOKarcie(raycastHit.transform.gameObject);
+                }
+                else
+                {
+                    if(Input.GetButton("Tab"))
+                    {
+                        InfoOKarcie(raycastHit.transform.gameObject);
+                    }
+                    else
+                    {
+                        InfoPlusOf();
+                    }
+                }
             }
             else if(raycastHit.transform.gameObject.tag == "efektImg")
             {

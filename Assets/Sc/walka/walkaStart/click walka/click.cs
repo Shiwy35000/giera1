@@ -31,6 +31,7 @@ public class click : MonoBehaviour
     public GameObject nadLinia;
     private celLinia CelLinia;
     private GameObject ramkaCeluGracz;
+    private bool czySklep;
 
     void Awake()
     {
@@ -48,16 +49,30 @@ public class click : MonoBehaviour
 
         clickNieWalka.ekwipunekWidoczny += CzyEkwipunekOtwarty;
         clickNieWalka.clickLag += lagCorutineStart;
+        dialog.sklepOn += czySklepAktywny;
     }
     private void OnDestroy()
     {
         clickNieWalka.ekwipunekWidoczny -= CzyEkwipunekOtwarty;
         clickNieWalka.clickLag -= lagCorutineStart;
+        dialog.sklepOn -= czySklepAktywny;
     }
     void CzyEkwipunekOtwarty(bool czy)
     {
         czyEkwipunekOtwarty = czy;
     }
+    void czySklepAktywny(List<aso> czy)
+    {
+        if(czy.Count == 0)
+        {
+            czySklep = false;
+        }
+        else
+        {
+            czySklep = true;
+        }
+    }
+
     void lagCorutineStart(bool nic)
     {
         StartCoroutine(lagCorutine(0.1f));
@@ -70,7 +85,7 @@ public class click : MonoBehaviour
     }
     void LateUpdate()
     {
-        if (czyEkwipunekOtwarty == false)
+        if (czyEkwipunekOtwarty == false && czySklep == false)
         {
             Cast();
         }
@@ -140,10 +155,10 @@ public class click : MonoBehaviour
                 {
                     InfoOEfekcie(raycastHit.transform.gameObject);
                 }
-                else if(raycastHit.transform.gameObject.tag == "karta")
+                /*else if(raycastHit.transform.gameObject.tag == "karta")
                 {
                     InfoOKarcie(raycastHit.transform.gameObject);
-                }
+                }*/
             }
             CeleRamkiRysuj(raycastHit.transform.gameObject);
         }
@@ -279,12 +294,12 @@ public class click : MonoBehaviour
         }
     }
 
-    void InfoOKarcie(GameObject target)
+    /*void InfoOKarcie(GameObject target)
     {
         infoEfektAnim.Play("pojawia");
         textMorInfo.text = target.GetComponent<taKarta>().publicznyPrzekszta販onyOpis;
         InfoObj.GetComponent<wPozMyszy>().WyliczKorektePoz();
-    }
+    }*/
 
     void InfoOEfekcie(GameObject target)
     {
@@ -473,18 +488,24 @@ public class click : MonoBehaviour
             else //czyszczenie
             {
                 ramkaCeluGracz.SetActive(false);
-                for (int x = 0; x < d這n.GetComponent<sortGrupZ>().kartyWD這ni.Count; x++)
+                if (d這n.GetComponent<sortGrupZ>().kartyWD這ni.Count > 0)
                 {
-                    if (d這n.GetComponent<sortGrupZ>().kartyWD這ni[x].GetComponent<taKarta>().ramkaCelu.activeSelf == true)
+                    for (int x = 0; x < d這n.GetComponent<sortGrupZ>().kartyWD這ni.Count; x++)
                     {
-                        d這n.GetComponent<sortGrupZ>().kartyWD這ni[x].GetComponent<taKarta>().ramkaCelu.SetActive(false);
+                        if (d這n.GetComponent<sortGrupZ>().kartyWD這ni[x].GetComponent<taKarta>().ramkaCelu.activeSelf == true)
+                        {
+                            d這n.GetComponent<sortGrupZ>().kartyWD這ni[x].GetComponent<taKarta>().ramkaCelu.SetActive(false);
+                        }
                     }
                 }
-                for (int x = 0; x < WalkaStart.przeciwnicyWwalce.Count; x++)
+                if (WalkaStart.przeciwnicyWwalce.Count > 0)
                 {
-                    if (WalkaStart.przeciwnicyWwalce[x].GetComponent<WRUG1>().ramkaCelu.activeSelf == true)
+                    for (int x = 0; x < WalkaStart.przeciwnicyWwalce.Count; x++)
                     {
-                        WalkaStart.przeciwnicyWwalce[x].GetComponent<WRUG1>().ramkaCelu.SetActive(false);
+                        if (WalkaStart.przeciwnicyWwalce[x].GetComponent<WRUG1>().ramkaCelu.activeSelf == true)
+                        {
+                            WalkaStart.przeciwnicyWwalce[x].GetComponent<WRUG1>().ramkaCelu.SetActive(false);
+                        }
                     }
                 }
             }
@@ -492,18 +513,24 @@ public class click : MonoBehaviour
         else //czyszczenie
         {
             ramkaCeluGracz.SetActive(false);
-            for (int x = 0; x < d這n.GetComponent<sortGrupZ>().kartyWD這ni.Count; x++)
+            if (d這n.GetComponent<sortGrupZ>().kartyWD這ni.Count > 0)
+            {
+                for (int x = 0; x < d這n.GetComponent<sortGrupZ>().kartyWD這ni.Count; x++)
             {
                 if (d這n.GetComponent<sortGrupZ>().kartyWD這ni[x].GetComponent<taKarta>().ramkaCelu.activeSelf == true)
                 {
                     d這n.GetComponent<sortGrupZ>().kartyWD這ni[x].GetComponent<taKarta>().ramkaCelu.SetActive(false);
                 }
             }
-            for (int x = 0; x < WalkaStart.przeciwnicyWwalce.Count; x++)
+            }
+            if (WalkaStart.przeciwnicyWwalce.Count > 0)
             {
-                if (WalkaStart.przeciwnicyWwalce[x].GetComponent<WRUG1>().ramkaCelu.activeSelf == true)
+                for (int x = 0; x < WalkaStart.przeciwnicyWwalce.Count; x++)
                 {
-                    WalkaStart.przeciwnicyWwalce[x].GetComponent<WRUG1>().ramkaCelu.SetActive(false);
+                    if (WalkaStart.przeciwnicyWwalce[x].GetComponent<WRUG1>().ramkaCelu.activeSelf == true)
+                    {
+                        WalkaStart.przeciwnicyWwalce[x].GetComponent<WRUG1>().ramkaCelu.SetActive(false);
+                    }
                 }
             }
         }

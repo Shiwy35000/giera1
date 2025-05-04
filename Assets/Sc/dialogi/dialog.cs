@@ -20,55 +20,49 @@ public class dialog : MonoBehaviour
     private walkaStart WalkaStart;
     private playerEq playerEQ;
     private biblioteka Biblioteka;
-
     public static event System.Action<bool> Walka;
     public static event System.Action<bool> wDialogu;
+    public static event System.Action<List<aso>> sklepOn;
     private bool czyEkwipunekOtwarty;
 
     [Header("Dodatkowe Akcje")]
     public List<objList> Przeciwnicy = new List<objList>();
-    public List<objList> SklepyAsortyment = new List<objList>();
-
+    public List<grupaAso> SklepyAsortyment = new List<grupaAso>();
+    private bool sklepOtwarty;
     // podawanie nowy dialog pocz¹tkowy ma tylko sens gdy koniczymy rozmowe lub wchodzimy do walki by odpali³o odpowiedni dialog po jej zakoñczeniu,
     // podonie co z walk¹ bedzie ze sklepem;
     // gdy koñczymy rozmowê dodatkowo nasze wybory w dialogach s¹ zapisywane by ruszy³o od podanego w kolejnej rozmowie;
 
     private void Awake()
     {
+        gracz = GameObject.FindGameObjectWithTag("Player");
+        playerEQ = gracz.GetComponent<playerEq>();
+        WordCanvas = GameObject.FindGameObjectWithTag("WordCanvas");
+        camPoz = GameObject.FindGameObjectWithTag("MainCamera");
+        walkaCanvasUi = GameObject.FindGameObjectWithTag("nadUiWalka");
+        Biblioteka = GameObject.FindGameObjectWithTag("saveGame").GetComponent<biblioteka>();
+        WalkaStart = GameObject.FindGameObjectWithTag("camWalka").GetComponent<walkaStart>();
+        dialogZnacznik.SetActive(false);
+
         clickNieWalka.ekwipunekWidoczny += CzyEkwipunekOtwarty;
+        sklepOn += SklepOf;
     }
     private void OnDestroy()
     {
         clickNieWalka.ekwipunekWidoczny -= CzyEkwipunekOtwarty;
+        sklepOn -= SklepOf;
     }
     void CzyEkwipunekOtwarty(bool czy)
     {
         czyEkwipunekOtwarty = czy;
     }
 
-    void Start()
-    {
-        gracz = GameObject.FindGameObjectWithTag("Player");
-        playerEQ = gracz.GetComponent<playerEq>();
-        WordCanvas = GameObject.FindGameObjectWithTag("WordCanvas");
-        camPoz = GameObject.FindGameObjectWithTag("MainCamera");
-        dialogZnacznik.SetActive(false);
-        walkaCanvasUi = GameObject.FindGameObjectWithTag("nadUiWalka");
-        Biblioteka = GameObject.FindGameObjectWithTag("saveGame").GetComponent<biblioteka>();
-        WalkaStart = walkaCanvasUi.transform.parent.gameObject.GetComponent<walkaStart>();
-        walkaCanvasUi.SetActive(false);
-    }
-
     void Update()
     {
-        if (Input.GetButtonDown("LewyMysz") && dialogZnacznik.activeSelf == true && czyEkwipunekOtwarty == false)
+        if (Input.GetButtonDown("LewyMysz") && dialogZnacznik.activeSelf == true && czyEkwipunekOtwarty == false && sklepOtwarty == false)
         {
             WczytajPoczatekDialogu();
             PodejmijDialog();
-        }
-        if(WalkaStart.przeciwnicyWwalce.Count == 0 && walkaCanvasUi.activeSelf == true)
-        {
-            PoWalce();
         }
     }
 
@@ -178,6 +172,12 @@ public class dialog : MonoBehaviour
         else if (reakcja.TypReakcji == typReakcji.sklep) //sklep
         {
             gracz.GetComponent<OpcjeDialogowe>().wizualizacjaWyboru.SetActive(false);
+            wDialogu?.Invoke(false);
+            sklepOn?.Invoke(SklepyAsortyment[reakcja.reakcjaUzupe³nienie].zawartoœæ);
+            if (listaDialogowa[poczatekDialogu].listaOdpowiedzi[n].nowyDialogPoczatkowy != 0) //zawsze podaj pocz¹tek dialogu po walce!!
+            {
+                poczatekDialogu = listaDialogowa[poczatekDialogu].listaOdpowiedzi[n].nowyDialogPoczatkowy;
+            }
         }
         else if (reakcja.TypReakcji == typReakcji.otrzymanieStrataZdrowia)
         {
@@ -202,9 +202,13 @@ public class dialog : MonoBehaviour
             }
             else if (reakcja.reakcjaUzupe³nienie < 0)
             {
-                if(playerEQ.deckPrefab.Contains(Biblioteka.wszystkieKarty[Mathf.Abs(reakcja.reakcjaUzupe³nienie)]))
+                for (int x = 0; x < playerEQ.deckPrefab.Count; x++)
                 {
-                    playerEQ.deckPrefab.Remove(Biblioteka.wszystkieKarty[Mathf.Abs(reakcja.reakcjaUzupe³nienie)]);
+                    if(playerEQ.deckPrefab[x].GetComponent<taKarta>().Id == Mathf.Abs(reakcja.reakcjaUzupe³nienie))
+                    {
+                        playerEQ.deckPrefab.Remove(playerEQ.deckPrefab[x]);
+                        break;
+                    }
                 }
             }
         }
@@ -212,21 +216,27 @@ public class dialog : MonoBehaviour
         {
             if (reakcja.reakcjaUzupe³nienie > 0)
             {
-                playerEQ.posiadaneArtefakty.Add(Biblioteka.istniej¹ceArtefakty[reakcja.reakcjaUzupe³nienie]);
+                //playerEQ.posiadaneArtefakty.Add(Biblioteka.istniej¹ceArtefakty[reakcja.reakcjaUzupe³nienie]);
+                playerEQ.ArtefaktPrzypisz(Biblioteka.istniej¹ceArtefakty[reakcja.reakcjaUzupe³nienie]);
             }
             else if (reakcja.reakcjaUzupe³nienie < 0)
             {
-                if (playerEQ.posiadaneArtefakty.Contains(Biblioteka.istniej¹ceArtefakty[Mathf.Abs(reakcja.reakcjaUzupe³nienie)]))
+                playerEQ.UsuñArtefakt(Mathf.Abs(reakcja.reakcjaUzupe³nienie));
+                /*for (int x = 0; x < playerEQ.posiadaneArtefakty.Count; x++)
                 {
-                    playerEQ.posiadaneArtefakty.Remove(Biblioteka.istniej¹ceArtefakty[Mathf.Abs(reakcja.reakcjaUzupe³nienie)]);
-                }
+                    if (playerEQ.posiadaneArtefakty[x].GetComponent<artefakt>().Id == Mathf.Abs(reakcja.reakcjaUzupe³nienie))
+                    {
+                        playerEQ.posiadaneArtefakty.Remove(playerEQ.posiadaneArtefakty[x]);
+                        break;
+                    }
+                }*/
             }
         }
     }
 
     public void PrzygotowaniaDoWalki(int zKim)
     {
-        WalkaStart.SpawnPrzeciwinicy(Przeciwnicy[zKim].obj);
+        WalkaStart.SpawnPrzeciwinicy(Przeciwnicy[zKim].obj, this.gameObject);
         WalkaStart.CzyszczenieRêki();
         gracz.GetComponent<OpcjeDialogowe>().wizualizacjaWyboru.SetActive(false);
         walkaCanvasUi.SetActive(true);
@@ -246,6 +256,25 @@ public class dialog : MonoBehaviour
         wDialogu?.Invoke(true);
         Walka?.Invoke(false);
         walkaCanvasUi.SetActive(false);
+    }
+
+    public void SklepOf(List<aso> nic)
+    {
+        if (nic.Count == 0)
+        {
+            sklepOtwarty = false;
+
+            obecnyDymek.GetComponent<czyjDymek>().WstawText(listaDialogowa[poczatekDialogu].tresc);
+            gracz.GetComponent<OpcjeDialogowe>().UsunOpcjeDialogowe();
+            gracz.GetComponent<OpcjeDialogowe>().zKimPrzyjemnoscRozmawiac = this.gameObject;
+            SprawdziWarunkiOpcjiDialogowych();
+            gracz.GetComponent<OpcjeDialogowe>().WizualizujOdpowiedzi(listaDialogowa[poczatekDialogu].listaOdpowiedzi);
+            wDialogu?.Invoke(true);
+        }
+        else
+        {
+            sklepOtwarty = true;
+        }
     }
 
     private void WczytajPoczatekDialogu()
@@ -343,11 +372,11 @@ public class dialog : MonoBehaviour
             }
             else if(warunki[y].czego == Czegoo.karta)
             {
-                if(warunki[y].IleZnak == Znak.wiêksze_posiada && playerEQ.deckPrefab.Contains(Biblioteka.wszystkieKarty[warunki[y].Ile_Id]))
-                {
-                    warunki[y].czySpelniony = true;
+                if(warunki[y].IleZnak == Znak.wiêksze_posiada && playerEQ.deckPrefab.Any(x => x.GetComponent<taKarta>().Id == warunki[y].Ile_Id))
+                {          
+                    warunki[y].czySpelniony = true;           
                 }
-                else if(warunki[y].IleZnak == Znak.mniejsze_niePosida && !playerEQ.deckPrefab.Contains(Biblioteka.wszystkieKarty[warunki[y].Ile_Id]))
+                else if(warunki[y].IleZnak == Znak.mniejsze_niePosida && playerEQ.deckPrefab.All(x => x.GetComponent<taKarta>().Id != warunki[y].Ile_Id))
                 {
                     warunki[y].czySpelniony = true;
                 }
@@ -358,11 +387,11 @@ public class dialog : MonoBehaviour
             }
             else if (warunki[y].czego == Czegoo.artefakt)
             {
-                if (warunki[y].IleZnak == Znak.wiêksze_posiada && playerEQ.posiadaneArtefakty.Contains(Biblioteka.istniej¹ceArtefakty[warunki[y].Ile_Id]))
+                if (warunki[y].IleZnak == Znak.wiêksze_posiada && playerEQ.posiadaneArtefakty.Any(x => x.GetComponent<artefakt>().Id == warunki[y].Ile_Id))
                 {
                     warunki[y].czySpelniony = true;
                 }
-                else if (warunki[y].IleZnak == Znak.mniejsze_niePosida && !playerEQ.posiadaneArtefakty.Contains(Biblioteka.istniej¹ceArtefakty[warunki[y].Ile_Id]))
+                else if (warunki[y].IleZnak == Znak.mniejsze_niePosida && playerEQ.posiadaneArtefakty.All(x => x.GetComponent<artefakt>().Id != warunki[y].Ile_Id))
                 {
                     warunki[y].czySpelniony = true;
                 }

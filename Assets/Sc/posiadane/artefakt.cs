@@ -31,10 +31,10 @@ public class artefakt : MonoBehaviour
     {
         player = GameObject.FindGameObjectWithTag("Player").gameObject;
 
-        Przypisy();
+        //Przypisy();
     }
 
-    void Przypisy()
+    public void Przypisy()
     {
 
         if (sprite != null)

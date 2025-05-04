@@ -34,6 +34,8 @@ public class WRUG1 : MonoBehaviour
     [HideInInspector] public playerEq Eq;
     [HideInInspector] public float otrzymywaneDMG;
 
+    [HideInInspector] public GameObject zDialogu;
+
     private void Awake()
     {
         //morInfo = this.gameObject.transform.GetChild(1).gameObject;
@@ -44,7 +46,7 @@ public class WRUG1 : MonoBehaviour
         BazaEfektow = this.GetComponent<bazaEfektow>();
         punktLinia = this.gameObject.transform.GetChild(2).gameObject;
         ramkaCelu = this.gameObject.transform.GetChild(3).gameObject;
-        ramkaCelu.SetActive(false);
+        //ramkaCelu.SetActive(false);
 
         walkaStart.KoniecTury += Wywo³ajEfektyKoniecT;
         walkaStart.Pocz¹tekTury += Wywo³ajEfektyPocz¹tekT;
@@ -70,7 +72,7 @@ public class WRUG1 : MonoBehaviour
         {
             hpAktualne = 0;
         }
-        else if (hpAktualne == 0)
+        if (hpAktualne == 0)
         {
             Die();
         }
@@ -80,6 +82,12 @@ public class WRUG1 : MonoBehaviour
     {
         GameObject walka = GameObject.FindGameObjectWithTag("nadUiWalka").transform.parent.gameObject;
         walka.GetComponent<walkaStart>().przeciwnicyWwalce.Remove(this.gameObject);
+
+        if (walka.GetComponent<walkaStart>().przeciwnicyWwalce.Count == 0)
+        {
+            zDialogu.GetComponent<dialog>().PoWalce();
+        }
+
         Destroy(this.gameObject);
     }
 

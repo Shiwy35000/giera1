@@ -11,7 +11,7 @@ public class moveWASD : MonoBehaviour
     private float playerWalkingSpeed = 3f;
     private Vector3 camPoz;
     [HideInInspector] public bool wRozmowie;
-
+    private bool czySklepOtwarty;
     private bool czyEkwipunekOtwarty;
    
     void Awake()
@@ -20,16 +20,28 @@ public class moveWASD : MonoBehaviour
         cam = GameObject.FindGameObjectWithTag("MainCamera").transform;
 
         clickNieWalka.ekwipunekWidoczny += CzyEkwipunekOtwarty;
+        dialog.sklepOn += CzySklepOtwarty;
     }
     private void OnDestroy()
     {
         clickNieWalka.ekwipunekWidoczny -= CzyEkwipunekOtwarty;
+        dialog.sklepOn -= CzySklepOtwarty;
     }
     void CzyEkwipunekOtwarty(bool czy)
     {
         czyEkwipunekOtwarty = czy;
     }
-
+    void CzySklepOtwarty(List<aso> nic)
+    {
+        if (nic.Count == 0)
+        {
+            czySklepOtwarty = false;
+        }
+        else
+        {
+            czySklepOtwarty = true;
+        }
+    }
     void Start()
     {
         Cursor.visible = false;
@@ -39,7 +51,7 @@ public class moveWASD : MonoBehaviour
     
     void Update()
     {
-        if (wRozmowie  || czyEkwipunekOtwarty)
+        if (wRozmowie  || czyEkwipunekOtwarty || czySklepOtwarty)
         {
             forwardMovement = 0;
             sidewaysMovement = 0;

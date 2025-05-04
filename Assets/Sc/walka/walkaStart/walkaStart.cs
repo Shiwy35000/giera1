@@ -67,12 +67,13 @@ public class walkaStart : MonoBehaviour
         wskaünikEnergi.gameObject.transform.GetChild(1).GetComponent<TextMeshPro>().text = eq.aktualnaEnergia.ToString() + "/" + eq.maxEnergia.ToString();
     }
 
-    public void SpawnPrzeciwinicy(List<GameObject> przeciwnicySpawn)
+    public void SpawnPrzeciwinicy(List<GameObject> przeciwnicySpawn, GameObject nadawca)
     {
         for (int x = 0; x < przeciwnicySpawn.Count; x++)
         {
             GameObject ten = Instantiate(przeciwnicySpawn[x], wrogowieSpawn);
             przeciwnicyWwalce.Add(ten);
+            ten.GetComponent<WRUG1>().zDialogu = nadawca;
         }
     }
 

@@ -169,6 +169,7 @@ MonoBehaviour:
   aktualnyPancerz: 30
   "bonusDoObrarze\u0144": 0
   "na\u0142orzoneEfekty": []
+  ramkaCelu: {fileID: 4004030344162581642}
   "efektyWywo\u0142anieOtrzyma\u0142Cios":
     m_PersistentCalls:
       m_Calls: []
@@ -181,12 +182,19 @@ MonoBehaviour:
   "efektyWywo\u0142aniePocz\u0105tekTury":
     m_PersistentCalls:
       m_Calls: []
+  "efektyWywo\u0142anieAtak":
+    m_PersistentCalls:
+      m_Calls: []
   ilee: 0
   nieUchronnee: 0
   obecnaAkcja:
     m_PersistentCalls:
       m_Calls: []
   punktLinia: {fileID: 0}
+  "atakuj\u0105cyy": {fileID: 0}
+  Eq: {fileID: 0}
+  otrzymywaneDMG: 0
+  zDialogu: {fileID: 0}
 --- !u!114 &-5741796903916476568
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -494,6 +502,11 @@ PrefabInstance:
 --- !u!4 &2480272998473122328 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 120575148306596586, guid: 72c8b51e9fff4b4469e66eecbee49aa6, type: 3}
+  m_PrefabInstance: {fileID: 2578290255794127090}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &4004030344162581642 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1465571149076749432, guid: 72c8b51e9fff4b4469e66eecbee49aa6, type: 3}
   m_PrefabInstance: {fileID: 2578290255794127090}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8853482422098793092

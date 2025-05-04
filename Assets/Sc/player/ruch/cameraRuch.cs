@@ -8,23 +8,36 @@ public class cameraRuch : MonoBehaviour
     private float rotacjaAktualna;
     [HideInInspector] public bool walka = false;
     private bool czyEkwipunekOtwarty;
+    private bool czySklepOtwarty;
 
     void Awake()
     {
         dialog.Walka += Wwalce;
         clickNieWalka.ekwipunekWidoczny += CzyEkwipunekOtwarty;
+        dialog.sklepOn += CzySklepOtwarty;
     }
     private void OnDestroy()
     {
         dialog.Walka -= Wwalce;
         clickNieWalka.ekwipunekWidoczny -= CzyEkwipunekOtwarty;
+        dialog.sklepOn -= CzySklepOtwarty;
     }
 
     void CzyEkwipunekOtwarty(bool czy)
     {
         czyEkwipunekOtwarty = czy;
     }
-
+    void CzySklepOtwarty(List<aso> nic)
+    {
+        if (nic.Count == 0)
+        {
+            czySklepOtwarty = false;
+        }
+        else
+        {
+            czySklepOtwarty = true;
+        }
+    }
     void Wwalce(bool czy)
     {
         walka = czy;
@@ -39,7 +52,7 @@ public class cameraRuch : MonoBehaviour
     {
         rotacjaAktualna = transform.eulerAngles.y;
 
-        if (walka == false && czyEkwipunekOtwarty == false)
+        if (walka == false && czyEkwipunekOtwarty == false && czySklepOtwarty == false)
         {
             if (Input.GetAxis("ScrollWheel") != 0f)
             {

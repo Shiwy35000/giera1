@@ -21,7 +21,7 @@ public class playerEq : MonoBehaviour
     public List<GameObject> wykluczone;
 
     [Header("Ekwipunek")]
-    public List<artefakt> posiadaneArtefakty;
+    public List<GameObject> posiadaneArtefakty;
     public List<GameObject> deckPrefab;
 
     [Header("Inne")]
@@ -41,6 +41,7 @@ public class playerEq : MonoBehaviour
     [HideInInspector] public bool nieUchronnee;
     [HideInInspector] public GameObject atakuj¹cyy;
     [HideInInspector] public float otrzymywaneDMG;
+    public GameObject listaArtefaktów;
 
     void Awake()
     {
@@ -52,6 +53,8 @@ public class playerEq : MonoBehaviour
         walkaStart.Pocz¹tekTury += Wywo³ajEfektyPocz¹tekT;
         BazaEfektow = this.GetComponent<bazaEfektow>();
         sortZ = GameObject.FindGameObjectWithTag("dlon").gameObject.GetComponent<sortGrupZ>();
+
+        ArtefaktyStart();
     }
     private void OnDestroy()
     {
@@ -72,9 +75,33 @@ public class playerEq : MonoBehaviour
         aktualnaEnergia = maxEnergia;
     }
 
-    private void Update()
+    void ArtefaktyStart() //tylko narazie potem bêdzei wszystko robione ArtefaktPrzypisz!!
     {
-        //hpZasady();
+        for (int x = 0; x < posiadaneArtefakty.Count;x++)
+        {
+            GameObject it = Instantiate(posiadaneArtefakty[x], listaArtefaktów.transform);
+            it.name = posiadaneArtefakty[x].name;
+        }
+    }
+
+    public void ArtefaktPrzypisz(GameObject A)
+    {
+        GameObject it = Instantiate(A, listaArtefaktów.transform);
+        it.name = A.name;
+        posiadaneArtefakty.Add(it);
+    }
+    public void UsuñArtefakt(int Id)
+    {
+        for (int x = 0; x < posiadaneArtefakty.Count; x++)
+        {
+            if(posiadaneArtefakty[x].GetComponent<artefakt>().Id == Id)
+            {
+                GameObject it = posiadaneArtefakty[x];
+                posiadaneArtefakty.Remove(posiadaneArtefakty[x]);
+                Destroy(it);
+                break;
+            }
+        }
     }
 
     public void hpZasady()
@@ -87,7 +114,7 @@ public class playerEq : MonoBehaviour
         {
             hp = 0;
         }
-        else if (hp == 0)
+        if (hp == 0)
         {
             Die();
         }
