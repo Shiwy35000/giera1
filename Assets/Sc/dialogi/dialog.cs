@@ -23,6 +23,7 @@ public class dialog : MonoBehaviour
     public static event System.Action<bool> Walka;
     public static event System.Action<bool> wDialogu;
     public static event System.Action<List<aso>> sklepOn;
+    public static event System.Action<GameObject> straganiarz;
     private bool czyEkwipunekOtwarty;
 
     [Header("Dodatkowe Akcje")]
@@ -45,12 +46,10 @@ public class dialog : MonoBehaviour
         dialogZnacznik.SetActive(false);
 
         clickNieWalka.ekwipunekWidoczny += CzyEkwipunekOtwarty;
-        sklepOn += SklepOf;
     }
     private void OnDestroy()
     {
         clickNieWalka.ekwipunekWidoczny -= CzyEkwipunekOtwarty;
-        sklepOn -= SklepOf;
     }
     void CzyEkwipunekOtwarty(bool czy)
     {
@@ -171,13 +170,14 @@ public class dialog : MonoBehaviour
         }
         else if (reakcja.TypReakcji == typReakcji.sklep) //sklep
         {
-            gracz.GetComponent<OpcjeDialogowe>().wizualizacjaWyboru.SetActive(false);
-            wDialogu?.Invoke(false);
-            sklepOn?.Invoke(SklepyAsortyment[reakcja.reakcjaUzupe³nienie].zawartoœæ);
+
             if (listaDialogowa[poczatekDialogu].listaOdpowiedzi[n].nowyDialogPoczatkowy != 0) //zawsze podaj pocz¹tek dialogu po walce!!
             {
                 poczatekDialogu = listaDialogowa[poczatekDialogu].listaOdpowiedzi[n].nowyDialogPoczatkowy;
             }
+            SklepOfOn(SklepyAsortyment[reakcja.reakcjaUzupe³nienie].zawartoœæ);
+            //sklepOn?.Invoke(SklepyAsortyment[reakcja.reakcjaUzupe³nienie].zawartoœæ);
+
         }
         else if (reakcja.TypReakcji == typReakcji.otrzymanieStrataZdrowia)
         {
@@ -216,20 +216,11 @@ public class dialog : MonoBehaviour
         {
             if (reakcja.reakcjaUzupe³nienie > 0)
             {
-                //playerEQ.posiadaneArtefakty.Add(Biblioteka.istniej¹ceArtefakty[reakcja.reakcjaUzupe³nienie]);
                 playerEQ.ArtefaktPrzypisz(Biblioteka.istniej¹ceArtefakty[reakcja.reakcjaUzupe³nienie]);
             }
             else if (reakcja.reakcjaUzupe³nienie < 0)
             {
                 playerEQ.UsuñArtefakt(Mathf.Abs(reakcja.reakcjaUzupe³nienie));
-                /*for (int x = 0; x < playerEQ.posiadaneArtefakty.Count; x++)
-                {
-                    if (playerEQ.posiadaneArtefakty[x].GetComponent<artefakt>().Id == Mathf.Abs(reakcja.reakcjaUzupe³nienie))
-                    {
-                        playerEQ.posiadaneArtefakty.Remove(playerEQ.posiadaneArtefakty[x]);
-                        break;
-                    }
-                }*/
             }
         }
     }
@@ -258,12 +249,13 @@ public class dialog : MonoBehaviour
         walkaCanvasUi.SetActive(false);
     }
 
-    public void SklepOf(List<aso> nic)
+    public void SklepOfOn(List<aso> nic)
     {
         if (nic.Count == 0)
         {
             sklepOtwarty = false;
 
+            sklepOn?.Invoke(new List<aso>());
             obecnyDymek.GetComponent<czyjDymek>().WstawText(listaDialogowa[poczatekDialogu].tresc);
             gracz.GetComponent<OpcjeDialogowe>().UsunOpcjeDialogowe();
             gracz.GetComponent<OpcjeDialogowe>().zKimPrzyjemnoscRozmawiac = this.gameObject;
@@ -274,6 +266,12 @@ public class dialog : MonoBehaviour
         else
         {
             sklepOtwarty = true;
+
+            sklepOn?.Invoke(nic);
+            gracz.GetComponent<OpcjeDialogowe>().wizualizacjaWyboru.SetActive(false);
+            wDialogu?.Invoke(false);
+            straganiarz?.Invoke(this.gameObject);
+
         }
     }
 

@@ -10,6 +10,7 @@ public class clickNieWalka : MonoBehaviour
     public GameObject InfoObj;
     public TextMeshProUGUI textMorInfo;
     public GameObject podgl¹dKart, UiPozaWalk¹, przyciskiWWalce, przyciskiPozaWalk¹, sklep;
+    public zarz¹dzanieSklepem Zarz¹dzanieSklepem;
 
     [Header("Przyciski:")]
     [Header("ZAWSZE W EQ")]
@@ -20,7 +21,8 @@ public class clickNieWalka : MonoBehaviour
     [Header("EQ W WALCE")]
     public GameObject cmentarzButton;
     public GameObject wykluczoneButton;
-    [Header("EQ POZA WALK¥")]
+    [Header("EQ SKLEP")]
+    public GameObject sklepOffButton;
 
     //przypisy
     private Camera cam;
@@ -249,6 +251,11 @@ public class clickNieWalka : MonoBehaviour
                         podgl¹dKart.SetActive(true);
                         ScrolCards.Aktywuj(eq.wykluczone);
                     }
+                }
+                else if(raycastHit.transform.gameObject == sklepOffButton)
+                {
+                    Zarz¹dzanieSklepem.w³aœcicielSklepu.GetComponent<dialog>().SklepOfOn(new List<aso>());
+                    lagCorutineStart();
                 }
 
             }

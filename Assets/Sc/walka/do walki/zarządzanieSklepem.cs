@@ -11,8 +11,9 @@ public class zarządzanieSklepem : MonoBehaviour
     private biblioteka Biblioteka;
 
     private List<GameObject> asoObj = new List<GameObject>();
-    public List<GameObject> sloty = new List<GameObject>();
+    private List<GameObject> sloty = new List<GameObject>();
     public float scalArtefaktu;
+    [HideInInspector] public GameObject właścicielSklepu;
 
     private void Awake()
     {
@@ -23,15 +24,22 @@ public class zarządzanieSklepem : MonoBehaviour
         SlotyList();
         sklep.SetActive(false);
 
-        dialog.sklepOn += otwieramySklep;
+        dialog.sklepOn += otwarcieZamknięcieSklep;
+        dialog.straganiarz += ktoSprzedaje;
     }
 
     private void OnDestroy()
     {
-        dialog.sklepOn -= otwieramySklep;
+        dialog.sklepOn -= otwarcieZamknięcieSklep;
+        dialog.straganiarz -= ktoSprzedaje;
     }
 
-    private void otwieramySklep(List<aso> dostawa)
+    private void ktoSprzedaje(GameObject kto)
+    {
+        właścicielSklepu = kto;
+    }
+
+    private void otwarcieZamknięcieSklep(List<aso> dostawa)
     {
         if(dostawa.Count == 0)
         {
