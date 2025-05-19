@@ -10,12 +10,16 @@ public class zarządzanieSklepem : MonoBehaviour
     private GameObject sklep;
     private GameObject asoPoz, asoPoz2;
     private biblioteka Biblioteka;
+    private playerEq eq;
 
     private List<GameObject> asoObj = new List<GameObject>();
     private List<GameObject> sloty = new List<GameObject>();
     public float scalArtefaktu;
     public int nrDialoguGdyPułkiPuste = -1; //domyślnie liczba < 0 by nie podawał nowego początku dialogu;
+    [HideInInspector] public GameObject wybraneAsoDoKupienia;
     [HideInInspector] public GameObject właścicielSklepu;
+
+    public GameObject BuyButton;
 
     private void Awake()
     {
@@ -23,6 +27,8 @@ public class zarządzanieSklepem : MonoBehaviour
         asoPoz = this.transform.GetChild(0).transform.GetChild(0).gameObject;
         asoPoz2 = this.transform.GetChild(0).transform.GetChild(1).gameObject;
         Biblioteka = GameObject.FindGameObjectWithTag("saveGame").GetComponent<biblioteka>();
+        eq = GameObject.FindGameObjectWithTag("Player").GetComponent<playerEq>();
+
         SlotyList();
         sklep.SetActive(false);
 
@@ -45,6 +51,8 @@ public class zarządzanieSklepem : MonoBehaviour
     {
         if(dostawa.Count == 0)
         {
+            wybraneAsoDoKupienia = null;
+            BuyButton.SetActive(false);
             CzyszczenieAso();
             sklep.SetActive(false);
         }
@@ -167,5 +175,31 @@ public class zarządzanieSklepem : MonoBehaviour
         }
 
         AktywujIPrzypiszSloty();
+    }
+
+    public void Kup()
+    {
+        if(wybraneAsoDoKupienia != null && wybraneAsoDoKupienia.GetComponent<asoInfo>().Aso.cena <= eq.sakiewka)
+        {
+            eq.sakiewka -= wybraneAsoDoKupienia.GetComponent<asoInfo>().Aso.cena;
+
+            if(wybraneAsoDoKupienia.GetComponent<asoInfo>().Aso.asoTyp == AsoTyp.karta)
+            {
+                eq.deckPrefab.Add(Biblioteka.wszystkieKarty[wybraneAsoDoKupienia.GetComponent<asoInfo>().Aso.Id].Obj);
+            }
+            else if(wybraneAsoDoKupienia.GetComponent<asoInfo>().Aso.asoTyp == AsoTyp.artefakt)
+            {
+                eq.ArtefaktPrzypisz(Biblioteka.istniejąceArtefakty[wybraneAsoDoKupienia.GetComponent<asoInfo>().Aso.Id].Obj);
+            }
+
+            if(wybraneAsoDoKupienia.GetComponent<asoInfo>().Aso.ilość == ilośćAso.jednaSztuka)
+            {
+                asoObj.Remove(wybraneAsoDoKupienia);
+                Destroy(wybraneAsoDoKupienia.gameObject);
+                wybraneAsoDoKupienia = null;
+                AktywujIPrzypiszSloty();
+                BuyButton.SetActive(false);
+            }
+        }
     }
 }

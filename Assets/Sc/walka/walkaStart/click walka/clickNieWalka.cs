@@ -23,6 +23,7 @@ public class clickNieWalka : MonoBehaviour
     public GameObject wykluczoneButton;
     [Header("EQ SKLEP")]
     public GameObject sklepOffButton;
+    public GameObject sklepBuyButton;
 
     //przypisy
     private Camera cam;
@@ -31,18 +32,22 @@ public class clickNieWalka : MonoBehaviour
     private string TreœæArtefaktu;
     private scrolCards ScrolCards;
     private playerEq eq;
-
+    
     public static event System.Action<bool> ekwipunekWidoczny;
     public static event System.Action<bool> clickLag;
 
     //
     private bool ClickLag;
     private bool wDialogu;
+    private bool czyWSklepie;
+    private bool czyOtwartyEwkipunek;
 
     void Awake()
     {
         dialog.Walka += CzyWalkaSwitch;
         dialog.wDialogu += wDialoguSwitch;
+        dialog.sklepOn += CzyWsklepie;
+        ekwipunekWidoczny += CzyOtwartyEwkipunek;
 
         cam = this.gameObject.transform.parent.gameObject.GetComponent<Camera>();
         InfoObjT³o = textMorInfo.gameObject.transform.parent.gameObject.GetComponent<Image>();
@@ -56,10 +61,27 @@ public class clickNieWalka : MonoBehaviour
     {
         dialog.Walka -= CzyWalkaSwitch;
         dialog.wDialogu -= wDialoguSwitch;
+        dialog.sklepOn -= CzyWsklepie;
+        ekwipunekWidoczny -= CzyOtwartyEwkipunek;
     }
     private void wDialoguSwitch(bool czy)
     {
         wDialogu = czy;
+    }
+    private void CzyOtwartyEwkipunek(bool czy)
+    {
+        czyOtwartyEwkipunek = czy;
+    }
+    private void CzyWsklepie(List<aso> czy)
+    {
+        if(czy.Count == 0)
+        {
+            czyWSklepie = false;
+        }
+        else
+        {
+            czyWSklepie = true;
+        }
     }
     void ZamknijEq()
     {
@@ -257,12 +279,49 @@ public class clickNieWalka : MonoBehaviour
                     Zarz¹dzanieSklepem.w³aœcicielSklepu.GetComponent<dialog>().SklepOfOn(new List<aso>());
                     lagCorutineStart();
                 }
+                else if (raycastHit.transform.gameObject == sklepBuyButton)
+                {
+                    Zarz¹dzanieSklepem.Kup();
+                    lagCorutineStart();
+                }
+            }
 
+            if (czyWSklepie == true && czyOtwartyEwkipunek == false)
+            {
+                Zakupy(raycastHit.transform.gameObject);
             }
         }
         else
         {
             InfoPlusOf();
+        }
+    }
+
+
+    void Zakupy(GameObject cel)
+    {
+        if (cel.tag == "karta" || cel.tag == "artefakt")
+        {
+            if (Input.GetButtonDown("LewyMysz") && ClickLag == false)
+            {
+                if(cel.GetComponent<asoInfo>().Aso.cena <= eq.sakiewka)
+                {
+                    Zarz¹dzanieSklepem.wybraneAsoDoKupienia = cel;
+                    sklepBuyButton.SetActive(true);
+                    lagCorutineStart();
+                }
+                else
+                {
+                    Zarz¹dzanieSklepem.wybraneAsoDoKupienia = null;
+                    sklepBuyButton.SetActive(false);
+                    lagCorutineStart();
+                }
+            }
+            else if(Input.GetButtonDown("PrawyMysz") && ClickLag == false)
+            {
+                Zarz¹dzanieSklepem.wybraneAsoDoKupienia = null;
+                sklepBuyButton.SetActive(false);
+            }
         }
     }
 
