@@ -4306,9 +4306,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   wszystkieKarty:
-  - {fileID: 7271937273496504588, guid: 519d4bafd93464947a5a881b7922a65c, type: 3}
+  - Obj: {fileID: 7271937273496504588, guid: 519d4bafd93464947a5a881b7922a65c, type: 3}
+    Odblokowane: 1
   "istniej\u0105ceArtefakty":
-  - {fileID: 7532274841795424490, guid: 1d0b98aff7f65ea49b90359198514e2b, type: 3}
+  - Obj: {fileID: 7532274841795424490, guid: 1d0b98aff7f65ea49b90359198514e2b, type: 3}
+    Odblokowane: 1
   "dost\u0119pneEfekty":
   - nazwa: "Krucho\u015B\u0107"
     odbiurEfektu: 1
@@ -5070,6 +5072,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scalArtefaktu: 4
+  "nrDialoguGdyPu\u0142kiPuste": -1
   "w\u0142a\u015BcicielSklepu": {fileID: 0}
 --- !u!1 &1354149880
 GameObject:
@@ -7519,11 +7522,11 @@ MonoBehaviour:
   - "zawarto\u015B\u0107":
     - asoTyp: 0
       Id: 0
-      specjalAso: 0
+      "ilo\u015B\u0107": 0
       cena: 100
     - asoTyp: 1
       Id: 0
-      specjalAso: 0
+      "ilo\u015B\u0107": 0
       cena: 10
 --- !u!54 &1896643137
 Rigidbody:
@@ -8403,6 +8406,10 @@ PrefabInstance:
     - target: {fileID: 1465571149076749432, guid: 72c8b51e9fff4b4469e66eecbee49aa6, type: 3}
       propertyPath: m_Name
       value: ramka celu
+      objectReference: {fileID: 0}
+    - target: {fileID: 1465571149076749432, guid: 72c8b51e9fff4b4469e66eecbee49aa6, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

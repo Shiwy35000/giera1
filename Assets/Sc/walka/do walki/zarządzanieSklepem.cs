@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using System.Linq;
 
 public class zarządzanieSklepem : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class zarządzanieSklepem : MonoBehaviour
     private List<GameObject> asoObj = new List<GameObject>();
     private List<GameObject> sloty = new List<GameObject>();
     public float scalArtefaktu;
+    public int nrDialoguGdyPułkiPuste = -1; //domyślnie liczba < 0 by nie podawał nowego początku dialogu;
     [HideInInspector] public GameObject właścicielSklepu;
 
     private void Awake()
@@ -117,12 +119,35 @@ public class zarządzanieSklepem : MonoBehaviour
         {
             if(dostawa[x].asoTyp == AsoTyp.karta)
             {
-                Dodaj(Biblioteka.wszystkieKarty[dostawa[x].Id], dostawa[x]);
+                if (Biblioteka.wszystkieKarty[dostawa[x].Id].Odblokowane == true)
+                {
+                    Dodaj(Biblioteka.wszystkieKarty[dostawa[x].Id].Obj, dostawa[x]);
+                }
             }
             else if (dostawa[x].asoTyp == AsoTyp.artefakt)
             {
-                Dodaj(Biblioteka.istniejąceArtefakty[dostawa[x].Id], dostawa[x]);
+                if (Biblioteka.istniejąceArtefakty[dostawa[x].Id].Odblokowane == true)
+                {
+                    Dodaj(Biblioteka.istniejąceArtefakty[dostawa[x].Id].Obj, dostawa[x]);
+                }
             }
+
+            if(x == dostawa.Count - 1)
+            {
+                CzyPustePułki();
+            }
+        }
+    }
+
+    public void CzyPustePułki()
+    {
+        if (asoObj.Count == 0 && właścicielSklepu != null) //jeśli dostawa nie jest dostępna do wyłorzenia(itemy są nie odblokowane w biblotece), to zamykamy sklep!;
+        {
+            if (nrDialoguGdyPułkiPuste >= 0)
+            {
+                właścicielSklepu.GetComponent<dialog>().poczatekDialogu = nrDialoguGdyPułkiPuste;
+            }
+            właścicielSklepu.GetComponent<dialog>().SklepOfOn(new List<aso>());
         }
     }
 

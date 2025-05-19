@@ -3,22 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public enum AsoTyp { karta, artefakt};
-[System.Flags]
-public enum SpecjalAso : int {normal = 0x00, nieSkoñczoneAso = 0x01, odblokuj = 0x02};
+public enum iloœæAso {jednaSztuka, nieSkoñczoneAso};
 
 [System.Serializable]
 public class aso
 {
     public AsoTyp asoTyp;
     public int Id;
-    public SpecjalAso specjalAso;
+    public iloœæAso iloœæ;
     public int cena;
 
-    public aso(AsoTyp a, int i, SpecjalAso s, int c)
+    public aso(AsoTyp a, int i, iloœæAso s, int c)
     {
         asoTyp = a;
         Id = i;
-        specjalAso = s;
+        iloœæ = s;
         cena = c;
     }
 }

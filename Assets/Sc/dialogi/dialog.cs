@@ -198,7 +198,8 @@ public class dialog : MonoBehaviour
         {
             if(reakcja.reakcjaUzupe³nienie > 0)
             {
-                playerEQ.deckPrefab.Add(Biblioteka.wszystkieKarty[reakcja.reakcjaUzupe³nienie]);
+                Biblioteka.OdblokowanieZawartoœci(Biblioteka.wszystkieKarty[reakcja.reakcjaUzupe³nienie].Obj);
+                playerEQ.deckPrefab.Add(Biblioteka.wszystkieKarty[reakcja.reakcjaUzupe³nienie].Obj);
             }
             else if (reakcja.reakcjaUzupe³nienie < 0)
             {
@@ -216,7 +217,8 @@ public class dialog : MonoBehaviour
         {
             if (reakcja.reakcjaUzupe³nienie > 0)
             {
-                playerEQ.ArtefaktPrzypisz(Biblioteka.istniej¹ceArtefakty[reakcja.reakcjaUzupe³nienie]);
+                Biblioteka.OdblokowanieZawartoœci(Biblioteka.istniej¹ceArtefakty[reakcja.reakcjaUzupe³nienie].Obj);
+                playerEQ.ArtefaktPrzypisz(Biblioteka.istniej¹ceArtefakty[reakcja.reakcjaUzupe³nienie].Obj);
             }
             else if (reakcja.reakcjaUzupe³nienie < 0)
             {
@@ -266,12 +268,11 @@ public class dialog : MonoBehaviour
         else
         {
             sklepOtwarty = true;
-
-            sklepOn?.Invoke(nic);
             gracz.GetComponent<OpcjeDialogowe>().wizualizacjaWyboru.SetActive(false);
             wDialogu?.Invoke(false);
             straganiarz?.Invoke(this.gameObject);
-
+            sklepOn?.Invoke(nic);
+            
         }
     }
 
